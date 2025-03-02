@@ -4,6 +4,30 @@ This project can help you get information about materials, prices, and productio
 
 ## Building
 
+### Windows
+
+```cmake
+mkdir build
+cd build
+cmake .. -G "Visual Studio 17 2022"
+cmake --build . --config Release
+```
+
+### Linux
+
+```cmake
+mkdir release
+cd release
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . 
+```
+
+## Used third-party tools
+- [**wxwidgets**](https://github.com/wxWidgets/wxWidgets)
+- [**boost beast**](https://github.com/boostorg/boost)
+- [**openssl**](https://github.com/openssl/openssl)
+- [**nlohmann/json**](https://github.com/nlohmann/json)
+
 
 ## How to use
 
@@ -36,12 +60,6 @@ All materials from blueprints\
 
 Stages\
 ![12](docs/examples/example_12.png)
-
-## Used third-party tools
-- [**wxwidgets**](https://github.com/wxWidgets/wxWidgets)
-- [**boost beast**](https://github.com/boostorg/boost)
-- [**openssl**](https://github.com/openssl/openssl)
-- [**nlohmann/json**](https://github.com/nlohmann/json)
 
 ## License
 
