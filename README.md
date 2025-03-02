@@ -10,9 +10,9 @@ This project can help you get information about materials, prices, and productio
 
 ## Used third-party tools
 - [**wxwidgets**](https://github.com/wxWidgets/wxWidgets)
-- [**boost beast**] (https://github.com/boostorg/boost)
-- [**openssl**] (https://github.com/openssl/openssl)
-- [**nlohmann/json**] (https://github.com/nlohmann/json)
+- [**boost beast**](https://github.com/boostorg/boost)
+- [**openssl**](https://github.com/openssl/openssl)
+- [**nlohmann/json**](https://github.com/nlohmann/json)
 
 ## License
 
