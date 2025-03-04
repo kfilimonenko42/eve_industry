@@ -70,3 +70,5 @@ EVE industry is licensed under the GNU GPL v3.0, see LICENSE
 * EVE: Kirill Dif
 
 ## CCP Copyright Notice
+
+© 2014 CCP hf. All rights reserved. "EVE", "EVE Online", "CCP", and all related logos and images are trademarks or registered trademarks of CCP hf.
