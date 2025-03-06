@@ -68,6 +68,48 @@ int EVE::Industry::ListLayoutAvailableMaterials::getItemImage(void* container, c
 
 void EVE::Industry::ListLayoutAvailableMaterials::copyToClipboard(void* container, const std::vector<long>& lines, const std::vector<long>& columns)
 {
+	const auto& list = *reinterpret_cast<std::vector<MaterialProject>*>(container);
+
+	const std::size_t colSize = columns.size();
+
+	std::string data;
+	for (const long& line : lines)
+	{
+		const auto& item = list[line];
+
+		if (!data.empty())
+		{
+			data += '\n';
+		}
+
+		for (std::size_t cIndex = 0; cIndex < colSize; ++cIndex)
+		{
+			if (cIndex > 0 && cIndex < colSize)
+			{
+				data += '\t';
+			}
+
+			long index = columns[cIndex];
+			switch (index)
+			{
+			case 0:
+				data += item.m_Type.name();
+				break;
+			case 1:
+				data += item.m_Type.group().name();
+				break;
+			case 2:
+				data += std::format("{}", item.m_Type.getQuantity());
+				break;
+			}
+		}
+	}
+
+	if (!data.empty() && wxTheClipboard->Open())
+	{
+		wxTheClipboard->AddData(new wxTextDataObject(data));
+		wxTheClipboard->Close();
+	}
 }
 
 void EVE::Industry::ListLayoutAvailableMaterials::deleteSelectedListItems(void* container, std::vector<long>& lines)

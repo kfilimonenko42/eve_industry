@@ -89,6 +89,8 @@ set(INDUSTRY_src
 	include/FormApplication.hpp
 	include/FormAppraisal.cpp
 	include/FormAppraisal.hpp
+	include/FormMaterialsStages.cpp
+	include/FormMaterialsStages.hpp
 	include/FormProject.cpp
 	include/FormProject.hpp
 	include/FormProjectName.cpp

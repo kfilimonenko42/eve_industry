@@ -199,6 +199,12 @@ void EVE::Industry::FormProject::setStageStatus(const StageStatus status, const 
 	updateNamePage();
 }
 
+void EVE::Industry::FormProject::showMaterialsStages(const std::vector<long>& selected)
+{
+	GetMaterialsStages materialsStages{};
+	materialsStages(m_Project, selected);
+}
+
 const std::string& EVE::Industry::FormProject::name() const
 {
 	return m_Project.name();

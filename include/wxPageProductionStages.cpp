@@ -22,9 +22,10 @@
 #include "FormProject.hpp"
 #include "TotalValues.hpp"
 
-constexpr int ID_STATUS_OUTSTANDING = 10001;
-constexpr int ID_STATUS_INPROGRESS = 10002;
-constexpr int ID_STATUS_FINISHED = 10003;
+constexpr int ID_GET_MATERIALS = 10001;
+constexpr int ID_STATUS_OUTSTANDING = 10002;
+constexpr int ID_STATUS_INPROGRESS = 10003;
+constexpr int ID_STATUS_FINISHED = 10004;
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::ProductionStage>;
 
@@ -61,7 +62,7 @@ void EVE::Industry::wxPageProductionStages::updateTotalLabels()
 	const std::size_t countOutstanding = totalStatuses(m_ProductionStages->get(), StageStatus::Outstanding);
 	const std::size_t countInProgress = totalStatuses(m_ProductionStages->get(), StageStatus::InProgress);
 	const std::size_t countFinished = totalStatuses(m_ProductionStages->get(), StageStatus::Finished);
-	m_TotalStatuses->SetLabelText(std::format("Total: {}\nOutstanding: {}\nIn Progress: {}\nFinished: {}", 
+	m_TotalStatuses->SetLabelText(std::format("Total: {}\nOutstanding: {}\nIn Progress: {}\nFinished: {}",
 		size, countOutstanding, countInProgress, countFinished));
 }
 
@@ -129,6 +130,8 @@ void EVE::Industry::wxPageProductionStages::OnCopyRuns(wxCommandEvent& event)
 void EVE::Industry::wxPageProductionStages::OnListRightClick(wxListEvent& event)
 {
 	wxMenu menu;
+	menu.Append(ID_GET_MATERIALS, "Materials");
+	menu.AppendSeparator();
 	menu.Append(ID_STATUS_OUTSTANDING, "Status 'Outstanding'");
 	menu.Append(ID_STATUS_INPROGRESS, "Status 'In Progress'");
 	menu.Append(ID_STATUS_FINISHED, "Status 'Finished'");
@@ -146,20 +149,22 @@ void EVE::Industry::wxPageProductionStages::OnListPopupClick(wxCommandEvent& eve
 		return;
 	}
 
-	StageStatus status = StageStatus::Outstanding;
 	switch (event.GetId())
 	{
+	case ID_GET_MATERIALS:
+		dynamic_cast<FormProject*>(m_FormProject)->showMaterialsStages(sLines);
+		break;
 	case ID_STATUS_OUTSTANDING:
-		status = StageStatus::Outstanding;
+		dynamic_cast<FormProject*>(m_FormProject)->setStageStatus(StageStatus::Outstanding, sLines);
+		updateTotalLabels();
 		break;
 	case ID_STATUS_INPROGRESS:
-		status = StageStatus::InProgress;
+		dynamic_cast<FormProject*>(m_FormProject)->setStageStatus(StageStatus::InProgress, sLines);
+		updateTotalLabels();
 		break;
 	case ID_STATUS_FINISHED:
-		status = StageStatus::Finished;
+		dynamic_cast<FormProject*>(m_FormProject)->setStageStatus(StageStatus::Finished, sLines);
+		updateTotalLabels();
 		break;
 	}
-
-	dynamic_cast<FormProject*>(m_FormProject)->setStageStatus(status, sLines);
-	updateTotalLabels();
 }

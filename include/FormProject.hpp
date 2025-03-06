@@ -64,6 +64,7 @@ namespace EVE::Industry
 		void setME(const EVE::Assets::RigME me, const std::vector<long>& selected);
 		void setMaximumRuns(const std::uint64_t runs, const std::vector<long>& selected);
 		void setStageStatus(const StageStatus status, const std::vector<long>& selected);
+		void showMaterialsStages(const std::vector<long>& selected);
 		void calculateProject();
 
 	private:

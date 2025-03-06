@@ -69,6 +69,7 @@ namespace EVE::Industry
 			bool getNeedUpdate() const;
 			void updateWeight();
 			std::uint64_t getWeight() const;
+			bool hasParents() const;
 			const std::vector<std::shared_ptr<IndustryElement>>& getParents() const;
 			std::uint64_t quantity() const;
 			std::uint64_t quantityManufacturedMaterials(std::uint64_t type_id) const;
@@ -93,7 +94,7 @@ namespace EVE::Industry
 			bool m_NeedUpdate{};
 		};
 
-		explicit IndustryCalculation(const IndustryProject& project);
+		IndustryCalculation(const IndustryProject& project, const bool fullCalculation = true);
 		~IndustryCalculation();
 
 		IndustryCalculation(const IndustryCalculation&) = delete;
@@ -104,6 +105,8 @@ namespace EVE::Industry
 		void clear();
 		void getRawMaterials(std::vector<MaterialBase>& raw);
 		void getBpsMaterials(std::vector<MaterialBlueprint>& types);
+		void getAllMaterials(std::vector<MaterialProject>& materials);
+		void getAllMaterialsNoIndustryMaterials(std::vector<MaterialProject>& materials);
 		void getStages(std::vector<ProductionStage>& stages);
 
 	private:
@@ -126,6 +129,7 @@ namespace EVE::Industry
 	private:
 		std::queue<std::shared_ptr<IndustryElement>> m_FillQueue;
 		std::vector<std::shared_ptr<IndustryElement>> m_IndustryElements;
+		bool m_FullCalculation{};
 	};
 
 }; // namespace EVE::Industry

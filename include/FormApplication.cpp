@@ -213,7 +213,7 @@ void EVE::Industry::FormApplication::OnAbout(wxCommandEvent& e)
 	aboutInfo.SetVersion(
 		std::format("{}\n{}", VERSION_STRING, SDE_DATE_STRING)
 	);
-	if (git_version > GITHUBAPI_RELEASE_ID)
+	if (git_version > GITHUB_RELEASE_ID)
 	{
 		aboutInfo.SetDescription("new version available");
 		aboutInfo.SetWebSite(new_release_link);

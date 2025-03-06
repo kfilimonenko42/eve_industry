@@ -37,6 +37,7 @@
 #include "VectorStrToTypeIndustry.hpp"
 #include "FormAddTypesText.hpp"
 #include "BlueprintMaterialEfficiency.hpp"
+#include "FormMaterialsStages.hpp"
 
 namespace EVE::Industry
 {
@@ -359,13 +360,13 @@ namespace EVE::Industry
 
 	struct CalculateIndustry
 	{
-		void operator()(IndustryProject& project)
+		void operator()(IndustryProject& project, const bool fullCalculation = true)
 		{
 			std::vector<MaterialBase> types_base;
 			std::vector<MaterialBlueprint> types_blueprints;
 			std::vector<ProductionStage> prod_stages;
 
-			IndustryCalculation industryCalculation(project);
+			IndustryCalculation industryCalculation(project, fullCalculation);
 			industryCalculation.getRawMaterials(types_base);
 			industryCalculation.getBpsMaterials(types_blueprints);
 			industryCalculation.getStages(prod_stages);
@@ -378,6 +379,58 @@ namespace EVE::Industry
 			project.m_ProductionStages.update(std::move(prod_stages));
 
 			project.setModified(true);
+		}
+	};
+
+	struct GetMaterialsStages
+	{
+		void operator()(
+			const IndustryProject& project,
+			const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			std::vector<MaterialProject> tmpTypes;
+
+			const auto& stagesProject = project.m_ProductionStages.get();
+			for (const long stageIndex : selected)
+			{
+				const auto& stagesContainer = project.m_ProductionStages.get();
+				const ProductionStage& stage = stagesContainer[stageIndex];
+				const std::uint32_t type_id = stage.m_Blueprint.producedID();
+				const std::uint64_t quantity = stage.m_Quantity;
+
+				auto ittr = std::find_if(std::begin(tmpTypes), std::end(tmpTypes),
+					[type_id](const MaterialProject& elem)
+					{
+						return elem.m_Type.id() == type_id;
+					});
+
+				if (ittr != std::end(tmpTypes))
+				{
+					ittr->add(quantity);
+				}
+				else
+				{
+					tmpTypes.emplace_back(TypeRecord{ type_id }, quantity);
+				}
+			}
+
+			IndustryProject tmpProject;
+			tmpProject.m_TypesProject.update(std::move(tmpTypes));
+			tmpProject.m_BlueprintsList.update(project.m_BlueprintsList.copy());
+			
+			std::vector<MaterialProject> tmpMaterials;
+			IndustryCalculation industryCalculation(tmpProject, false);
+			industryCalculation.getAllMaterialsNoIndustryMaterials(tmpMaterials);
+
+			std::sort(std::begin(tmpMaterials), std::end(tmpMaterials), MaterialProjectSortByGroupIdTypeName());
+
+			std::unique_ptr<FormMaterialsStages> dialog = std::make_unique<FormMaterialsStages>(std::move(tmpMaterials));
+			dialog->ShowModal();
 		}
 	};
 

@@ -43,6 +43,32 @@ namespace EVE::Industry
 		TypeRecord m_Type;
 	};
 
+	struct MaterialProjectSortByGroupTypeIds
+	{
+		bool operator()(const MaterialProject& lhs, const MaterialProject& rhs) const
+		{
+			if (lhs.m_Type.group().id() == rhs.m_Type.group().id())
+			{
+				return lhs.m_Type.id() < rhs.m_Type.id();
+			}
+
+			return lhs.m_Type.group().id() < rhs.m_Type.group().id();
+		}
+	};
+
+	struct MaterialProjectSortByGroupIdTypeName
+	{
+		bool operator()(const MaterialProject& lhs, const MaterialProject& rhs) const
+		{
+			if (lhs.m_Type.group().id() == rhs.m_Type.group().id())
+			{
+				return lhs.m_Type.name() < rhs.m_Type.name();
+			}
+
+			return lhs.m_Type.group().id() < rhs.m_Type.group().id();
+		}
+	};
+
 } // EVE::Industry
 
 #endif // _EVEINDUSTRY_MATERIALPROJECT_HPP_

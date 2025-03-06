@@ -249,6 +249,11 @@ std::uint64_t EVE::Industry::IndustryCalculation::IndustryElement::getWeight() c
 	return this->m_Weight;
 }
 
+bool EVE::Industry::IndustryCalculation::IndustryElement::hasParents() const
+{
+	return !this->m_ParentElements.empty();
+}
+
 const std::vector<std::shared_ptr<EVE::Industry::IndustryCalculation::IndustryElement>>& EVE::Industry::IndustryCalculation::IndustryElement::getParents() const
 {
 	return this->m_ParentElements;
@@ -280,7 +285,8 @@ const std::vector<std::uint64_t>& EVE::Industry::IndustryCalculation::IndustryEl
 	return this->m_Stages;
 }
 
-EVE::Industry::IndustryCalculation::IndustryCalculation(const EVE::Industry::IndustryProject& project)
+EVE::Industry::IndustryCalculation::IndustryCalculation(const EVE::Industry::IndustryProject& project, const bool fullCalculation)
+	: m_FullCalculation{ fullCalculation }
 {
 	if (!project.m_BlueprintsList.empty())
 	{
@@ -355,6 +361,52 @@ void EVE::Industry::IndustryCalculation::getBpsMaterials(std::vector<MaterialBlu
 		try
 		{
 			types.emplace_back(elem->blueprint(), elem->type(), elem->quantity());
+		}
+		catch (const std::runtime_error& er)
+		{
+			Log::LOG_ERROR(er.what());
+		}
+	}
+}
+
+void EVE::Industry::IndustryCalculation::getAllMaterials(std::vector<MaterialProject>& materials)
+{
+	materials.clear();
+
+	for (auto elem : this->m_IndustryElements)
+	{
+		try
+		{
+			materials.emplace_back(TypeRecord{ elem->type() }, elem->quantity());
+		}
+		catch (const std::runtime_error& er)
+		{
+			Log::LOG_ERROR(er.what());
+		}
+	}
+}
+
+void EVE::Industry::IndustryCalculation::getAllMaterialsNoIndustryMaterials(std::vector<MaterialProject>& materials)
+{
+	materials.clear();
+
+	auto filter = std::views::filter(
+		[](const std::shared_ptr<IndustryElement>& elem)
+		{
+			return elem->hasParents();
+		});
+
+	auto filteredElements = this->m_IndustryElements | filter;
+	if (filteredElements.empty())
+	{
+		return;
+	}
+
+	for (auto elem : filteredElements)
+	{
+		try
+		{
+			materials.emplace_back(TypeRecord{ elem->type() }, elem->quantity());
 		}
 		catch (const std::runtime_error& er)
 		{
@@ -547,10 +599,17 @@ void EVE::Industry::IndustryCalculation::addIndustryElement(
 		element->setNeedUpdate();
 	}
 
-	if (!element->isRaw())
+	if (element->isRaw())
 	{
-		this->m_FillQueue.push(element);
+		return;
 	}
+
+	if (element->hasParents() && !this->m_FullCalculation)
+	{
+		return;
+	}
+
+	this->m_FillQueue.push(element);
 }
 
 void EVE::Industry::IndustryCalculation::makeLinkParentChild(
