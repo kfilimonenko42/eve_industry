@@ -39,10 +39,11 @@ namespace EVE::Industry
 		std::tuple<std::string, std::uint64_t> parse(const std::string& src) override;
 
 	private:
+		void check_from_assets(std::string& src) const;
 		bool match_firstline(const std::string& src) const;
 		bool match_left(const std::string& src) const;
 		bool match_right(const std::string& src) const;
-
+		
 		std::tuple<std::string, std::uint64_t> do_parse_firstline(std::string& src);
 		std::tuple<std::string, std::uint64_t> do_parse_left(std::string& src);
 		std::tuple<std::string, std::uint64_t> do_parse_right(std::string& src);

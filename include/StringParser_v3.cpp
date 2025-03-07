@@ -26,6 +26,7 @@ std::tuple<std::string, std::uint64_t> EVE::Industry::StringParser_v3::parse(con
 
 	if (!_tmp_str.empty())
 	{
+		check_from_assets(_tmp_str);
 
 		if (match_firstline(_tmp_str))
 		{
@@ -48,6 +49,33 @@ std::tuple<std::string, std::uint64_t> EVE::Industry::StringParser_v3::parse(con
 	}
 
 	return std::make_tuple(std::string(), 0);
+}
+
+void EVE::Industry::StringParser_v3::check_from_assets(std::string& src) const
+{
+	auto length = src.length();
+	const auto countT = std::count(std::begin(src), std::end(src), '\t');
+	if (countT > 2)
+	{
+		auto t1 = std::find(std::begin(src), std::end(src), '\t');
+		auto t2 = std::find(++t1, std::end(src), '\t');
+
+		src.erase(t2, std::end(src));
+		src.erase(std::remove_if(t1, std::end(src),
+			[](unsigned char x) { return (std::isspace(x) || x == u'\xa0'); }),
+			std::end(src));
+	}
+	else if (countT == 2)
+	{
+		auto t1 = std::find(std::begin(src), std::end(src), '\t');
+		auto t2 = std::find(++t1, std::end(src), '\t');
+
+		const char symbol = src.at(length - 1);
+		if (symbol >= 48 && symbol <= 57)
+		{
+			src.erase(t1, t2);
+		}
+	}
 }
 
 bool EVE::Industry::StringParser_v3::match_firstline(const std::string& src) const
