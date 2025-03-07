@@ -35,7 +35,7 @@ namespace EVE::Industry
 	class wxPageMaterialsBase : public wxWindow
 	{
 	public:
-		wxPageMaterialsBase(wxWindow* parent, ListDataWrapper<MaterialBase>* materials);
+		wxPageMaterialsBase(wxWindow* parent, wxWindow* formProject, ListDataWrapper<MaterialBase>* materials);
 		~wxPageMaterialsBase() override = default;
 
 		wxPageMaterialsBase(const wxPageMaterialsBase& tmp) = delete;
@@ -55,9 +55,12 @@ namespace EVE::Industry
 		void OnCopyNameQuantity(wxCommandEvent& event);
 		void OnCopyName(wxCommandEvent& event);
 		void OnCopyQuantity(wxCommandEvent& event);
+		void OnListRightClick(wxListEvent& event);
+		void OnListPopupClick(wxCommandEvent& event);
 
 	private:
 		wxWindow* m_Parent{};
+		wxWindow* m_FormProject{};
 		wxListCtrl* m_VirtualList{};
 		wxStaticText* m_TotalVolume{};
 		wxStaticText* m_TotalPriceSell{};

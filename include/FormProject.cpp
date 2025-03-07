@@ -205,6 +205,26 @@ void EVE::Industry::FormProject::showMaterialsStages(const std::vector<long>& se
 	materialsStages(m_Project, selected);
 }
 
+void EVE::Industry::FormProject::addStockFromRawMaterials(const std::vector<long>& selected)
+{
+	AddToStock addStock{};
+	addStock(m_Project, m_Project.m_TypesBase, selected);
+
+	updateIndustryResultLists();
+	updateMaterialsAvailableList();
+	updateNamePage();
+}
+
+void EVE::Industry::FormProject::addStockFromBpMaterials(const std::vector<long>& selected)
+{
+	AddToStock addStock{};
+	addStock(m_Project, m_Project.m_TypesBlueprint, selected);
+
+	updateIndustryResultLists();
+	updateMaterialsAvailableList();
+	updateNamePage();
+}
+
 const std::string& EVE::Industry::FormProject::name() const
 {
 	return m_Project.name();
@@ -226,7 +246,7 @@ void EVE::Industry::FormProject::createControls()
 	m_PageMaterialsProject = new wxPageMaterialsProject(page1, this, &m_Project.m_TypesProject);
 	
 	wxNotebookPage* page2 = new wxNotebookPage(m_baseNotebook, wxID_ANY);
-	m_baseNotebook->AddPage(page2, "available materials");
+	m_baseNotebook->AddPage(page2, "stock");
 	m_PageAvailableMaterials = new wxPageAvailableMaterials(page2, this, &m_Project.m_Stock);
 
 	wxNotebookPage* page3 = new wxNotebookPage(m_baseNotebook, wxID_ANY);
@@ -235,11 +255,11 @@ void EVE::Industry::FormProject::createControls()
 
 	wxNotebookPage* page4 = new wxNotebookPage(m_baseNotebook, wxID_ANY);
 	m_baseNotebook->AddPage(page4, "materials - raw");
-	m_PageMaterialsBase = new wxPageMaterialsBase(page4, &m_Project.m_TypesBase);
+	m_PageMaterialsBase = new wxPageMaterialsBase(page4, this, &m_Project.m_TypesBase);
 
 	wxNotebookPage* page5 = new wxNotebookPage(m_baseNotebook, wxID_ANY);
 	m_baseNotebook->AddPage(page5, "materials - bps");
-	m_PageMaterialsBlueprint = new wxPageMaterialsBlueprint(page5, &m_Project.m_TypesBlueprint);
+	m_PageMaterialsBlueprint = new wxPageMaterialsBlueprint(page5, this, &m_Project.m_TypesBlueprint);
 
 	wxNotebookPage* page6 = new wxNotebookPage(m_baseNotebook, wxID_ANY);
 	m_baseNotebook->AddPage(page6, "stages");

@@ -398,8 +398,7 @@ namespace EVE::Industry
 			const auto& stagesProject = project.m_ProductionStages.get();
 			for (const long stageIndex : selected)
 			{
-				const auto& stagesContainer = project.m_ProductionStages.get();
-				const ProductionStage& stage = stagesContainer[stageIndex];
+				const ProductionStage& stage = stagesProject[stageIndex];
 				const std::uint32_t type_id = stage.m_Blueprint.producedID();
 				const std::uint64_t quantity = stage.m_Quantity;
 
@@ -431,6 +430,44 @@ namespace EVE::Industry
 
 			std::unique_ptr<FormMaterialsStages> dialog = std::make_unique<FormMaterialsStages>(std::move(tmpMaterials));
 			dialog->ShowModal();
+		}
+	};
+
+	struct AddToStock
+	{
+		void operator()(IndustryProject& project, auto& dst, const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			auto tmpStock = project.m_Stock.copy();
+			const auto& container = dst.get();
+			for (const long index : selected)
+			{
+				const std::uint32_t type_id = container[index].m_Type.id();
+				const std::uint64_t quantity = container[index].m_Type.getQuantity();
+				auto ittr = std::find_if(std::begin(tmpStock), std::end(tmpStock),
+					[type_id](const auto& elem)
+					{
+						return elem.m_Type.id() == type_id;
+					});
+
+				if (ittr != std::end(tmpStock))
+				{
+					ittr->add(quantity);
+				}
+				else
+				{
+					tmpStock.emplace_back(TypeRecord{ type_id }, quantity);
+				}
+			}
+
+			project.m_Stock.update(std::move(tmpStock));
+
+			CalculateIndustry calcIndy{};
+			calcIndy(project);
 		}
 	};
 

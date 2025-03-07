@@ -19,11 +19,14 @@
 #include "wxPageMaterialsBlueprint.hpp"
 #include "wxVirtualListCtrl.hpp"
 #include "ListLayout_MaterialsBlueprint.hpp"
+#include "FormProject.hpp"
+
+constexpr int ID_ADD_STOCK = 10001;
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::MaterialBlueprint>;
 
-EVE::Industry::wxPageMaterialsBlueprint::wxPageMaterialsBlueprint(wxWindow* parent, ListDataWrapper<MaterialBlueprint>* materials)
-	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_Materials{ materials }
+EVE::Industry::wxPageMaterialsBlueprint::wxPageMaterialsBlueprint(wxWindow* parent, wxWindow* formProject, ListDataWrapper<MaterialBlueprint>* materials)
+	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_FormProject{ formProject }, m_Materials{ materials }
 {
 	createControls();
 }
@@ -78,6 +81,7 @@ void EVE::Industry::wxPageMaterialsBlueprint::createControls()
 		&m_Materials->get(),
 		wxDefaultPosition,
 		wxSize(200, 200));
+	m_VirtualList->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &wxPageMaterialsBlueprint::OnListRightClick, this);
 
 	std::function<void()> updatePricesMethod = std::bind(&wxPageMaterialsBlueprint::updatePrices, this);
 	std::function<void()> updateImageMethod = std::bind(&wxPageMaterialsBlueprint::updateImages, this);
@@ -109,4 +113,30 @@ void EVE::Industry::wxPageMaterialsBlueprint::OnCopyName(wxCommandEvent& event)
 void EVE::Industry::wxPageMaterialsBlueprint::OnCopyQuantity(wxCommandEvent& event)
 {
 	dynamic_cast<vListCtrl*>(m_VirtualList)->copyToClipboardSelected({ 3 });
+}
+
+void EVE::Industry::wxPageMaterialsBlueprint::OnListRightClick(wxListEvent& event)
+{
+	wxMenu menu;
+	menu.Append(ID_ADD_STOCK, "Add to stock");
+	menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &wxPageMaterialsBlueprint::OnListPopupClick, this);
+	PopupMenu(&menu);
+
+	event.Skip();
+}
+
+void EVE::Industry::wxPageMaterialsBlueprint::OnListPopupClick(wxCommandEvent& event)
+{
+	const std::vector<long> sLines = dynamic_cast<vListCtrl*>(m_VirtualList)->getSelected();
+	if (sLines.empty())
+	{
+		return;
+	}
+
+	switch (event.GetId())
+	{
+	case ID_ADD_STOCK:
+		dynamic_cast<FormProject*>(m_FormProject)->addStockFromBpMaterials(sLines);
+		break;
+	}
 }
