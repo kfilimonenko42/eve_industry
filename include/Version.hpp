@@ -24,12 +24,12 @@
 
 #define MAJOR_VERSION	0
 #define MINOR_VERSION	1
-#define RELEASE_NUMBER	0
+#define RELEASE_NUMBER	1
 #define VERSION_STRING  std::format("{}.{}.{}", MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER)
 #define VERSION_NUMBER  MAJOR_VERSION * 10000 + MINOR_VERSION * 100 + RELEASE_NUMBER;
 #define PROJECT_NAME_STRING	std::string("EVE industry")
 #define SDE_DATE_STRING	std::string("SDE 2024.11.12")
-#define GITHUB_RELEASE_ID 203221294
+#define GITHUB_RELEASE_ID 204400384
 #define GITHUB_LINK std::string("https://github.com/kfilimonenko42/eve_industry")
 
 #endif // _EVEINDUSTRY_VERSION_HPP_
