@@ -18,6 +18,7 @@
 
 #include "ListLayout_MaterialsAppraisal.hpp"
 #include "MaterialAppraisal.hpp"
+#include "AppraisalContainer.hpp"
 
 void EVE::Industry::ListLayoutMaterialsAppraisal::createColumns(wxListCtrl* list)
 {
@@ -33,7 +34,7 @@ void EVE::Industry::ListLayoutMaterialsAppraisal::createColumns(wxListCtrl* list
 	list->SetColumnWidth(4, 100);
 }
 
-std::string EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(void* container, const long index, const long column)
+std::string EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<MaterialAppraisal>*>(container);
 	const auto& item = list[index];
@@ -43,13 +44,13 @@ std::string EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(void* conta
 	case 0:
 		return item.m_Type.toString();
 	case 1:
-		return item.m_Type.priceSellToString();
+		return priceSellToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings });
 	case 2:
-		return item.m_Type.priceBuyToString();
+		return priceBuyToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings });
 	case 3:
-		return item.m_Type.priceSellTotalToString();
+		return priceSellToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings }, item.m_Type.getQuantity());
 	case 4:
-		return item.m_Type.priceBuyTotalToString();
+		return priceBuyToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings }, item.m_Type.getQuantity());
 	default:
 		return "";
 	}
@@ -60,7 +61,7 @@ int EVE::Industry::ListLayoutMaterialsAppraisal::getItemImage(void* container, c
 	const auto& list = *reinterpret_cast<std::vector<MaterialAppraisal>*>(container);
 	const auto& item = list[index];
 
-	const std::uint32_t type_id = item.m_Type.id();
+	const std::uint32_t type_id = item.id();
 	if (vIdsIcons.contains(type_id))
 	{
 		return vIdsIcons.at(type_id);

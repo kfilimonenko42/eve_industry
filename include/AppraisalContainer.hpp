@@ -21,45 +21,109 @@
 
 #include <cstdint>
 #include <unordered_map>
-#include <mutex>
+#include <set>
 #include <algorithm>
+#include <utility>
 #include <tuple>
+#include <string>
+#include <format>
+#include <functional>
+#include <chrono>
 
 #include "TypePrice.hpp"
 #include "Appraisal.hpp"
 #include "Logger.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
+#include "UpdateContainerThread.hpp"
+#include "ChronoTools.hpp"
 
 namespace EVE::Industry
 {
-	constexpr static double PRICE_CACHED_TIME = 3600.0;
+	constexpr static double PRICE_CACHED_TIME_TEST = 3600.0;
+
+	struct UpdatePriceRecord
+	{
+		UpdatePriceRecord(int owner_id, std::uint32_t typeId, const EsiOrderSettings& esiSettings)
+			: m_EsiSettings{ esiSettings }, m_OwnerId{ owner_id }, m_TypeId{ typeId }
+		{
+		}
+
+		EsiOrderSettings m_EsiSettings{};
+		int m_OwnerId{};
+		std::uint32_t m_TypeId{};
+	};
+
+	bool thread_price_check(const UpdatePriceRecord& updRecord);
 
 	class AppraisalContainer
 	{
 	public:
+		// [areaID].[type_id]->[TypePrice]
 		using umapPrices = std::unordered_map<std::uint32_t, std::unordered_map<std::uint32_t, TypePrice>>;
-
+		// [areaID]->set([type_id])
+		using umapQueue = std::unordered_map<std::uint32_t, std::set<std::uint32_t>>;
+		// update thread
+		using updThread = UpdateContainerThread<UpdatePriceRecord>;
 		AppraisalContainer() = default;
 
 		static AppraisalContainer& Instance();
 
 		void clear();
-		bool needUpdate(const std::uint32_t id, const EsiOrderSettings& esiSettings) const;
-		bool hasPrice(const std::uint32_t id, const EsiOrderSettings& esiSettings) const;
-		[[nodiscard]] TypePrice getPrice(const std::uint32_t id, const EsiOrderSettings& esiSettings) const;
-
-		bool push(const std::uint32_t id, const EsiOrderSettings& esiSettings);
+		void addInQueueIfNeed(const UpdatePriceRecord& updRecord);
+		TypePrice getPriceNoUpdate(const UpdatePriceRecord& updRecord);
+		bool check(const UpdatePriceRecord& updRecord);
+		time_point lastUpdate(int owner_id);
 
 	private:
-		bool do_check(const std::uint32_t id, const EsiOrderSettings& esiSettings);
-		void storePrice(const std::uint32_t id, const double sellPrice, const double buyPrice, const EsiOrderSettings& esiSettings);
+		bool hasPrice(const UpdatePriceRecord& updRecord) const;
+		bool needUpdate(const UpdatePriceRecord& updRecord) const;
+		bool do_check(const UpdatePriceRecord& updRecord);
+		void storePrice(const UpdatePriceRecord& updRecord, const double sellPrice, const double buyPrice);
+		bool inQueue(const UpdatePriceRecord& updRecord) const;
+		void addInQueue(const UpdatePriceRecord& updRecord);
 
 	private:
 		umapPrices m_Container;
-		std::mutex m_Mutex;
+		umapQueue m_InQueue;
+		std::function<bool(const UpdatePriceRecord&)> checkPriceFunc = thread_price_check;
+		updThread m_UpdThread{ checkPriceFunc };
 	};
 
+	inline std::string priceSellToString(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
+	{
+		auto& container = AppraisalContainer::Instance();
+		const auto& price = container.getPriceNoUpdate(updRecord);
+		return std::format(std::locale(""), "{:.2Lf}", price.m_PriceSell * count);
+	}
+
+	inline std::string priceBuyToString(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
+	{
+		auto& container = AppraisalContainer::Instance();
+		const auto& price = container.getPriceNoUpdate(updRecord);
+		return std::format(std::locale(""), "{:.2Lf}", price.m_PriceBuy * count);
+	}
+
+	inline double priceSell(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
+	{
+		auto& container = AppraisalContainer::Instance();
+		const auto& price = container.getPriceNoUpdate(updRecord);
+		return price.m_PriceSell * count;
+	}
+
+	inline double priceBuy(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
+	{
+		auto& container = AppraisalContainer::Instance();
+		const auto& price = container.getPriceNoUpdate(updRecord);
+		return price.m_PriceBuy * count;
+	}
+
+	inline bool priceUpdOwner(int owner_id, time_point last)
+	{
+		auto& container = AppraisalContainer::Instance();
+		time_point time = container.lastUpdate(owner_id);
+		return time > last;
+	}
 
 } // EVE::Industry
 

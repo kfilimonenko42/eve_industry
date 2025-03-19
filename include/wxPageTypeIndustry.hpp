@@ -24,10 +24,14 @@
 #include <atomic>
 #include <wx/wx.h>
 #include <wx/listctrl.h>
+#include <wx/timer.h>
 
 #include "TypeRecord.hpp"
+#include "wxVirtualListCtrl.hpp"
+#include "ListLayout_TypeManufacturing.hpp"
 #include "TypeManufacturing.hpp"
 #include "ListDataWrapper.hpp"
+#include "Assets.hpp"
 
 namespace EVE::Industry
 {
@@ -47,17 +51,17 @@ namespace EVE::Industry
 
 		void updateList();
 		void refreshList();
-		void updateImages();
 
 	private:
 		void updateManufacturingMaterials();
 		void createControls();
+		void OnUpdateTimer(wxTimerEvent& event);
 
 	private:
 		TypeRecord m_Type;
 		wxPanel* m_MainPanel{};
 		wxListCtrl* m_VirtualList{};
-
+		wxTimer m_UpdTimer;
 		ListDataWrapper<TypeManufacturing> m_ManufacturingMaterials;
 	};
 

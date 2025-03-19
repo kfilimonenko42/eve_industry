@@ -27,6 +27,7 @@
 #include <wx/listctrl.h>
 #include <wx/textctrl.h>
 
+#include "ListDataWrapper.hpp"
 #include "wxVirtualListCtrl.hpp"
 #include "BaseRecord.hpp"
 
@@ -63,7 +64,7 @@ namespace EVE::Industry
 		wxTextCtrl* m_txtFilter{};
 		wxListCtrl* m_VirtualList{};
 		BaseRecord m_Result;
-		std::vector<BaseRecord> m_RegionsList;
+		ListDataWrapper<BaseRecord> m_RegionsList;
 	};
 
 } // namespace EVE::Industry

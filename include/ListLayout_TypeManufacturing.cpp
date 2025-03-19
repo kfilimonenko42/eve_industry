@@ -27,7 +27,7 @@ void EVE::Industry::ListLayoutTypeManufacturing::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(1, 100);
 }
 
-std::string EVE::Industry::ListLayoutTypeManufacturing::getItemText(void* container, const long index, const long column)
+std::string EVE::Industry::ListLayoutTypeManufacturing::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<TypeManufacturing>*>(container);
 	const auto& item = list[index];
@@ -48,7 +48,7 @@ int EVE::Industry::ListLayoutTypeManufacturing::getItemImage(void* container, co
 	const auto& list = *reinterpret_cast<std::vector<TypeManufacturing>*>(container);
 	const auto& item = list[index];
 
-	const std::uint32_t type_id = item.m_Type.id();
+	const std::uint32_t type_id = item.id();
 	if (vIdsIcons.contains(type_id))
 	{
 		const std::size_t _iconIndex = vIdsIcons.at(type_id);

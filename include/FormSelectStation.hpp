@@ -25,6 +25,7 @@
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
 
+#include "ListDataWrapper.hpp"
 #include "wxVirtualListCtrl.hpp"
 #include "StationRecord.hpp"
 
@@ -67,7 +68,7 @@ namespace EVE::Industry
 		std::uint32_t m_RegionID{};
 		std::uint32_t m_SolarSystemID{};
 		StationRecord m_Result;
-		std::vector<StationRecord> m_StationsList;
+		ListDataWrapper<StationRecord> m_StationsList;
 	};
 
 } // namespace EVE::Industry

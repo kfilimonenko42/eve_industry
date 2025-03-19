@@ -29,6 +29,7 @@
 
 #include "TypeRecord.hpp"
 #include "BlueprintRecord.hpp"
+#include "EsiOrderSettings.hpp"
 
 namespace EVE::Industry
 {
@@ -42,6 +43,7 @@ namespace EVE::Industry
 
 		BlueprintRecord m_Blueprint;
 		TypeRecord m_Type;
+		EsiOrderSettings m_EsiSettings;
 		uint64_t m_Runs{};
 	};
 

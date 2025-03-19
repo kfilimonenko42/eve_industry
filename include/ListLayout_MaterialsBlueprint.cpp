@@ -40,7 +40,7 @@ void EVE::Industry::ListLayoutMaterialsBlueprint::createColumns(wxListCtrl* list
 	list->SetColumnWidth(7, 100);
 }
 
-std::string EVE::Industry::ListLayoutMaterialsBlueprint::getItemText(void* container, const long index, const long column)
+std::string EVE::Industry::ListLayoutMaterialsBlueprint::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<MaterialBlueprint>*>(container);
 	const auto& item = list[index];
@@ -60,9 +60,9 @@ std::string EVE::Industry::ListLayoutMaterialsBlueprint::getItemText(void* conta
 	case 5:
 		return item.m_Type.volumeTotalToString();
 	case 6:
-		return item.m_Type.priceSellTotalToString();
+		return priceSellToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings }, item.m_Type.getQuantity());
 	case 7:
-		return item.m_Type.priceBuyTotalToString();
+		return priceBuyToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings }, item.m_Type.getQuantity());
 	default:
 		return "";
 	}
@@ -73,7 +73,7 @@ int EVE::Industry::ListLayoutMaterialsBlueprint::getItemImage(void* container, c
 	const auto& list = *reinterpret_cast<std::vector<MaterialBlueprint>*>(container);
 	const auto& item = list[index];
 
-	const std::uint32_t type_id = item.m_Type.id();
+	const std::uint32_t type_id = item.id();
 	if (vIdsIcons.contains(type_id))
 	{
 		const size_t _iconIndex = vIdsIcons.at(type_id);

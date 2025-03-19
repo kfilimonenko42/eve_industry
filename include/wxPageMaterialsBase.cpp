@@ -17,10 +17,6 @@
 */
 
 #include "wxPageMaterialsBase.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_MaterialsBase.hpp"
-#include "TotalValues.hpp"
-#include "FormProject.hpp"
 
 constexpr int ID_ADD_STOCK = 10001;
 
@@ -30,30 +26,22 @@ EVE::Industry::wxPageMaterialsBase::wxPageMaterialsBase(wxWindow* parent, wxWind
 	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_FormProject{ formProject }, m_Materials{ materials }
 {
 	createControls();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &wxPageMaterialsBase::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::wxPageMaterialsBase::updateList()
 {
 	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
 	_list->refreshAfterUpdate();
+
+	updateTotalLabels();
 }
 
 void EVE::Industry::wxPageMaterialsBase::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::wxPageMaterialsBase::updatePrices()
-{
-	m_Materials->setPrices();
-	refreshList();
-	updateTotalLabels();
-}
-
-void EVE::Industry::wxPageMaterialsBase::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_Materials->setImages(_list);
 }
 
 void EVE::Industry::wxPageMaterialsBase::createControls()
@@ -80,17 +68,12 @@ void EVE::Industry::wxPageMaterialsBase::createControls()
 	m_VirtualList = new vListCtrl(
 		mainPanel,
 		std::make_unique<ListLayoutMaterialsBase>(),
-		&m_Materials->get(),
+		m_Materials,
 		wxDefaultPosition,
 		wxSize(200, 200));
 	m_VirtualList->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &wxPageMaterialsBase::OnListRightClick, this);
-
-	std::function<void()> updatePricesMethod = std::bind(&wxPageMaterialsBase::updatePrices, this);
-	std::function<void()> updateImageMethod = std::bind(&wxPageMaterialsBase::updateImages, this);
-
-	m_Materials->addUpdater(std::make_unique<PriceUpdater>(updatePricesMethod, m_EsiSettings));
-	m_Materials->addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
-	m_Materials->setEsiSettings(m_EsiSettings);
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsPrices(true);
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxPanel* _panelResults = new wxPanel(mainPanel);
 	
@@ -169,4 +152,16 @@ void EVE::Industry::wxPageMaterialsBase::OnListPopupClick(wxCommandEvent& event)
 		dynamic_cast<FormProject*>(m_FormProject)->addStockFromRawMaterials(sLines);
 		break;
 	}
+}
+
+void EVE::Industry::wxPageMaterialsBase::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	if (priceUpdOwner(_list->GetId(), _list->LastRefreshPrice()))
+	{
+		updateTotalLabels();
+	}
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

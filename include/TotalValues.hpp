@@ -23,6 +23,7 @@
 #include <string>
 
 #include "StageStatus.hpp"
+#include "AppraisalContainer.hpp"
 
 namespace EVE::Industry
 {
@@ -43,7 +44,7 @@ namespace EVE::Industry
 		return std::accumulate(std::begin(source), std::end(source), 0.0,
 			[](double summ, const T& element) -> double
 			{
-				return element.m_Type.getPriceSellTotal() + summ;
+				return priceSell(UpdatePriceRecord{ 0, element.id(), element.m_EsiSettings }, element.m_Type.getQuantity()) + summ;
 			});
 	}
 
@@ -53,7 +54,7 @@ namespace EVE::Industry
 		return std::accumulate(std::begin(source), std::end(source), 0.0,
 			[](double summ, const T& element) -> double
 			{
-				return element.m_Type.getPriceBuyTotal() + summ;
+				return priceBuy(UpdatePriceRecord{ 0, element.id(), element.m_EsiSettings }, element.m_Type.getQuantity()) + summ;
 			});
 	}
 

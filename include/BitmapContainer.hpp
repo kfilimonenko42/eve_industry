@@ -25,22 +25,55 @@
 #include <cstdint>
 #include <mutex>
 #include <cassert>
-
+#include <set>
+#include <functional>
 #include <wx/wx.h>
+
+#include "UpdateContainerThread.hpp"
+#include "AppraisalContainer.hpp"
 
 namespace EVE::Industry
 {
+
+	enum class BitmapSize
+	{
+		x16,
+		x32
+	};
+
+	struct UpdateBitmapRecord
+	{
+		UpdateBitmapRecord(int owner_id, std::uint32_t type_id, BitmapSize size)
+			: m_OwnerId{ owner_id }, m_TypeId{ type_id }, m_Size{ size }
+		{
+		}
+
+		int m_OwnerId{};
+		std::uint32_t m_TypeId{};
+		BitmapSize m_Size;
+	};
+
+	bool thread_bitmap_check(const UpdateBitmapRecord& updRecord);
 
 	class BitmapContainer
 	{
 	public:
 		using mwxBitmap = std::map<std::uint32_t, wxBitmap>;
 		using mIDLine = std::map<std::uint32_t, std::size_t>;
+		// set([type_id])
+		using setQueue = std::set<std::uint32_t>;
+		// update thread
+		using updThread = UpdateContainerThread<UpdateBitmapRecord>;
 
 		BitmapContainer() = default;
 		~BitmapContainer();
 
 		static BitmapContainer& Instance();
+
+		void addInQueueIfNeed(const UpdateBitmapRecord& updRecord);
+		bool check(const UpdateBitmapRecord& updRecord);
+		time_point lastUpdate(int owner_id);
+		void setLastUpdateNow(int owner_id);
 
 		bool has16(const std::uint32_t id) const;
 		bool update16(const std::uint32_t id);
@@ -57,13 +90,30 @@ namespace EVE::Industry
 		void get32(const std::vector<std::uint32_t>& ids, wxVector<wxBitmapBundle>& dst, mIDLine& idslink) const;
 
 	private:
-		mwxBitmap m_Containerx16;
-		mwxBitmap m_Containerx32;
+		bool do_check(const UpdateBitmapRecord& updRecord);
+		bool needUpdate(const UpdateBitmapRecord& updRecord) const;
+		bool inQueue(const UpdateBitmapRecord& updRecord) const;
+		void addInQueue(const UpdateBitmapRecord& updRecord);
 
+	private:
+		mwxBitmap m_Containerx16;
 		std::mutex m_Mutex16;
+		setQueue m_InQueuex16;
+
+		mwxBitmap m_Containerx32;
 		std::mutex m_Mutex32;
+		setQueue m_InQueuex32;
+
+		std::function<bool(const UpdateBitmapRecord&)> checkBitmapFunc = thread_bitmap_check;
+		updThread m_UpdThread{ checkBitmapFunc };
 	};
 
+	inline bool bitmapUpdOwner(int owner_id, time_point last)
+	{
+		auto& container = BitmapContainer::Instance();
+		time_point time = container.lastUpdate(owner_id);
+		return time > last;
+	}
 
 } // EVE::Industry
 

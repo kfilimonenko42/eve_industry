@@ -20,6 +20,12 @@
 
 #include "wxBitmapFileSystem.hpp"
 
+bool EVE::Industry::thread_bitmap_check(const UpdateBitmapRecord& updRecord)
+{
+	BitmapContainer& container = BitmapContainer::Instance();
+	return container.check(updRecord);
+}
+
 EVE::Industry::BitmapContainer::~BitmapContainer()
 {
 	m_Containerx16.clear();
@@ -30,6 +36,37 @@ EVE::Industry::BitmapContainer& EVE::Industry::BitmapContainer::Instance()
 {
 	static BitmapContainer instance{};
 	return instance;
+}
+
+void EVE::Industry::BitmapContainer::addInQueueIfNeed(const UpdateBitmapRecord& updRecord)
+{
+	if (needUpdate(updRecord))
+	{
+		if (!inQueue(updRecord))
+		{
+			addInQueue(updRecord);
+			m_UpdThread.push(updRecord);
+		}
+	}
+}
+
+bool EVE::Industry::BitmapContainer::check(const UpdateBitmapRecord& updRecord)
+{
+	if (needUpdate(updRecord))
+	{
+		return do_check(updRecord);
+	}
+	return false;
+}
+
+time_point EVE::Industry::BitmapContainer::lastUpdate(int owner_id)
+{
+	return m_UpdThread.lastUpdate(owner_id);
+}
+
+void EVE::Industry::BitmapContainer::setLastUpdateNow(int owner_id)
+{
+	m_UpdThread.setLastUpdateNow(owner_id);
 }
 
 bool EVE::Industry::BitmapContainer::has16(const std::uint32_t id) const
@@ -189,6 +226,60 @@ void EVE::Industry::BitmapContainer::get32(const std::vector<std::uint32_t>& ids
 	for (const std::uint32_t _id : ids)
 	{
 		get32(ids, dst, idslink);
+	}
+}
+
+bool EVE::Industry::BitmapContainer::do_check(const UpdateBitmapRecord& updRecord)
+{
+	if (updRecord.m_Size == BitmapSize::x16)
+	{
+		return update16(updRecord.m_TypeId);
+	}
+	else if (updRecord.m_Size == BitmapSize::x32)
+	{
+		return update32(updRecord.m_TypeId);
+	}
+
+	return false;
+}
+
+bool EVE::Industry::BitmapContainer::needUpdate(const UpdateBitmapRecord& updRecord) const
+{
+	if (updRecord.m_Size == BitmapSize::x16)
+	{
+		return !m_Containerx16.contains(updRecord.m_TypeId);
+	}
+	else if (updRecord.m_Size == BitmapSize::x32)
+	{
+		return !m_Containerx32.contains(updRecord.m_TypeId);
+	}
+
+	return false;
+}
+
+bool EVE::Industry::BitmapContainer::inQueue(const UpdateBitmapRecord& updRecord) const
+{
+	if (updRecord.m_Size == BitmapSize::x16)
+	{
+		return m_InQueuex16.contains(updRecord.m_TypeId);
+	}
+	else if (updRecord.m_Size == BitmapSize::x32)
+	{
+		return m_InQueuex32.contains(updRecord.m_TypeId);
+	}
+
+	return true;
+}
+
+void EVE::Industry::BitmapContainer::addInQueue(const UpdateBitmapRecord& updRecord)
+{
+	if (updRecord.m_Size == BitmapSize::x16)
+	{
+		m_InQueuex16.insert(updRecord.m_TypeId);
+	}
+	else if (updRecord.m_Size == BitmapSize::x32)
+	{
+		m_InQueuex32.insert(updRecord.m_TypeId);
 	}
 }
 

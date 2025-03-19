@@ -43,7 +43,7 @@ void EVE::Industry::ListLayoutBlueprintsProject::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(6, 150);
 }
 
-std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(void* container, const long index, const long column)
+std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<BlueprintProject>*>(container);
 	const auto& item = list[index];
@@ -85,7 +85,7 @@ int EVE::Industry::ListLayoutBlueprintsProject::getItemImage(void* container, co
 	const auto& list = *reinterpret_cast<std::vector<BlueprintProject>*>(container);
 	const auto& item = list[index];
 
-	const std::uint32_t type_id = item.m_Blueprint.id();
+	const std::uint32_t type_id = item.id();
 	if (vIdsIcons.contains(type_id))
 	{
 		const std::size_t _iconIndex = vIdsIcons.at(type_id);

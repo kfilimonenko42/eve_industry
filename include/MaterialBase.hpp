@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include "TypeRecord.hpp"
+#include "EsiOrderSettings.hpp"
 
 namespace EVE::Industry
 {
@@ -38,7 +39,9 @@ namespace EVE::Industry
 		MaterialBase(TypeRecord&& type, const std::uint64_t quantity);
 
 		std::uint32_t id() const;
+
 		TypeRecord m_Type;
+		EsiOrderSettings m_EsiSettings;
 	};
 
 	struct MaterialsBaseSortByGroupTypeIds

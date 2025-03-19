@@ -25,6 +25,7 @@
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
 
+#include "ListDataWrapper.hpp"
 #include "wxVirtualListCtrl.hpp"
 #include "SolarSystemRecord.hpp"
 
@@ -62,7 +63,7 @@ namespace EVE::Industry
 		wxListCtrl* m_VirtualList{};
 		SolarSystemRecord m_Result;
 		std::uint32_t m_RegionID{};
-		std::vector<SolarSystemRecord> m_SolarSystemsList;
+		ListDataWrapper<SolarSystemRecord> m_SolarSystemsList;
 	};
 
 } // namespace EVE::Industry

@@ -24,10 +24,15 @@
 #include <format>
 #include <wx/wx.h>
 #include <wx/listctrl.h>
+#include <wx/timer.h>
 
 #include "MaterialProject.hpp"
+#include "wxVirtualListCtrl.hpp"
+#include "ListLayout_MaterialsProject.hpp"
 #include "ListDataWrapper.hpp"
 #include "EsiOrderSettings.hpp"
+#include "FormProject.hpp"
+#include "TotalValues.hpp"
 
 namespace EVE::Industry
 {
@@ -45,8 +50,6 @@ namespace EVE::Industry
 
 		void updateList();
 		void refreshList();
-		void updatePrices();
-		void updateImages();
 
 	private:
 		void createControls();
@@ -55,6 +58,7 @@ namespace EVE::Industry
 		void OnAdd(wxCommandEvent& event);
 		void OnDelete(wxCommandEvent& event);
 		void OnDeleteAll(wxCommandEvent& event);
+		void OnUpdateTimer(wxTimerEvent& event);
 
 	private:
 		wxWindow* m_Parent{};
@@ -62,9 +66,8 @@ namespace EVE::Industry
 		wxListCtrl* m_VirtualList{};
 		wxStaticText* m_TotalPriceSell{};
 		wxStaticText* m_TotalPriceBuy{};
-
+		wxTimer m_UpdTimer;
 		ListDataWrapper<MaterialProject>* m_Materials;
-		EsiOrderSettings m_EsiSettings{};
 	};
 
 } // EVE::Industry

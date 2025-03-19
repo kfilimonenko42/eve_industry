@@ -17,10 +17,6 @@
 */
 
 #include "wxPageProductionStages.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_ProductionStages.hpp"
-#include "FormProject.hpp"
-#include "TotalValues.hpp"
 
 constexpr int ID_GET_MATERIALS = 10001;
 constexpr int ID_STATUS_OUTSTANDING = 10002;
@@ -36,24 +32,22 @@ EVE::Industry::wxPageProductionStages::wxPageProductionStages(
 	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_FormProject{ formProject }, m_ProductionStages{ stages }
 {
 	createControls();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &wxPageProductionStages::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::wxPageProductionStages::updateList()
 {
 	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
 	_list->refreshAfterUpdate();
+
 	updateTotalLabels();
 }
 
 void EVE::Industry::wxPageProductionStages::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::wxPageProductionStages::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_ProductionStages->setImages(_list);
 }
 
 void EVE::Industry::wxPageProductionStages::updateTotalLabels()
@@ -86,13 +80,11 @@ void EVE::Industry::wxPageProductionStages::createControls()
 	m_VirtualList = new vListCtrl(
 		mainPanel,
 		std::make_unique<ListLayoutProductionStages>(),
-		&m_ProductionStages->get(),
+		m_ProductionStages,
 		wxDefaultPosition,
 		wxSize(200, 200));
 	m_VirtualList->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &wxPageProductionStages::OnListRightClick, this);
-
-	std::function<void()> updateImageMethod = std::bind(&wxPageProductionStages::updateImages, this);
-	m_ProductionStages->addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxPanel* _panelResults = new wxPanel(mainPanel);
 
@@ -167,4 +159,12 @@ void EVE::Industry::wxPageProductionStages::OnListPopupClick(wxCommandEvent& eve
 		updateTotalLabels();
 		break;
 	}
+}
+
+void EVE::Industry::wxPageProductionStages::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

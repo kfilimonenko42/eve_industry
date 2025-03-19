@@ -25,9 +25,12 @@
 #include <wx/wx.h>
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
+#include <wx/timer.h>
 
 #include "ListDataWrapper.hpp"
 #include "MaterialProject.hpp"
+#include "ListLayout_AvailableMaterials.hpp"
+#include "wxVirtualListCtrl.hpp"
 
 namespace EVE::Industry
 {
@@ -39,16 +42,17 @@ namespace EVE::Industry
 
 		void updateList();
 		void refreshList();
-		void updateImages();
 
 	private:
 		void createControls();
 
 		void OnCopyName(wxCommandEvent& event);
 		void OnCopyQuantity(wxCommandEvent& event);
+		void OnUpdateTimer(wxTimerEvent& event);
 
 	private:
 		wxListCtrl* m_VirtualList{};
+		wxTimer m_UpdTimer;
 		ListDataWrapper<MaterialProject> m_Materials;
 	};
 

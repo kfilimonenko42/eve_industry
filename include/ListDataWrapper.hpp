@@ -29,8 +29,8 @@
 #include <map>
 #include <wx/wx.h>
 
-#include "IListInfoUpdater.hpp"
-#include "EsiOrderSettings.hpp"
+#include "AppraisalContainer.hpp"
+#include "BitmapContainer.hpp"
 
 namespace EVE::Industry
 {
@@ -40,37 +40,37 @@ namespace EVE::Industry
 	{
 	public:
 		ListDataWrapper() = default;
-		~ListDataWrapper();
+
+		T& operator[](std::size_t index);
+		const T& operator[](std::size_t index) const;
 
 		std::vector<T>& get();
 		const std::vector<T>& get() const;
+		std::vector<std::uint32_t> ids() const;
 		std::vector<T> copy() const;
 		void clear();
 		std::size_t size() const;
 		bool empty() const;
 		void erase(const std::size_t index);
 		void update(std::vector<T>&& src);
-		void addUpdater(std::unique_ptr<IListInfoUpdater> updater);
-
-		void setPrices();
-		void setImages(auto vCtrlList);
-		void setEsiSettings(const EsiOrderSettings& esiSettings);
-
-	private:
-		void stopUpdaters();
-		void startUpdaters(const std::vector<std::uint32_t>& ids);
+		void sendUpdatePrices(int owner_id) const;
+		void sendUpdateImages(int owner_id) const;
 
 	private:
 		std::vector<T> m_Data;
 		std::mutex m_Mutex;
-		std::vector<std::unique_ptr<IListInfoUpdater>> m_Updaters;
-		EsiOrderSettings m_EsiSettings{};
 	};
 
 	template<typename T>
-	inline ListDataWrapper<T>::~ListDataWrapper()
+	inline T& ListDataWrapper<T>::operator[](std::size_t index)
 	{
-		m_Updaters.clear();
+		return m_Data[index];
+	}
+
+	template<typename T>
+	inline const T& ListDataWrapper<T>::operator[](std::size_t index) const
+	{
+		return m_Data[index];
 	}
 
 	template<typename T>
@@ -83,6 +83,19 @@ namespace EVE::Industry
 	inline const std::vector<T>& ListDataWrapper<T>::get() const
 	{
 		return m_Data;
+	}
+
+	template<typename T>
+	inline std::vector<std::uint32_t> ListDataWrapper<T>::ids() const
+	{
+		std::vector<std::uint32_t> result;
+
+		for (const auto& elem : m_Data)
+		{
+			result.push_back(elem.id());
+		}
+
+		return result;
 	}
 
 	template<typename T>
@@ -120,95 +133,45 @@ namespace EVE::Industry
 	template<typename T>
 	inline void ListDataWrapper<T>::update(std::vector<T>&& src)
 	{
-		stopUpdaters();
-
 		{
 			m_Data.clear();
 		}
-
-		std::vector<std::uint32_t> ids;
-
 		{
 			std::scoped_lock sl(m_Mutex);
 			m_Data = std::move(src);
-
-			for (const auto& elem : m_Data)
-			{
-				ids.push_back(elem.id());
-			}
 		}
-
-		startUpdaters(ids);
 	}
 
 	template<typename T>
-	inline void ListDataWrapper<T>::addUpdater(std::unique_ptr<IListInfoUpdater> updater)
+	inline void ListDataWrapper<T>::sendUpdatePrices(int owner_id) const
 	{
-		if (updater)
+		if (m_Data.empty())
 		{
-			m_Updaters.push_back(std::move(updater));
+			return;
 		}
-	}
 
-	template<typename T>
-	inline void ListDataWrapper<T>::setPrices()
-	{
-		AppraisalContainer& container = AppraisalContainer::Instance();
-
-		std::scoped_lock sl(m_Mutex);
-		for (auto& elem : m_Data)
+		auto& container = AppraisalContainer::Instance();
+		for (const auto& elem : m_Data)
 		{
-			if (container.hasPrice(elem.id(), m_EsiSettings))
-			{
-				const auto& price = container.getPrice(elem.id(), m_EsiSettings);
-				elem.m_Type.setPriceSell(price.m_PriceSell);
-				elem.m_Type.setPriceBuy(price.m_PriceBuy);
-			}
+			container.addInQueueIfNeed(UpdatePriceRecord{ owner_id, elem.id(), elem.m_EsiSettings });
 		}
 	}
 
 	template<typename T>
-	inline void ListDataWrapper<T>::setImages(auto vCtrlList)
+	inline void ListDataWrapper<T>::sendUpdateImages(int owner_id) const
 	{
-		BitmapContainer& container = BitmapContainer::Instance();
-
-		wxVector<wxBitmapBundle> m_vIcons;
-		std::map<std::uint32_t, std::size_t> m_vIdsIcons;
-
-		std::scoped_lock sl(m_Mutex);
-		for (auto& elem : m_Data)
+		if (m_Data.empty())
 		{
-			if (container.has16(elem.id()))
-			{
-				container.get16(elem.id(), m_vIcons, m_vIdsIcons);
-			}
+			return;
 		}
 
-		vCtrlList->updateImages(m_vIcons, m_vIdsIcons);
-	}
-
-	template<typename T>
-	inline void ListDataWrapper<T>::setEsiSettings(const EsiOrderSettings& esiSettings)
-	{
-		m_EsiSettings = esiSettings;
-	}
-
-	template<typename T>
-	inline void ListDataWrapper<T>::stopUpdaters()
-	{
-		for (size_t index = 0; index < m_Updaters.size(); ++index)
+		auto& container = BitmapContainer::Instance();
+		for (const auto& elem : m_Data)
 		{
-			m_Updaters[index]->stop();
+			container.addInQueueIfNeed(UpdateBitmapRecord{ owner_id, elem.id(), BitmapSize::x16 });
 		}
-	}
 
-	template<typename T>
-	inline void ListDataWrapper<T>::startUpdaters(const std::vector<std::uint32_t>& ids)
-	{
-		for (size_t index = 0; index < m_Updaters.size(); ++index)
-		{
-			m_Updaters[index]->start(ids);
-		}
+		container.setLastUpdateNow(owner_id);
 	}
 
 } // EVE::Industry

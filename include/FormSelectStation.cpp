@@ -97,8 +97,11 @@ void EVE::Industry::FormSelectStation::createControls()
 void EVE::Industry::FormSelectStation::updateStationsList()
 {
 	const std::string txtFilter = tolower(m_txtFilter->GetValue().ToStdString());
+
+	std::vector<StationRecord> _list = m_StationsList.copy();
 	FilterLeftStations filter{ m_RegionID, m_SolarSystemID, true };
-	filter(m_StationsList, txtFilter);
+	filter(_list, txtFilter);
+	m_StationsList.update(std::move(_list));
 	updateList();
 }
 

@@ -28,9 +28,20 @@
 #include <wx/listctrl.h>
 #include <wx/spinctrl.h>
 #include <wx/choice.h>
+#include <wx/timer.h>
 
 #include "BlueprintProject.hpp"
 #include "ListDataWrapper.hpp"
+#include "wxVirtualListCtrl.hpp"
+#include "ListLayout_BlueprintsProject.hpp"
+#include "FormProject.hpp"
+#include "Assets.hpp"
+#include "StringTools.hpp"
+#include "FormSelectSolarSystem.hpp"
+#include "FormSelectBlueprintME.hpp"
+#include "FormSelectStructME.hpp"
+#include "FormSelectRigME.hpp"
+#include "FormSelectMaxRuns.hpp"
 
 namespace EVE::Industry
 {
@@ -48,11 +59,11 @@ namespace EVE::Industry
 
 		void updateList();
 		void refreshList();
-		void updateImages();
 
 	private:
 		void createControls();
 
+		void OnUpdateTimer(wxTimerEvent& event);
 		void OnCalculateProject(wxCommandEvent& event);
 		void OnListRightClick(wxListEvent& event);
 		void OnListPopupClick(wxCommandEvent& event);
@@ -61,7 +72,7 @@ namespace EVE::Industry
 		wxWindow* m_Parent{};
 		wxWindow* m_FormProject{};
 		wxListCtrl* m_VirtualList{};
-
+		wxTimer m_UpdTimer;
 		ListDataWrapper<BlueprintProject>* m_Blueprints;
 	};
 

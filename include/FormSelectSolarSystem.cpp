@@ -94,8 +94,11 @@ void EVE::Industry::FormSelectSolarSystem::createControls()
 void EVE::Industry::FormSelectSolarSystem::updateSolarSystemList()
 {
 	const std::string txtFilter = tolower(m_txtFilter->GetValue().ToStdString());
+
+	std::vector<SolarSystemRecord> _list = m_SolarSystemsList.copy();
 	FilterLeftSolarSystems filter{ m_RegionID, true };
-	filter(m_SolarSystemsList, txtFilter);
+	filter(_list, txtFilter);
+	m_SolarSystemsList.update(std::move(_list));
 	updateList();
 }
 

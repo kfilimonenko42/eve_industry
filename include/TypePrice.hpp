@@ -22,14 +22,14 @@
 #include <cstdint>
 #include <chrono>
 
+#include "ChronoTools.hpp"
+
 namespace EVE::Industry
 {
 
 	class TypePrice
 	{
 	public:
-		using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
-
 		explicit TypePrice() = default;
 		TypePrice(double sell, double buy);
 

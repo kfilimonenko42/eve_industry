@@ -17,9 +17,6 @@
 */
 
 #include "wxPageAvailableMaterials.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_AvailableMaterials.hpp"
-#include "FormProject.hpp"
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::MaterialProject>;
 
@@ -30,6 +27,9 @@ EVE::Industry::wxPageAvailableMaterials::wxPageAvailableMaterials(
 	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_FormProject{ formProject }, m_Materials{ materials }
 {
 	createControls();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &wxPageAvailableMaterials::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::wxPageAvailableMaterials::updateList()
@@ -41,12 +41,6 @@ void EVE::Industry::wxPageAvailableMaterials::updateList()
 void EVE::Industry::wxPageAvailableMaterials::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::wxPageAvailableMaterials::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_Materials->setImages(_list);
 }
 
 void EVE::Industry::wxPageAvailableMaterials::createControls()
@@ -70,12 +64,10 @@ void EVE::Industry::wxPageAvailableMaterials::createControls()
 	m_VirtualList = new vListCtrl(
 		mainPanel,
 		std::make_unique<ListLayoutAvailableMaterials>(),
-		&m_Materials->get(),
+		m_Materials,
 		wxDefaultPosition,
 		wxSize(200, 200));
-
-	std::function<void()> updateImageMethod = std::bind(&wxPageAvailableMaterials::updateImages, this);
-	m_Materials->addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxBoxSizer* panel_sizer = new wxBoxSizer(wxVERTICAL);
 	panel_sizer->Add(btn_sizer, 0, wxLEFT | wxTOP, 5);
@@ -101,4 +93,12 @@ void EVE::Industry::wxPageAvailableMaterials::OnDelete(wxCommandEvent& event)
 void EVE::Industry::wxPageAvailableMaterials::OnDeleteAll(wxCommandEvent& event)
 {
 	dynamic_cast<FormProject*>(m_FormProject)->deleteAllAvailableTypes();
+}
+
+void EVE::Industry::wxPageAvailableMaterials::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

@@ -17,16 +17,6 @@
 */
 
 #include "wxPageBlueprintsProject.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_BlueprintsProject.hpp"
-#include "FormProject.hpp"
-#include "Assets.hpp"
-#include "StringTools.hpp"
-#include "FormSelectSolarSystem.hpp"
-#include "FormSelectBlueprintME.hpp"
-#include "FormSelectStructME.hpp"
-#include "FormSelectRigME.hpp"
-#include "FormSelectMaxRuns.hpp"
 
 constexpr int ID_STATUS_SETSOLARSYSTEM = 10001;
 constexpr int ID_STATUS_SETBLUEPRINTME = 10002;
@@ -43,6 +33,9 @@ EVE::Industry::wxPageBlueprintsProject::wxPageBlueprintsProject(
 	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_FormProject{ formProject }, m_Blueprints{ materials }
 {
 	createControls();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &wxPageBlueprintsProject::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::wxPageBlueprintsProject::updateList()
@@ -54,12 +47,6 @@ void EVE::Industry::wxPageBlueprintsProject::updateList()
 void EVE::Industry::wxPageBlueprintsProject::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::wxPageBlueprintsProject::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_Blueprints->setImages(_list);
 }
 
 void EVE::Industry::wxPageBlueprintsProject::createControls()
@@ -78,13 +65,11 @@ void EVE::Industry::wxPageBlueprintsProject::createControls()
 	m_VirtualList = new vListCtrl(
 		mainPanel,
 		std::make_unique<ListLayoutBlueprintsProject>(),
-		&m_Blueprints->get(),
+		m_Blueprints,
 		wxDefaultPosition,
 		wxSize(200, 200));
 	m_VirtualList->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &wxPageBlueprintsProject::OnListRightClick, this);
-
-	std::function<void()> updateImageMethod = std::bind(&wxPageBlueprintsProject::updateImages, this);
-	m_Blueprints->addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxBoxSizer* panel_sizer = new wxBoxSizer(wxVERTICAL);
 	panel_sizer->Add(btnPanelLine1, 0, wxLEFT | wxTOP, 5);
@@ -180,4 +165,12 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 		break;
 	}
 	}
+}
+
+void EVE::Industry::wxPageBlueprintsProject::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

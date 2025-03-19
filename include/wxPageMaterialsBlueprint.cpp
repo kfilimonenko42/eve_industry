@@ -17,9 +17,6 @@
 */
 
 #include "wxPageMaterialsBlueprint.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_MaterialsBlueprint.hpp"
-#include "FormProject.hpp"
 
 constexpr int ID_ADD_STOCK = 10001;
 
@@ -29,6 +26,9 @@ EVE::Industry::wxPageMaterialsBlueprint::wxPageMaterialsBlueprint(wxWindow* pare
 	: wxWindow(parent, wxID_ANY), m_Parent{ parent }, m_FormProject{ formProject }, m_Materials{ materials }
 {
 	createControls();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &wxPageMaterialsBlueprint::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::wxPageMaterialsBlueprint::updateList()
@@ -40,18 +40,6 @@ void EVE::Industry::wxPageMaterialsBlueprint::updateList()
 void EVE::Industry::wxPageMaterialsBlueprint::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::wxPageMaterialsBlueprint::updatePrices()
-{
-	m_Materials->setPrices();
-	refreshList();
-}
-
-void EVE::Industry::wxPageMaterialsBlueprint::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_Materials->setImages(_list);
 }
 
 void EVE::Industry::wxPageMaterialsBlueprint::createControls()
@@ -78,17 +66,12 @@ void EVE::Industry::wxPageMaterialsBlueprint::createControls()
 	m_VirtualList = new vListCtrl(
 		mainPanel,
 		std::make_unique<ListLayoutMaterialsBlueprint>(),
-		&m_Materials->get(),
+		m_Materials,
 		wxDefaultPosition,
 		wxSize(200, 200));
 	m_VirtualList->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &wxPageMaterialsBlueprint::OnListRightClick, this);
-
-	std::function<void()> updatePricesMethod = std::bind(&wxPageMaterialsBlueprint::updatePrices, this);
-	std::function<void()> updateImageMethod = std::bind(&wxPageMaterialsBlueprint::updateImages, this);
-
-	m_Materials->addUpdater(std::make_unique<PriceUpdater>(updatePricesMethod, m_EsiSettings));
-	m_Materials->addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
-	m_Materials->setEsiSettings(m_EsiSettings);
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsPrices(true);
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxBoxSizer* mainPanelSizer = new wxBoxSizer(wxVERTICAL);
 	mainPanelSizer->Add(_btnPanel1, 0, wxLEFT | wxTOP, 5);
@@ -139,4 +122,12 @@ void EVE::Industry::wxPageMaterialsBlueprint::OnListPopupClick(wxCommandEvent& e
 		dynamic_cast<FormProject*>(m_FormProject)->addStockFromBpMaterials(sLines);
 		break;
 	}
+}
+
+void EVE::Industry::wxPageMaterialsBlueprint::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

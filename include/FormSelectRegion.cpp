@@ -94,8 +94,11 @@ void EVE::Industry::FormSelectRegion::createControls()
 void EVE::Industry::FormSelectRegion::updateRegionList()
 {
 	const std::string txtFilter = tolower(m_txtFilter->GetValue().ToStdString());
+
+	std::vector<BaseRecord> _list = m_RegionsList.copy();
 	FilterLeftRegions filter{ true };
-	filter(m_RegionsList, txtFilter);
+	filter(_list, txtFilter);
+	m_RegionsList.update(std::move(_list));
 	updateList();
 }
 

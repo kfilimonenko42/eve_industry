@@ -27,10 +27,22 @@
 #include <wx/wx.h>
 #include <wx/splitter.h>
 #include <wx/listctrl.h>
+#include <wx/timer.h>
 
 #include "MaterialAppraisal.hpp"
 #include "ListDataWrapper.hpp"
-#include "EsiOrderSettings.hpp"
+#include "wxVirtualListCtrl.hpp"
+#include "ListLayout_MaterialsAppraisal.hpp"
+#include "AppraisalContainer.hpp"
+#include "BitmapContainer.hpp"
+#include "WxTextToVectorStr.hpp"
+#include "VectorStrToTypeIndustry.hpp"
+#include "TotalValues.hpp"
+#include "StringTools.hpp"
+#include "RegionPanel.hpp"
+#include "SolarSystemPanel.hpp"
+#include "StationPanel.hpp"
+#include "ChronoTools.hpp"
 
 namespace EVE::Industry
 {
@@ -43,14 +55,13 @@ namespace EVE::Industry
 
 		void updateList();
 		void refreshList();
-		void updatePrices();
-		void updateImages();
 
 	private:
 		void createControls();
 		void updateTotalLabels();
 		void OnSubmit(wxCommandEvent& event);
 		void OnClear(wxCommandEvent& event);
+		void OnUpdateTimer(wxTimerEvent& event);
 
 	private:
 		wxTextCtrl* m_TypesText{};
@@ -60,8 +71,8 @@ namespace EVE::Industry
 		wxPanel* m_RegionPanel;
 		wxPanel* m_SolarSystemPanel;
 		wxPanel* m_StationPanel;
+		wxTimer m_UpdTimer;
 		ListDataWrapper<MaterialAppraisal> m_Materials;
-		EsiOrderSettings m_EsiSettings{};
 	};
 
 } // namespace EVE::Industry

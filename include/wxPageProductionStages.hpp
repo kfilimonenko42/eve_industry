@@ -27,9 +27,14 @@
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
+#include <wx/timer.h>
 
 #include "ProductionStage.hpp"
+#include "wxVirtualListCtrl.hpp"
+#include "ListLayout_ProductionStages.hpp"
 #include "ListDataWrapper.hpp"
+#include "FormProject.hpp"
+#include "TotalValues.hpp"
 
 namespace EVE::Industry
 {
@@ -47,7 +52,6 @@ namespace EVE::Industry
 
 		void updateList();
 		void refreshList();
-		void updateImages();
 
 	private:
 		void createControls();
@@ -57,13 +61,14 @@ namespace EVE::Industry
 		void OnCopyRuns(wxCommandEvent& event);
 		void OnListRightClick(wxListEvent& event);
 		void OnListPopupClick(wxCommandEvent& event);
+		void OnUpdateTimer(wxTimerEvent& event);
 
 	private:
 		wxWindow* m_Parent{};
 		wxWindow* m_FormProject{};
 		wxListCtrl* m_VirtualList{};
 		wxStaticText* m_TotalStatuses{};
-
+		wxTimer m_UpdTimer;
 		ListDataWrapper<ProductionStage>* m_ProductionStages;
 	};
 

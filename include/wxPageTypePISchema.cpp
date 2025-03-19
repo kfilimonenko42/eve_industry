@@ -17,8 +17,6 @@
 */
 
 #include "wxPageTypePISchema.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_TypeManufacturing.hpp"
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::TypeManufacturing>;
 
@@ -29,6 +27,9 @@ EVE::Industry::wxPageTypePISchema::wxPageTypePISchema(const TypeRecord& type, wx
 
 	createControls();
 	updateManufacturingMaterials();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &wxPageTypePISchema::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::wxPageTypePISchema::updateList()
@@ -40,12 +41,6 @@ void EVE::Industry::wxPageTypePISchema::updateList()
 void EVE::Industry::wxPageTypePISchema::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::wxPageTypePISchema::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_ManufacturingMaterials.setImages(_list);
 }
 
 void EVE::Industry::wxPageTypePISchema::updateManufacturingMaterials()
@@ -71,12 +66,10 @@ void EVE::Industry::wxPageTypePISchema::createControls()
 	m_VirtualList = new vListCtrl(
 		m_MainPanel,
 		std::make_unique<ListLayoutTypeManufacturing>(),
-		&m_ManufacturingMaterials.get(),
+		&m_ManufacturingMaterials,
 		wxDefaultPosition,
 		wxSize(200, 200));
-
-	std::function<void()> updateImageMethod = std::bind(&wxPageTypePISchema::updateImages, this);
-	m_ManufacturingMaterials.addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxBoxSizer* panel_sizer = new wxBoxSizer(wxVERTICAL);
 	panel_sizer->Add(m_VirtualList, 1, wxEXPAND);
@@ -85,4 +78,12 @@ void EVE::Industry::wxPageTypePISchema::createControls()
 	wxBoxSizer* page_sizer = new wxBoxSizer(wxVERTICAL);
 	page_sizer->Add(m_MainPanel, 1, wxEXPAND);
 	m_MainPanel->GetParent()->SetSizer(page_sizer);
+}
+
+void EVE::Industry::wxPageTypePISchema::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

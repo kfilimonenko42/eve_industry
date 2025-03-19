@@ -17,15 +17,6 @@
 */
 
 #include "FormAppraisal.hpp"
-#include "WxTextToVectorStr.hpp"
-#include "VectorStrToTypeIndustry.hpp"
-#include "wxVirtualListCtrl.hpp"
-#include "ListLayout_MaterialsAppraisal.hpp"
-#include "TotalValues.hpp"
-#include "StringTools.hpp"
-#include "RegionPanel.hpp"
-#include "SolarSystemPanel.hpp"
-#include "StationPanel.hpp"
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::MaterialAppraisal>;
 
@@ -33,30 +24,22 @@ EVE::Industry::FormAppraisal::FormAppraisal(wxWindow* parent)
 	: wxWindow(parent, wxID_ANY)
 {
 	createControls();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &FormAppraisal::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::FormAppraisal::updateList()
 {
 	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
 	_list->refreshAfterUpdate();
+
+	updateTotalLabels();
 }
 
 void EVE::Industry::FormAppraisal::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::FormAppraisal::updatePrices()
-{
-	m_Materials.setPrices();
-	refreshList();
-	updateTotalLabels();
-}
-
-void EVE::Industry::FormAppraisal::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_Materials.setImages(_list);
 }
 
 void EVE::Industry::FormAppraisal::createControls()
@@ -101,15 +84,11 @@ void EVE::Industry::FormAppraisal::createControls()
 	m_VirtualList = new vListCtrl(
 		m_rightPanel,
 		std::make_unique<ListLayoutMaterialsAppraisal>(),
-		&m_Materials.get(),
+		&m_Materials,
 		wxDefaultPosition,
 		wxSize(200, 200));
-
-	std::function<void()> updatePricesMethod = std::bind(&FormAppraisal::updatePrices, this);
-	std::function<void()> updateImageMethod = std::bind(&FormAppraisal::updateImages, this);
-
-	m_Materials.addUpdater(std::make_unique<PriceUpdater>(updatePricesMethod, m_EsiSettings));
-	m_Materials.addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsPrices(true);
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxPanel* _panelResults = new wxPanel(m_rightPanel);
 
@@ -154,16 +133,17 @@ void EVE::Industry::FormAppraisal::OnSubmit(wxCommandEvent& event)
 	const BaseRecord& region = dynamic_cast<RegionPanel*>(m_RegionPanel)->get();
 	const BaseRecord& solSystem = dynamic_cast<SolarSystemPanel*>(m_SolarSystemPanel)->get();
 	const BaseRecord& station = dynamic_cast<StationPanel*>(m_StationPanel)->get();
-
+	
 	if (region.id() == 0)
 	{
 		wxMessageBox("set 'region'");
 		return;
 	}
 
-	m_EsiSettings.m_RegionID = region.id();
-	m_EsiSettings.m_SolarSystemID = solSystem.id();
-	m_EsiSettings.m_StationID = station.id();
+	EsiOrderSettings esiSettings{};
+	esiSettings.m_RegionID = region.id();
+	esiSettings.m_SolarSystemID = solSystem.id();
+	esiSettings.m_StationID = station.id();
 
 	std::vector<std::string> _str_types;
 	std::vector<MaterialProject> _types;
@@ -177,9 +157,8 @@ void EVE::Industry::FormAppraisal::OnSubmit(wxCommandEvent& event)
 	std::vector<MaterialAppraisal> _tmp;
 	for (auto& element : _types)
 	{
-		_tmp.emplace_back(std::forward<TypeRecord>(element.m_Type), element.m_Type.getQuantity());
+		_tmp.emplace_back(element.m_Type, esiSettings);
 	}
-	m_Materials.setEsiSettings(m_EsiSettings);
 	m_Materials.update(std::move(_tmp));
 
 	this->updateList();
@@ -188,4 +167,16 @@ void EVE::Industry::FormAppraisal::OnSubmit(wxCommandEvent& event)
 void EVE::Industry::FormAppraisal::OnClear(wxCommandEvent& event)
 {
 	m_TypesText->Clear();
+}
+
+void EVE::Industry::FormAppraisal::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	if (priceUpdOwner(_list->GetId(), _list->LastRefreshPrice()))
+	{
+		updateTotalLabels();
+	}
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }

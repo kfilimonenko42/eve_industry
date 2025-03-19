@@ -32,7 +32,6 @@
 #include <wx/event.h>
 
 #include "IndustryProject.hpp"
-#include "wxPageAvailableMaterials.hpp"
 #include "SolarSystemRecord.hpp"
 
 namespace EVE::Industry
@@ -88,7 +87,7 @@ namespace EVE::Industry
 		wxWindow* m_PageMaterialsBase{};
 		wxWindow* m_PageMaterialsBlueprint{};
 		wxWindow* m_PageProductionStages{};
-		wxPageAvailableMaterials* m_PageAvailableMaterials{};
+		wxWindow* m_PageAvailableMaterials{};
 		std::function<void()> m_fUpdNamePage;
 	};
 

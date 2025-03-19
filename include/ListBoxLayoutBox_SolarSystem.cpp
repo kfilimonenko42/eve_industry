@@ -31,7 +31,7 @@ void EVE::Industry::ListLayoutBoxSolarSystemRecord::createColumns(wxListCtrl* li
 	list->SetColumnWidth(0, 350);
 }
 
-std::string EVE::Industry::ListLayoutBoxSolarSystemRecord::getItemText(void* container, const long index, const long column)
+std::string EVE::Industry::ListLayoutBoxSolarSystemRecord::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<SolarSystemRecord>*>(container);
 	const auto& item = list[index];

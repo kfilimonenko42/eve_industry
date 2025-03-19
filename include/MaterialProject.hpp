@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include "TypeRecord.hpp"
+#include "EsiOrderSettings.hpp"
 
 namespace EVE::Industry
 {
@@ -41,6 +42,7 @@ namespace EVE::Industry
 		void add(const std::uint64_t q_add);
 
 		TypeRecord m_Type;
+		EsiOrderSettings m_EsiSettings;
 	};
 
 	struct MaterialProjectSortByGroupTypeIds

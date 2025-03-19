@@ -22,6 +22,7 @@
 #include "wxPageMaterialsBase.hpp"
 #include "wxPageMaterialsBlueprint.hpp"
 #include "wxPageProductionStages.hpp"
+#include "wxPageAvailableMaterials.hpp"
 #include "IndustryProject_utility.hpp"
 
 EVE::Industry::FormProject::FormProject(wxWindow* parent)

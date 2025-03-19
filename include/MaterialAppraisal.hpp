@@ -22,19 +22,30 @@
 #include <cstdint>
 
 #include "TypeRecord.hpp"
+#include "EsiOrderSettings.hpp"
 
 namespace EVE::Industry
 {
 
 	struct MaterialAppraisal
 	{
-		MaterialAppraisal(const TypeRecord& type, const std::uint64_t quantity);
-		MaterialAppraisal(TypeRecord&& type, const std::uint64_t quantity);
+		template<typename T>
+		MaterialAppraisal(T&& type, const EsiOrderSettings& esiSettings);
 
-		std::uint32_t id() const;
+		inline std::uint32_t id() const
+		{
+			return m_Type.id();
+		}
 
 		TypeRecord m_Type;
+		EsiOrderSettings m_EsiSettings;
 	};
+
+	template<typename T>
+	inline MaterialAppraisal::MaterialAppraisal(T&& type, const EsiOrderSettings& esiSettings)
+		: m_Type{ std::forward<T>(type) }, m_EsiSettings{ esiSettings }
+	{
+	}
 
 } // EVE::Industry
 

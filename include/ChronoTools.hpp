@@ -16,21 +16,11 @@
 	along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "MaterialAppraisal.hpp"
+#ifndef _CHRONOTOOLS_HPP_
+#define _CHRONOTOOLS_HPP_
 
-EVE::Industry::MaterialAppraisal::MaterialAppraisal(const TypeRecord& type, const std::uint64_t quantity)
-	: m_Type{ type }
-{
-	m_Type.setQuantity(quantity);
-}
+#include <chrono>
 
-EVE::Industry::MaterialAppraisal::MaterialAppraisal(TypeRecord&& type, const std::uint64_t quantity)
-	: m_Type{ std::move(type) }
-{
-	m_Type.setQuantity(quantity);
-}
+using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
-std::uint32_t EVE::Industry::MaterialAppraisal::id() const
-{
-	return m_Type.id();
-}
+#endif // _CHRONOTOOLS_HPP_

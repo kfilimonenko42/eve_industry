@@ -23,6 +23,12 @@
 #include "JsonAssetsLoader.hpp"
 #include "JsonHelper.hpp"
 
+bool EVE::Industry::thread_price_check(const UpdatePriceRecord& updRecord)
+{
+	AppraisalContainer& container = AppraisalContainer::Instance();
+	return container.check(updRecord);
+}
+
 EVE::Industry::AppraisalContainer& EVE::Industry::AppraisalContainer::Instance()
 {
 	static AppraisalContainer instance{};
@@ -31,100 +37,115 @@ EVE::Industry::AppraisalContainer& EVE::Industry::AppraisalContainer::Instance()
 
 void EVE::Industry::AppraisalContainer::clear()
 {
-	std::scoped_lock sl(m_Mutex);
-
 	m_Container.clear();
 }
 
-bool EVE::Industry::AppraisalContainer::needUpdate(const std::uint32_t id, const EsiOrderSettings& esiSettings) const
+void EVE::Industry::AppraisalContainer::addInQueueIfNeed(const UpdatePriceRecord& updRecord)
 {
-	const std::uint32_t areaID = esiSettings.saveID();
+	if (needUpdate(updRecord))
+	{
+		if (!inQueue(updRecord))
+		{
+			addInQueue(updRecord);
+			m_UpdThread.push(updRecord);
+		}
+	}
+}
+
+EVE::Industry::TypePrice EVE::Industry::AppraisalContainer::getPriceNoUpdate(const UpdatePriceRecord& updRecord)
+{
+	if (hasPrice(updRecord))
+	{
+		const std::uint32_t areaID = updRecord.m_EsiSettings.saveID();
+		const std::uint32_t typeID = updRecord.m_TypeId;
+
+		return m_Container.at(areaID).at(typeID);
+	}
+
+	return TypePrice{};
+}
+
+bool EVE::Industry::AppraisalContainer::check(const UpdatePriceRecord& updRecord)
+{
+	if (needUpdate(updRecord))
+	{
+		return do_check(updRecord);
+	}
+	return false;
+}
+
+time_point EVE::Industry::AppraisalContainer::lastUpdate(int owner_id)
+{
+	return m_UpdThread.lastUpdate(owner_id);
+}
+
+bool EVE::Industry::AppraisalContainer::hasPrice(const UpdatePriceRecord& updRecord) const
+{
+	return !needUpdate(updRecord);
+}
+
+bool EVE::Industry::AppraisalContainer::needUpdate(const UpdatePriceRecord& updRecord) const
+{
+	const std::uint32_t areaID = updRecord.m_EsiSettings.saveID();
 
 	if (!m_Container.contains(areaID))
 	{
 		return true;
 	}
 
-	return !m_Container.at(areaID).contains(id);
+	const std::uint32_t typeID = updRecord.m_TypeId;
+	return !m_Container.at(areaID).contains(typeID);
 }
 
-bool EVE::Industry::AppraisalContainer::hasPrice(const std::uint32_t id, const EsiOrderSettings& esiSettings) const
+bool EVE::Industry::AppraisalContainer::do_check(const UpdatePriceRecord& updRecord)
 {
-	const std::uint32_t areaID = esiSettings.saveID();
+	EsiPrice priceChecker(updRecord.m_TypeId, updRecord.m_EsiSettings);
 
-	if (!m_Container.contains(areaID))
+	try
 	{
+		const auto priceInfo = priceChecker.get();
+		const bool isSuccess = std::get<0>(priceInfo);
+		if (isSuccess)
+		{
+			storePrice(updRecord, std::get<1>(priceInfo), std::get<2>(priceInfo));
+		}
+		return isSuccess;
+	}
+	catch (const std::runtime_error& er)
+	{
+		Log::LOG_ERROR(std::format("update price for type: {} ({})", updRecord.m_TypeId, er.what()));
 		return false;
 	}
-
-	return m_Container.at(areaID).contains(id);
 }
 
 void EVE::Industry::AppraisalContainer::storePrice(
-	const std::uint32_t id,
+	const UpdatePriceRecord& updRecord,
 	const double sellPrice,
-	const double buyPrice,
-	const EsiOrderSettings& esiSettings)
+	const double buyPrice)
 {
-	if (id == 0)
+	const std::uint32_t areaID = updRecord.m_EsiSettings.saveID();
+	const std::uint32_t typeID = updRecord.m_TypeId;
+
+	if (typeID == 0)
 	{
 		return;
 	}
 
-	std::scoped_lock sl(m_Mutex);
-
-	const std::uint32_t areaID = esiSettings.saveID();
-	m_Container[areaID].emplace(id, TypePrice{sellPrice , buyPrice});
+	m_Container[areaID].emplace(typeID, TypePrice{ sellPrice , buyPrice });
 }
 
-EVE::Industry::TypePrice EVE::Industry::AppraisalContainer::getPrice(const std::uint32_t id, const EsiOrderSettings& esiSettings) const
+bool EVE::Industry::AppraisalContainer::inQueue(const UpdatePriceRecord& updRecord) const
 {
-	const std::uint32_t areaID = esiSettings.saveID();
+	const std::uint32_t areaID = updRecord.m_EsiSettings.saveID();
+	const std::uint32_t typeID = updRecord.m_TypeId;
 
-	if (m_Container.contains(areaID))
-	{
-		if (m_Container.at(areaID).contains(id))
-		{
-			return m_Container.at(areaID).at(id);
-		}
-	}
-
-	return TypePrice{};
+	return m_InQueue.contains(areaID) && m_InQueue.at(areaID).contains(typeID);
 }
 
-bool EVE::Industry::AppraisalContainer::push(const std::uint32_t id, const EsiOrderSettings& esiSettings)
+void EVE::Industry::AppraisalContainer::addInQueue(const UpdatePriceRecord& updRecord)
 {
-	if (id == 0)
-	{
-		return false;
-	}
+	const std::uint32_t areaID = updRecord.m_EsiSettings.saveID();
+	const std::uint32_t typeID = updRecord.m_TypeId;
 
-	return do_check(id, esiSettings);
-}
-
-bool EVE::Industry::AppraisalContainer::do_check(const std::uint32_t id, const EsiOrderSettings& esiSettings)
-{
-	AppraisalContainer& _container = AppraisalContainer::Instance();
-
-	if (_container.needUpdate(id, esiSettings))
-	{
-		EsiPrice priceChecker(id, esiSettings);
-
-		try
-		{
-			const auto priceInfo = priceChecker.get();
-			const bool isSuccess = std::get<0>(priceInfo);
-			if (isSuccess)
-			{
-				_container.storePrice(id, std::get<1>(priceInfo), std::get<2>(priceInfo), esiSettings);
-			}
-		}
-		catch (const std::runtime_error& er)
-		{
-			Log::LOG_ERROR(std::format("update price for type: {} ({})", id, er.what()));
-			return false;
-		}
-	}
-
-	return true;
+	m_InQueue[areaID].emplace(typeID);
 }

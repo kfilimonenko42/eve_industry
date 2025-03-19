@@ -7,6 +7,7 @@ set(LOGGER_src
 )
 
 set(TOOLS_src
+	include/ChronoTools.hpp
 	include/EnumTools.hpp
 	include/JsonHelper.cpp
 	include/JsonHelper.hpp
@@ -155,7 +156,6 @@ set(INDUSTRY_src
 	include/ListOfSolarSystems.hpp
 	include/ListOfStations.cpp
 	include/ListOfStations.hpp
-	include/MaterialAppraisal.cpp
 	include/MaterialAppraisal.hpp
 	include/MaterialBase.cpp
 	include/MaterialBase.hpp
@@ -191,6 +191,7 @@ set(INDUSTRY_src
 	include/TypePrice.hpp
 	include/TypeRecord.cpp
 	include/TypeRecord.hpp
+	include/UpdateContainerThread.hpp
 	include/VectorStrToTypeIndustry.cpp
 	include/VectorStrToTypeIndustry.hpp
 	include/Version.hpp

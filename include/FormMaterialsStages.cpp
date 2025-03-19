@@ -1,6 +1,22 @@
+/*
+	EVE bulk indy
+	Copyright (C) 2025 Kirill Filimonenko
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "FormMaterialsStages.hpp"
-#include "ListLayout_AvailableMaterials.hpp"
-#include "wxVirtualListCtrl.hpp"
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::MaterialProject>;
 
@@ -10,6 +26,9 @@ EVE::Industry::FormMaterialsStages::FormMaterialsStages(std::vector<MaterialProj
 	createControls();
 	m_Materials.update(std::move(materials));
 	updateList();
+
+	m_UpdTimer.Bind(wxEVT_TIMER, &FormMaterialsStages::OnUpdateTimer, this, m_UpdTimer.GetId());
+	m_UpdTimer.Start(1000);
 }
 
 void EVE::Industry::FormMaterialsStages::updateList()
@@ -21,12 +40,6 @@ void EVE::Industry::FormMaterialsStages::updateList()
 void EVE::Industry::FormMaterialsStages::refreshList()
 {
 	m_VirtualList->Refresh();
-}
-
-void EVE::Industry::FormMaterialsStages::updateImages()
-{
-	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
-	m_Materials.setImages(_list);
 }
 
 void EVE::Industry::FormMaterialsStages::createControls()
@@ -49,13 +62,10 @@ void EVE::Industry::FormMaterialsStages::createControls()
 	m_VirtualList = new vListCtrl(
 		mainPanel,
 		std::make_unique<ListLayoutAvailableMaterials>(),
-		&m_Materials.get(),
+		&m_Materials,
 		wxDefaultPosition,
 		wxSize(200, 200));
-
-	std::function<void()> updateImageMethod = std::bind(&FormMaterialsStages::updateImages, this);
-
-	m_Materials.addUpdater(std::make_unique<ImagesUpdater>(updateImageMethod));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
 	wxBoxSizer* mainPanelSizer = new wxBoxSizer(wxVERTICAL);
 	mainPanelSizer->Add(_btnPanel1, 0, wxLEFT | wxTOP, 5);
@@ -75,4 +85,12 @@ void EVE::Industry::FormMaterialsStages::OnCopyName(wxCommandEvent& event)
 void EVE::Industry::FormMaterialsStages::OnCopyQuantity(wxCommandEvent& event)
 {
 	dynamic_cast<vListCtrl*>(m_VirtualList)->copyToClipboardSelected({ 2 });
+}
+
+void EVE::Industry::FormMaterialsStages::OnUpdateTimer(wxTimerEvent& event)
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->OnUpdateTimer(event);
+
+	event.Skip();
 }
