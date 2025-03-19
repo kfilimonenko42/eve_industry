@@ -28,16 +28,6 @@ void EVE::Industry::TradeRecord::setQuantity(const std::uint64_t quantity)
 	this->m_Quantity = quantity;
 }
 
-void EVE::Industry::TradeRecord::setPriceBuy(const double price)
-{
-	this->m_PriceBuy = price;
-}
-
-void EVE::Industry::TradeRecord::setPriceSell(const double price)
-{
-	this->m_PriceSell = price;
-}
-
 void EVE::Industry::TradeRecord::setVolume(const double volume)
 {
 	this->m_Volume = volume;
@@ -51,46 +41,6 @@ std::uint64_t EVE::Industry::TradeRecord::getQuantity() const
 std::string EVE::Industry::TradeRecord::quantityToString() const
 {
 	return std::format(std::locale(""), "{:L}", getQuantity());
-}
-
-double EVE::Industry::TradeRecord::getPriceBuy() const
-{
-	return this->m_PriceBuy;
-}
-
-double EVE::Industry::TradeRecord::getPriceBuyTotal() const
-{
-	return getPriceBuy() * getQuantity();
-}
-
-std::string EVE::Industry::TradeRecord::priceBuyToString() const
-{
-	return std::format(std::locale(""), "{:.2Lf}", getPriceBuy());
-}
-
-std::string EVE::Industry::TradeRecord::priceBuyTotalToString() const
-{
-	return std::format(std::locale(""), "{:.2Lf}", getPriceBuyTotal());
-}
-
-double EVE::Industry::TradeRecord::getPriceSell() const
-{
-	return this->m_PriceSell;
-}
-
-double EVE::Industry::TradeRecord::getPriceSellTotal() const
-{
-	return getPriceSell() * getQuantity();
-}
-
-std::string EVE::Industry::TradeRecord::priceSellToString() const
-{
-	return std::format(std::locale(""), "{:.2Lf}", getPriceSell());
-}
-
-std::string EVE::Industry::TradeRecord::priceSellTotalToString() const
-{
-	return std::format(std::locale(""), "{:.2Lf}", getPriceSellTotal());
 }
 
 double EVE::Industry::TradeRecord::getVolume() const

@@ -31,6 +31,7 @@
 #include <chrono>
 #include <wx/wx.h>
 #include <wx/listctrl.h>
+#include <concepts>
 
 #include "ListDataWrapper.hpp"
 #include "IListCtrlLayout.hpp"

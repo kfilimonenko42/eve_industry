@@ -20,14 +20,6 @@
 #define _EVEASSETS_BLUEPRINTSETTINGS_HPP_
 
 #include <cstdint>
-#include <iostream>
-#include <string>
-#include <format>
-#include <vector>
-#include <compare>
-#include <utility>
-#include <algorithm>
-#include <cmath>
 
 #include "BlueprintMaterialEfficiency.hpp"
 

@@ -35,28 +35,16 @@ namespace EVE::Industry
 		virtual ~TradeRecord() = default;
 
 		void setQuantity(const std::uint64_t quantity);
-		void setPriceBuy(const double price);
-		void setPriceSell(const double price);
 		void setVolume(const double volume);
 
 		std::uint64_t getQuantity() const;
 		std::string quantityToString() const;
-		double getPriceBuy() const;
-		double getPriceBuyTotal() const;
-		std::string priceBuyToString() const;
-		std::string priceBuyTotalToString() const;
-		double getPriceSell() const;
-		double getPriceSellTotal() const;
-		std::string priceSellToString() const;
-		std::string priceSellTotalToString() const;
 		double getVolume() const;
 		double getVolumeTotal() const;
 		std::string volumeTotalToString() const;
 
 	private:
 		std::uint64_t m_Quantity{};
-		double m_PriceBuy{};
-		double m_PriceSell{};
 		double m_Volume{};
 	};
 

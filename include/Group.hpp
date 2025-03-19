@@ -20,10 +20,7 @@
 #define _EVEASSETS_GROUP_HPP_
 
 #include <cstdint>
-#include <iostream>
 #include <string>
-#include <format>
-#include <vector>
 #include <compare>
 
 namespace EVE::Assets

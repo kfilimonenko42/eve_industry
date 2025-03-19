@@ -20,9 +20,7 @@
 #define _EVEASSETS_CONSTELLATION_HPP_
 
 #include <cstdint>
-#include <iostream>
 #include <string>
-#include <format>
 #include <compare>
 
 #include "Point.hpp"

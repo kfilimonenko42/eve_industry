@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <concepts>
 #include <cstdint>
+#include <string>
+#include <format>
 
 #include "IBaseLoaders.hpp"
 

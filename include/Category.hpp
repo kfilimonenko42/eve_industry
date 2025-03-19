@@ -20,11 +20,8 @@
 #define _EVEASSETS_CATEGORY_HPP_
 
 #include <cstdint>
-#include <iostream>
-#include <string>
-#include <format>
-#include <vector>
 #include <compare>
+#include <string>
 
 namespace EVE::Assets
 {

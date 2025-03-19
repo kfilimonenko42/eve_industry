@@ -20,9 +20,7 @@
 #define _EVEASSETS_BLUEPRINTMATERIALEFFICIENCY_HPP_
 
 #include <cstdint>
-#include <iostream>
 #include <string>
-#include <format>
 #include <vector>
 #include <compare>
 #include <utility>

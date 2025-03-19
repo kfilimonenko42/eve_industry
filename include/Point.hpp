@@ -19,9 +19,6 @@
 #ifndef _EVEASSETS_POINT_HPP_
 #define _EVEASSETS_POINT_HPP_
 
-#include <iostream>
-#include <format>
-
 namespace EVE::Assets
 {
 
