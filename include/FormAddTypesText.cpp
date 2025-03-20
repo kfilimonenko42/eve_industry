@@ -19,7 +19,6 @@
 #include "FormAddTypesText.hpp"
 #include "WxTextToVectorStr.hpp"
 #include "Assets.hpp"
-#include "wxSettings.hpp"
 
 EVE::Industry::FormAddTypesText::FormAddTypesText(wxWindow* parent, const std::string& title)
 	: wxDialog(parent, wxID_ANY, title)

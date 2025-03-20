@@ -34,7 +34,7 @@ EVE::Industry::EsiPrice::SellBuy EVE::Industry::EsiPrice::get()
 		return std::make_tuple( false, 0.0, 0.0 );
 	}
 	
-	EVE::Assets::OrderContainer orders;
+	EVE::Assets::OrdersContainer orders;
 	orders.load(std::make_unique<EVE::Assets::JsonLoader>(std::move(response.m_Result)));
 	if (orders.empty())
 	{
@@ -47,7 +47,7 @@ EVE::Industry::EsiPrice::SellBuy EVE::Industry::EsiPrice::get()
 		getBuyPrice(orders));
 }
 
-double EVE::Industry::EsiPrice::getSellPrice(OrderContainer& orders) const
+double EVE::Industry::EsiPrice::getSellPrice(OrdersContainer& orders) const
 {
 	auto filterSellOrders = std::views::filter(
 		[esi = m_EsiSettings](const Order& order)
@@ -81,7 +81,7 @@ double EVE::Industry::EsiPrice::getSellPrice(OrderContainer& orders) const
 	return min.m_Price;
 }
 
-double EVE::Industry::EsiPrice::getBuyPrice(OrderContainer& orders) const
+double EVE::Industry::EsiPrice::getBuyPrice(OrdersContainer& orders) const
 {
 	auto filterBuyOrders = std::views::filter(
 		[esi = m_EsiSettings](const Order& order)

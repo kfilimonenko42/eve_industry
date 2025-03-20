@@ -58,8 +58,22 @@ double EVE::Industry::SolarSystemRecord::security() const
 	return this->m_Security;
 }
 
+std::string EVE::Industry::SolarSystemRecord::costIndex(const bool isReaction) const
+{
+	const double index = 100 * (isReaction ? this->m_ReactionIndex : this->m_ManufacturingIndex);
+	return std::format("{:.2f}%", index);
+}
+
 void EVE::Industry::SolarSystemRecord::setValues(SolarSystem solSystem)
 {
 	this->m_Security = solSystem->m_Security;
 	this->m_RegionID = solSystem->m_RegionID;
+
+	const Assets& assets = Assets::Instance();
+	auto [scifound, sci] = assets.m_SystemsCostIndicesContainer.element(this->m_ID);
+	if (scifound)
+	{
+		this->m_ManufacturingIndex = sci->m_Manufacturing;
+		this->m_ReactionIndex = sci->m_Reaction;
+	}
 }

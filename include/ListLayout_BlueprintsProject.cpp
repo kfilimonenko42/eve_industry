@@ -28,19 +28,21 @@ EVE::Industry::ListLayoutBlueprintsProject::ListLayoutBlueprintsProject()
 void EVE::Industry::ListLayoutBlueprintsProject::createColumns(wxListCtrl* list)
 {
 	list->AppendColumn("Blueprint");
-	list->SetColumnWidth(0, 400);
+	list->SetColumnWidth(0, 350);
 	list->AppendColumn("Group");
-	list->SetColumnWidth(1, 400);
+	list->SetColumnWidth(1, 350);
 	list->AppendColumn("System");
-	list->SetColumnWidth(2, 400);
+	list->SetColumnWidth(2, 250);
+	list->AppendColumn("System cost index");
+	list->SetColumnWidth(3, 120);
 	list->AppendColumn("Blueprint ME");
-	list->SetColumnWidth(3, 100);
+	list->SetColumnWidth(4, 80);
 	list->AppendColumn("Struct ME");
-	list->SetColumnWidth(4, 100);
+	list->SetColumnWidth(5, 80);
 	list->AppendColumn("Rig ME");
-	list->SetColumnWidth(5, 100);
+	list->SetColumnWidth(6, 80);
 	list->AppendColumn("Maximum runs (one job)");
-	list->SetColumnWidth(6, 150);
+	list->SetColumnWidth(7, 150);
 }
 
 std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, void* container, const long index, const long column)
@@ -55,12 +57,28 @@ std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id
 	case 1:
 		return item.m_Blueprint.group().toString();
 	case 2:
-		return item.m_SolarSystem.toString();
+	{
+		if (item.m_SolarSystem.id() != 0)
+		{
+			return item.m_SolarSystem.toString();
+		}
+
+		return std::string();
+	}
 	case 3:
-		return stringFromEnum(EVE::Assets::arrBlueprintME, item.m_ME.m_BpME);
+	{
+		if (item.m_SolarSystem.id() != 0)
+		{
+			return item.m_SolarSystem.costIndex(item.m_Blueprint.isReaction());
+		}
+
+		return std::string();
+	}
 	case 4:
-		return stringFromEnum(EVE::Assets::arrStructureME, item.m_ME.m_StructME);
+		return stringFromEnum(EVE::Assets::arrBlueprintME, item.m_ME.m_BpME);
 	case 5:
+		return stringFromEnum(EVE::Assets::arrStructureME, item.m_ME.m_StructME);
+	case 6:
 	{
 		if (item.m_SolarSystem.id() != 0)
 		{
@@ -73,7 +91,7 @@ std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id
 
 		return std::string("<set 'system'>");
 	}
-	case 6:
+	case 7:
 		return std::format(std::locale(""), "{:L}", item.m_MaxRunsPerJob);
 	default:
 		return std::string();

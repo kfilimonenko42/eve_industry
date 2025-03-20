@@ -35,7 +35,6 @@
 
 #include "ListDataWrapper.hpp"
 #include "IListCtrlLayout.hpp"
-#include "wxSettings.hpp"
 #include "ChronoTools.hpp"
 #include "AppraisalContainer.hpp"
 #include "BitmapContainer.hpp"

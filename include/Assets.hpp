@@ -25,6 +25,7 @@
 
 #include "AssetContainer.hpp"
 #include "JsonAssetsLoader.hpp"
+#include "ESI.hpp"
 
 namespace EVE::Industry
 {
@@ -32,6 +33,15 @@ namespace EVE::Industry
 	void tload(auto& container)
 	{
 		container.load(std::make_unique<EVE::Assets::JsonLoader>());
+	}
+
+	void tload_sci(auto& container)
+	{
+		RestAPI::Response response = ESI::getSystemsCostIndicies();
+		if (response.m_Successful)
+		{
+			container.load(std::make_unique<EVE::Assets::JsonLoader>(std::move(response.m_Result)));
+		}
 	}
 
 	class Assets
@@ -47,6 +57,7 @@ namespace EVE::Industry
 		using RegionsContainer = EVE::Assets::RegionsContainer;
 		using SolarSystemsContainer = EVE::Assets::SolarSystemsContainer;
 		using StationsContainer = EVE::Assets::StationsContainer;
+		using SystemsCostIndicesContainer = EVE::Assets::SystemsCostIndicesContainer;
 
 		Assets();
 		~Assets() = default;
@@ -69,6 +80,7 @@ namespace EVE::Industry
 		RegionsContainer m_RegionsContainer;
 		SolarSystemsContainer m_SolarSystemsContainer;
 		StationsContainer m_StationsContainer;
+		SystemsCostIndicesContainer m_SystemsCostIndicesContainer;
 
 	private:
 		void load();

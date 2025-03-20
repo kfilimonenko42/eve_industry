@@ -61,6 +61,7 @@ set(ASSETS_src
 	include/Settings.hpp
 	include/SolarSystem.hpp
 	include/Station.hpp
+	include/SystemCostIndices.hpp
 	include/Type.hpp
 )
 
@@ -216,7 +217,6 @@ set(INDUSTRY_src
 	include/wxPageTypeIndustry.hpp
 	include/wxPageTypePISchema.cpp
 	include/wxPageTypePISchema.hpp
-	include/wxSettings.hpp
 	include/WxTextToVectorStr.cpp
 	include/WxTextToVectorStr.hpp
 	include/wxVirtualListCtrl.hpp

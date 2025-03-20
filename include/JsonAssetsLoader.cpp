@@ -109,6 +109,22 @@ void EVE::Assets::JsonLoader::load(std::vector<Order>& _container)
 	json_load(js, _container);
 }
 
+void EVE::Assets::JsonLoader::load(std::vector<SystemCostIndices>& _container)
+{
+	assert(!m_Source.empty());
+
+	nlohmann::json js;
+	try
+	{
+		js = nlohmann::json::parse(m_Source);
+	}
+	catch (const std::runtime_error& er)
+	{
+		Log::LOG_ERROR(er.what());
+	}
+	json_load(js, _container);
+}
+
 void EVE::Assets::from_json(const nlohmann::json& j, Agent& v)
 {
 	if (!j.contains("agentID")) { throw std::runtime_error("agentID is not found."); }
@@ -375,4 +391,30 @@ void EVE::Assets::from_json(const nlohmann::json& j, Order& v)
 	if (j.contains("type_id")) { j.at("type_id").get_to(v.m_TypeID); }
 	if (j.contains("volume_remain")) { j.at("volume_remain").get_to(v.m_VolumeRemain); }
 	if (j.contains("volume_total")) { j.at("volume_total").get_to(v.m_VolumeTotal); }
+}
+
+void EVE::Assets::from_json(const nlohmann::json& j, SystemCostIndices& v)
+{
+	if (!j.contains("solar_system_id")) { throw std::runtime_error("solar system id is not found."); }
+
+	j.at("solar_system_id").get_to(v.m_ID);
+	if (j.contains("cost_indices"))
+	{
+		for (const auto& elem : j.at("cost_indices"))
+		{
+			double index{};
+			if (elem.contains("cost_index")) { elem.at("cost_index").get_to(index); }
+
+			if (elem.contains("activity"))
+			{
+				const std::string activity = elem.at("activity");
+				if (activity == "manufacturing") { v.m_Manufacturing = index; }
+				else if (activity == "reaction") { v.m_Reaction = index; }
+				else if (activity == "researching_time_efficiency") { v.m_ResearchTimeEfficiency = index; }
+				else if (activity == "researching_material_efficiency") { v.m_ResearchMaterialEfficiency = index; }
+				else if (activity == "copying") { v.m_Copying = index; }
+				else if (activity == "invention") { v.m_Invention = index; }
+			}
+		}
+	}
 }

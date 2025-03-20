@@ -34,6 +34,7 @@
 #include "Category.hpp"
 #include "PI.hpp"
 #include "Order.hpp"
+#include "SystemCostIndices.hpp"
 
 namespace EVE::Assets
 {
@@ -56,6 +57,7 @@ namespace EVE::Assets
 		virtual void load(std::vector<Category>& _container) = 0;
 		virtual void load(std::vector<PI>& _container) = 0;
 		virtual void load(std::vector<Order>& _container) = 0;
+		virtual void load(std::vector<SystemCostIndices>& _container) = 0;
 	};
 
 } // EVE::Assets

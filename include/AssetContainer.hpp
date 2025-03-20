@@ -231,7 +231,8 @@ namespace EVE::Assets
 	using GroupsContainer = AssetContainer<Group>;
 	using MarketGroupsContainer = AssetContainer<MarketGroup>;
 	using PISchemasContainer = AssetContainer<PI>;
-	using OrderContainer = AssetContainer<Order>;
+	using OrdersContainer = AssetContainer<Order>;
+	using SystemsCostIndicesContainer = AssetContainer<SystemCostIndices>;
 
 } // namespace EVE::Assets
 

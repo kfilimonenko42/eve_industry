@@ -52,6 +52,7 @@ namespace EVE::Assets
 		void load(std::vector<Category>& _container) override;
 		void load(std::vector<PI>& _container) override;
 		void load(std::vector<Order>& _container) override;
+		void load(std::vector<SystemCostIndices>& _container) override;
 
 	private:
 		std::string m_Source;
@@ -73,6 +74,7 @@ namespace EVE::Assets
 	void from_json(const nlohmann::json& j, Category& v);
 	void from_json(const nlohmann::json& j, PI& v);
 	void from_json(const nlohmann::json& j, Order& v);
+	void from_json(const nlohmann::json& j, SystemCostIndices& v);
 
 	template<class T>
 	bool json_load(const nlohmann::json& js, std::vector<T>& _container) noexcept

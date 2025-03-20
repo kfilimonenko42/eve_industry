@@ -47,4 +47,7 @@ void EVE::Industry::Assets::load()
 		std::jthread thread2(&tload<SolarSystemsContainer>, std::ref(m_SolarSystemsContainer));
 		std::jthread thread3(&tload<StationsContainer>, std::ref(m_StationsContainer));
 	}
+	{
+		std::jthread thread1(&tload_sci<SystemsCostIndicesContainer>, std::ref(m_SystemsCostIndicesContainer));
+	}
 }

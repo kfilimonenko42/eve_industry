@@ -43,12 +43,15 @@ namespace EVE::Industry
 
 		std::string toString() const override;
 		double security() const;
+		std::string costIndex(const bool isReaction = false) const;
 
 	private:
 		void setValues(SolarSystem solSystem);
 
 	private:
 		double m_Security{};
+		double m_ManufacturingIndex{};
+		double m_ReactionIndex{};
 		std::uint32_t m_RegionID{};
 	};
 

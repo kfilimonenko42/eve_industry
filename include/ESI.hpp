@@ -74,6 +74,12 @@ namespace ESI
         return get(target);
     }
 
+    inline RestAPI::Response getSystemsCostIndicies()
+    {
+        const std::string target = std::format("/latest/industry/systems/?datasource=tranquility");
+        return get(target);
+    }
+
 } // namespace ESI
 
 #endif // _ESI_HPP_

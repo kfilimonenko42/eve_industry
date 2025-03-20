@@ -44,7 +44,7 @@ namespace EVE::Industry
     {
     public:
         using Order = EVE::Assets::Order;
-        using OrderContainer = EVE::Assets::OrderContainer;
+        using OrdersContainer = EVE::Assets::OrdersContainer;
         using SellBuy = std::tuple<bool, double, double>;
 
         explicit EsiPrice(
@@ -54,8 +54,8 @@ namespace EVE::Industry
         SellBuy get();
 
     private:
-        double getSellPrice(OrderContainer& orders) const;
-        double getBuyPrice(OrderContainer& orders) const;
+        double getSellPrice(OrdersContainer& orders) const;
+        double getBuyPrice(OrdersContainer& orders) const;
 
     private:
         std::uint32_t m_TypeID{};
