@@ -125,7 +125,7 @@ namespace EVE::Industry
 		{
 			std::unique_lock<std::mutex> ul(m_Mutex);
 
-			m_Cv.wait(ul, [=]() { return m_StopUpdThread || !m_PauseUpdThread; });
+			m_Cv.wait(ul, [this]() { return m_StopUpdThread || !m_PauseUpdThread; });
 
 			if (m_StopUpdThread)
 			{
