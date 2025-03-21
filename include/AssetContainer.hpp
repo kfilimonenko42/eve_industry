@@ -233,6 +233,7 @@ namespace EVE::Assets
 	using PISchemasContainer = AssetContainer<PI>;
 	using OrdersContainer = AssetContainer<Order>;
 	using SystemsCostIndicesContainer = AssetContainer<SystemCostIndices>;
+	using MarketPricesContainer = AssetContainer<MarketPrice>;
 
 } // namespace EVE::Assets
 

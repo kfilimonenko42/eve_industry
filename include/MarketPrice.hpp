@@ -16,46 +16,36 @@
 	along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _EVEASSETS_ORDER_HPP_
-#define _EVEASSETS_ORDER_HPP_
+#ifndef _EVEASSETS_MARKETPRICE_HPP_
+#define _EVEASSETS_MARKETPRICE_HPP_
 
 #include <cstdint>
-#include <string>
 #include <compare>
 
 namespace EVE::Assets
 {
 
-	class Order
+	class MarketPrice
 	{
 	public:
-		Order() = default;
+		MarketPrice() = default;
 
-		bool operator==(const Order& rhs) const
+		bool operator==(const MarketPrice& rhs) const
 		{
-			return this->m_Price == rhs.m_Price;
+			return this->m_ID == rhs.m_ID;
 		}
 
-		auto operator<=>(const Order& rhs) const
+		auto operator<=>(const MarketPrice& rhs) const
 		{
-			return this->m_Price <=> rhs.m_Price;
+			return this->m_ID <=> rhs.m_ID;
 		}
 
 	public:
-		std::string m_Issued;
-		std::string m_Range;
-		double m_Price{};
-		std::uint64_t m_ID{};
-		std::uint32_t m_Duration{};
-		std::uint32_t m_LocationID{};
-		std::uint32_t m_SystemID{};
-		std::uint32_t m_TypeID{};
-		std::uint32_t m_MinVolume{};
-		std::uint32_t m_VolumeRemain{};
-		std::uint32_t m_VolumeTotal{};
-		bool m_IsBuyOrder{};
+		double m_Adjusted{};
+		double m_Average{};
+		std::uint32_t m_ID{};
 	};
 
 } // namespace EVE::Assets
 
-#endif // _EVEASSETS_ORDER_HPP_
+#endif // _EVEASSETS_MARKETPRICE_HPP_

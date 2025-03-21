@@ -51,6 +51,7 @@ set(ASSETS_src
 	include/JsonAssetsLoader.hpp
 	include/MarketGroup.cpp
 	include/MarketGroup.hpp
+	include/MarketPrice.hpp
 	include/Material.cpp
 	include/Material.hpp
 	include/Order.hpp

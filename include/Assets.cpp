@@ -49,5 +49,6 @@ void EVE::Industry::Assets::load()
 	}
 	{
 		std::jthread thread1(&tload_sci<SystemsCostIndicesContainer>, std::ref(m_SystemsCostIndicesContainer));
+		std::jthread thread2(&tload_mp<MarketPricesContainer>, std::ref(m_MarketPricesContainer));
 	}
 }

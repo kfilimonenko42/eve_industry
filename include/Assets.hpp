@@ -44,6 +44,15 @@ namespace EVE::Industry
 		}
 	}
 
+	void tload_mp(auto& container)
+	{
+		RestAPI::Response response = ESI::getMarketPrices();
+		if (response.m_Successful)
+		{
+			container.load(std::make_unique<EVE::Assets::JsonLoader>(std::move(response.m_Result)));
+		}
+	}
+
 	class Assets
 	{
 	public:
@@ -58,6 +67,7 @@ namespace EVE::Industry
 		using SolarSystemsContainer = EVE::Assets::SolarSystemsContainer;
 		using StationsContainer = EVE::Assets::StationsContainer;
 		using SystemsCostIndicesContainer = EVE::Assets::SystemsCostIndicesContainer;
+		using MarketPricesContainer = EVE::Assets::MarketPricesContainer;
 
 		Assets();
 		~Assets() = default;
@@ -81,6 +91,7 @@ namespace EVE::Industry
 		SolarSystemsContainer m_SolarSystemsContainer;
 		StationsContainer m_StationsContainer;
 		SystemsCostIndicesContainer m_SystemsCostIndicesContainer;
+		MarketPricesContainer m_MarketPricesContainer;
 
 	private:
 		void load();

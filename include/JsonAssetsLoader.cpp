@@ -125,6 +125,22 @@ void EVE::Assets::JsonLoader::load(std::vector<SystemCostIndices>& _container)
 	json_load(js, _container);
 }
 
+void EVE::Assets::JsonLoader::load(std::vector<MarketPrice>& _container)
+{
+	assert(!m_Source.empty());
+
+	nlohmann::json js;
+	try
+	{
+		js = nlohmann::json::parse(m_Source);
+	}
+	catch (const std::runtime_error& er)
+	{
+		Log::LOG_ERROR(er.what());
+	}
+	json_load(js, _container);
+}
+
 void EVE::Assets::from_json(const nlohmann::json& j, Agent& v)
 {
 	if (!j.contains("agentID")) { throw std::runtime_error("agentID is not found."); }
@@ -417,4 +433,13 @@ void EVE::Assets::from_json(const nlohmann::json& j, SystemCostIndices& v)
 			}
 		}
 	}
+}
+
+void EVE::Assets::from_json(const nlohmann::json& j, MarketPrice& v)
+{
+	if (!j.contains("type_id")) { throw std::runtime_error("type id is not found."); }
+
+	j.at("type_id").get_to(v.m_ID);
+	if (j.contains("adjusted_price")) { j.at("adjusted_price").get_to(v.m_Adjusted); }
+	if (j.contains("average_price")) { j.at("average_price").get_to(v.m_Average); }
 }
