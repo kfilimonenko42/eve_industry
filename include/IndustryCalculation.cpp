@@ -25,14 +25,13 @@
 EVE::Industry::IndustryCalculation::IndustryElement::IndustryElement(
 	TypeRecord&& type,
 	BlueprintRecord&& blueprint,
+	SolarSystemRecord&& solSystem,
 	const std::uint64_t quantity,
 	const std::uint64_t stock,
 	const std::uint64_t maxRunsPerJob,
-	const double secStatus,
 	EVE::Assets::BlueprintMaterialEfficiency bpME)
-	: m_Quantity{ quantity }, m_Stock{ stock }, m_MaxRunsPerJob{ maxRunsPerJob },
-	m_Type{ std::move(type) }, m_Blueprint{ std::move(blueprint) },
-	m_SecStatus{ secStatus }, m_BpME{ bpME }
+	: m_Type{ std::move(type) }, m_Blueprint{ std::move(blueprint) }, m_SolarSystem{ std::move(solSystem) }, m_BpME{ bpME },
+	m_Quantity{ quantity }, m_Stock{ stock }, m_MaxRunsPerJob{ maxRunsPerJob }
 {
 	m_IsRaw = this->m_Type.bpID() == 0;
 
@@ -49,6 +48,11 @@ const EVE::Industry::TypeRecord& EVE::Industry::IndustryCalculation::IndustryEle
 const EVE::Industry::BlueprintRecord& EVE::Industry::IndustryCalculation::IndustryElement::blueprint() const
 {
 	return this->m_Blueprint;
+}
+
+const EVE::Industry::SolarSystemRecord& EVE::Industry::IndustryCalculation::IndustryElement::solarSystem() const
+{
+	return this->m_SolarSystem;
 }
 
 bool EVE::Industry::IndustryCalculation::IndustryElement::isRaw() const
@@ -135,7 +139,7 @@ void EVE::Industry::IndustryCalculation::IndustryElement::updateQuantity()
 		for (const std::uint64_t run : _stagesParent)
 		{
 			std::uint64_t quantityComputed = EVE::Industry::quantity(
-				run, _quantityOneRun, parent->m_Blueprint.isReaction(), parent->m_SecStatus,
+				run, _quantityOneRun, parent->m_Blueprint.isReaction(), parent->m_SolarSystem.security(),
 				parent->m_BpME.m_BpME, parent->m_BpME.m_StructME, parent->m_BpME.m_RigME);
 
 			EVE::Industry::useStock(quantityComputed, stock);
@@ -441,7 +445,7 @@ void EVE::Industry::IndustryCalculation::getStages(std::vector<ProductionStage>&
 		{
 			try
 			{
-				stages.emplace_back(_stage, elem->blueprint(), run);
+				stages.emplace_back(_stage, elem->blueprint(), elem->solarSystem(), run);
 			}
 			catch (const std::runtime_error& er)
 			{
@@ -466,11 +470,11 @@ void EVE::Industry::IndustryCalculation::setIndustryElements(const EVE::Industry
 
 		if (bpProject)
 		{
-			const double secStatus = bpProject->m_SolarSystem.security();
 			TypeRecord tmp_type = type.m_Type;
 			BlueprintRecord tmp_bp = bpProject->m_Blueprint;
-			addIndustryElement(std::forward<TypeRecord>(tmp_type), std::forward<BlueprintRecord>(tmp_bp), type.m_Type.getQuantity(), stock,
-				bpProject->m_MaxRunsPerJob, secStatus, bpProject->m_ME);
+			SolarSystemRecord tmp_ss = bpProject->m_SolarSystem;
+			addIndustryElement(std::move(tmp_type), std::move(tmp_bp), std::move(tmp_ss), type.m_Type.getQuantity(), stock,
+				bpProject->m_MaxRunsPerJob, bpProject->m_ME);
 		}
 	}
 
@@ -501,12 +505,12 @@ void EVE::Industry::IndustryCalculation::setIndustryElements(const EVE::Industry
 
 				const auto bpProject = getBlueprintProjectFromIndustryType(project.m_BlueprintsList.get(), type.id());
 				BlueprintRecord blueprint = bpProject ? bpProject->m_Blueprint : BlueprintRecord{};
+				SolarSystemRecord tmp_ss = bpProject ? bpProject->m_SolarSystem : SolarSystemRecord{};
 				const std::uint64_t stock = project.getStock(type_id);
 				const std::uint64_t maxRunsPerJob = bpProject ? bpProject->m_MaxRunsPerJob: 0;
-				const double secStatus = (bpProject && bpProject->m_SolarSystem.id() != 0) ? bpProject->m_SolarSystem.security() : 1.0;
 				const EVE::Assets::BlueprintMaterialEfficiency me = bpProject ? bpProject->m_ME : EVE::Assets::BlueprintMaterialEfficiency{};
 
-				addIndustryElement(std::forward<TypeRecord>(type), std::forward<BlueprintRecord>(blueprint), 0, stock, maxRunsPerJob, secStatus, me, setNeedUpdate, parent);
+				addIndustryElement(std::move(type), std::move(blueprint), std::move(tmp_ss), 0, stock, maxRunsPerJob, me, setNeedUpdate, parent);
 			}
 		}
 
@@ -561,10 +565,10 @@ void EVE::Industry::IndustryCalculation::calculate(const EVE::Industry::Industry
 void EVE::Industry::IndustryCalculation::addIndustryElement(
 	TypeRecord&& type,
 	BlueprintRecord&& blueprint,
+	SolarSystemRecord&& solSystem,
 	const std::uint64_t quantity,
 	const std::uint64_t stock,
 	const std::uint64_t maxRunsPerJob,
-	const double secStatus,
 	const EVE::Assets::BlueprintMaterialEfficiency bpME,
 	const bool needUpdate,
 	std::shared_ptr<IndustryElement> parent)
@@ -586,10 +590,10 @@ void EVE::Industry::IndustryCalculation::addIndustryElement(
 		std::make_shared<IndustryElement>(
 			std::move(type),
 			std::move(blueprint),
+			std::move(solSystem),
 			quantity,
 			stock,
 			maxRunsPerJob,
-			secStatus,
 			bpME));
 
 	makeLinkParentChild(parent, element);

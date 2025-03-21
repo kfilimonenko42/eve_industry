@@ -46,10 +46,10 @@ namespace EVE::Industry
 			IndustryElement(
 				TypeRecord&& type,
 				BlueprintRecord&& blueprint,
+				SolarSystemRecord&& solSystem,
 				const std::uint64_t quantity,
 				const std::uint64_t stock,
 				const std::uint64_t maxRunsPerJob,
-				const double secStatus,
 				const EVE::Assets::BlueprintMaterialEfficiency bpME);
 			~IndustryElement() = default;
 
@@ -60,6 +60,7 @@ namespace EVE::Industry
 
 			const TypeRecord& type() const;
 			const BlueprintRecord& blueprint() const;
+			const SolarSystemRecord& solarSystem() const;
 			bool isRaw() const;
 			void addManufacturingElement(std::shared_ptr<IndustryElement> e);
 			void addParentElement(std::shared_ptr<IndustryElement> e);
@@ -77,19 +78,19 @@ namespace EVE::Industry
 			const std::vector<std::uint64_t>& getStages() const;
 
 		private:
+			TypeRecord m_Type;
+			BlueprintRecord m_Blueprint;
+			SolarSystemRecord m_SolarSystem;
 			std::vector<std::shared_ptr<IndustryElement>> m_ManufacturingElements;
 			std::vector<std::shared_ptr<IndustryElement>> m_ParentElements;
 			std::vector<std::uint64_t> m_Stages;
+			EVE::Assets::BlueprintMaterialEfficiency m_BpME{};
 			std::uint64_t m_Quantity{};
 			std::uint64_t m_Stock{};
 			std::uint64_t m_StockAfterCalculation{};
 			std::uint64_t m_ProducedStock{};
 			std::uint64_t m_MaxRunsPerJob{};
 			std::uint64_t m_Weight{};
-			TypeRecord m_Type;
-			BlueprintRecord m_Blueprint;
-			double m_SecStatus{};
-			EVE::Assets::BlueprintMaterialEfficiency m_BpME{};
 			bool m_IsRaw{};
 			bool m_NeedUpdate{};
 		};
@@ -115,10 +116,10 @@ namespace EVE::Industry
 		void addIndustryElement(
 			TypeRecord&& type,
 			BlueprintRecord&& blueprint,
+			SolarSystemRecord&& solSystem,
 			const std::uint64_t quantity,
 			const std::uint64_t stock,
 			const std::uint64_t maxRunsPerJob,
-			const double secStatus,
 			const EVE::Assets::BlueprintMaterialEfficiency bpME,
 			const bool needUpdate = false,
 			std::shared_ptr<IndustryElement> parent = nullptr);

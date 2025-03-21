@@ -21,9 +21,13 @@
 
 #include <vector>
 #include <string>
+#include <cstdint>
 
 #include "StageStatus.hpp"
 #include "AppraisalContainer.hpp"
+#include "BlueprintRecord.hpp"
+#include "SolarSystemRecord.hpp"
+#include "Assets.hpp"
 
 namespace EVE::Industry
 {
@@ -65,6 +69,36 @@ namespace EVE::Industry
 			[status](const T& element) -> double
 			{
 				return element.m_Status == status;
+			});
+	}
+
+	inline double jobCost(const BlueprintRecord& bp, const SolarSystemRecord& solSystem, const std::uint64_t runs)
+	{
+		const auto& assets = Assets::Instance();
+
+		const auto& list = bp.getManufacturingMaterials();
+		const auto materialsTotalCost = runs * std::accumulate(std::begin(list), std::end(list), 0.0,
+			[&assets](double summ, const EVE::Assets::Material& element) -> double
+			{
+				auto [mpfound, mp] = assets.m_MarketPricesContainer.element(element.type_id());
+				return ((mpfound ? mp->m_Adjusted : 0) * element.quantity()) + summ;
+			});
+
+		const auto totalJobCost = materialsTotalCost * solSystem.costIndex(bp.isReaction());
+		const auto facilityRoleBonus = totalJobCost * bp.structureRoleBonus();
+		const auto facilityTax = materialsTotalCost * bp.facilityTax();
+		const auto scc = materialsTotalCost * 0.04;
+
+		return totalJobCost - facilityRoleBonus + facilityTax + scc;
+	}
+
+	template <typename T>
+	inline double totalJobsCost(const std::vector<T>& source)
+	{
+		return std::accumulate(std::begin(source), std::end(source), 0.0,
+			[](double summ, const T& element) -> double
+			{
+				return jobCost(element.m_Blueprint, element.m_SolarSystem, element.m_Runs) + summ;
 			});
 	}
 

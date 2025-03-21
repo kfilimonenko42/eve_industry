@@ -168,7 +168,6 @@ set(INDUSTRY_src
 	include/OpenFormType.hpp
 	include/ParseIndustryText.cpp
 	include/ParseIndustryText.hpp
-	include/ProductionStage.cpp
 	include/ProductionStage.hpp
 	include/ProjectNew.hpp
 	include/RegionPanel.cpp

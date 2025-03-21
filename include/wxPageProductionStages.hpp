@@ -68,6 +68,10 @@ namespace EVE::Industry
 		wxWindow* m_FormProject{};
 		wxListCtrl* m_VirtualList{};
 		wxStaticText* m_TotalStatuses{};
+		wxStaticText* m_OutstandingStatuses{};
+		wxStaticText* m_InProgressStatuses{};
+		wxStaticText* m_FinishedStatuses{};
+		wxStaticText* m_TotalJobCost{};
 		wxTimer m_UpdTimer;
 		ListDataWrapper<ProductionStage>* m_ProductionStages;
 	};

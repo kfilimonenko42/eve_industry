@@ -43,6 +43,10 @@ void EVE::Industry::ListLayoutBlueprintsProject::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(6, 80);
 	list->AppendColumn("Maximum runs (one job)");
 	list->SetColumnWidth(7, 150);
+	list->AppendColumn("Structure role bonus (-isk)");
+	list->SetColumnWidth(8, 150);
+	list->AppendColumn("Facility tax");
+	list->SetColumnWidth(9, 150);
 }
 
 std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, void* container, const long index, const long column)
@@ -69,7 +73,7 @@ std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id
 	{
 		if (item.m_SolarSystem.id() != 0)
 		{
-			return item.m_SolarSystem.costIndex(item.m_Blueprint.isReaction());
+			return item.m_SolarSystem.costIndexString(item.m_Blueprint.isReaction());
 		}
 
 		return std::string();
@@ -93,6 +97,10 @@ std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id
 	}
 	case 7:
 		return std::format(std::locale(""), "{:L}", item.m_MaxRunsPerJob);
+	case 8:
+		return std::format(std::locale(""), "{:.2f}%", item.m_Blueprint.structureRoleBonus() * 100);
+	case 9:
+		return std::format(std::locale(""), "{:.2f}%", item.m_Blueprint.facilityTax() * 100);
 	default:
 		return std::string();
 	}

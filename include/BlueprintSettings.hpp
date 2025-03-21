@@ -38,6 +38,8 @@ namespace EVE::Assets
 		EVE::Assets::RigME m_RigME{ EVE::Assets::RigME::NO_RIG };
 		std::uint64_t m_Weight{};
 		std::uint64_t m_MaxRuns{};
+		double m_StructureRoleBonus{ 0.03 };
+		double m_FacilityTax{ 0.01 };
 	};
 
 } // namespace EVE::Assets

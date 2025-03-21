@@ -59,6 +59,8 @@ namespace EVE::Industry
 		EVE::Assets::BlueprintME bpME() const;
 		EVE::Assets::StructureME structME() const;
 		EVE::Assets::RigME rigME() const;
+		double structureRoleBonus() const;
+		double facilityTax() const;
 
 	private:
 		void setValues(Blueprint bp, Type type);

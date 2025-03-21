@@ -58,9 +58,14 @@ double EVE::Industry::SolarSystemRecord::security() const
 	return this->m_Security;
 }
 
-std::string EVE::Industry::SolarSystemRecord::costIndex(const bool isReaction) const
+double EVE::Industry::SolarSystemRecord::costIndex(const bool isReaction) const
 {
-	const double index = 100 * (isReaction ? this->m_ReactionIndex : this->m_ManufacturingIndex);
+	return (isReaction ? this->m_ReactionIndex : this->m_ManufacturingIndex);
+}
+
+std::string EVE::Industry::SolarSystemRecord::costIndexString(const bool isReaction) const
+{
+	const double index = 100 * costIndex(isReaction);
 	return std::format("{:.2f}%", index);
 }
 

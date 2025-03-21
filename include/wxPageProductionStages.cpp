@@ -53,11 +53,18 @@ void EVE::Industry::wxPageProductionStages::refreshList()
 void EVE::Industry::wxPageProductionStages::updateTotalLabels()
 {
 	const std::size_t size = m_ProductionStages->size();
+	m_TotalStatuses->SetLabelText(std::format("Total: {}", size));
+
 	const std::size_t countOutstanding = totalStatuses(m_ProductionStages->get(), StageStatus::Outstanding);
+	m_OutstandingStatuses->SetLabelText(std::format("Outstanding: {}", countOutstanding));
+
 	const std::size_t countInProgress = totalStatuses(m_ProductionStages->get(), StageStatus::InProgress);
+	m_InProgressStatuses->SetLabelText(std::format("In Progress: {}", countInProgress));
+
 	const std::size_t countFinished = totalStatuses(m_ProductionStages->get(), StageStatus::Finished);
-	m_TotalStatuses->SetLabelText(std::format("Total: {}\nOutstanding: {}\nIn Progress: {}\nFinished: {}",
-		size, countOutstanding, countInProgress, countFinished));
+	m_FinishedStatuses->SetLabelText(std::format("Finished: {}", countFinished));
+
+	m_TotalJobCost->SetLabelText(std::format(std::locale(""), "Total jobs cost: {:.2Lf}", totalJobsCost(m_ProductionStages->get())));
 }
 
 void EVE::Industry::wxPageProductionStages::createControls()
@@ -89,12 +96,28 @@ void EVE::Industry::wxPageProductionStages::createControls()
 	wxPanel* _panelResults = new wxPanel(mainPanel);
 
 	wxFont font = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false);
-	m_TotalStatuses = new wxStaticText(_panelResults, wxID_ANY, "Total:\nOutstanding:\nIn Progress:\nFinished:");
+	m_TotalStatuses = new wxStaticText(_panelResults, wxID_ANY, "Total: -");
 	m_TotalStatuses->SetFont(font);
+	m_OutstandingStatuses = new wxStaticText(_panelResults, wxID_ANY, "Outstanding: -");
+	m_OutstandingStatuses->SetFont(font);
+	m_OutstandingStatuses->SetForegroundColour(wxColour(214, 147, 101));
+	m_InProgressStatuses = new wxStaticText(_panelResults, wxID_ANY, "In Progress: -");
+	m_InProgressStatuses->SetFont(font);
+	m_InProgressStatuses->SetForegroundColour(wxColour(98, 192, 249));
+	m_FinishedStatuses = new wxStaticText(_panelResults, wxID_ANY, "Finished: -");
+	m_FinishedStatuses->SetFont(font);
+	m_FinishedStatuses->SetForegroundColour(wxColour(70, 150, 81));
+	m_TotalJobCost = new wxStaticText(_panelResults, wxID_ANY, "Total jobs cost: -");
+	m_TotalJobCost->SetFont(font);
 
 	wxBoxSizer* _resultSizer = new wxBoxSizer(wxVERTICAL);
 	_resultSizer->AddSpacer(5);
 	_resultSizer->Add(m_TotalStatuses, 0, wxEXPAND);
+	_resultSizer->Add(m_OutstandingStatuses, 0, wxEXPAND);
+	_resultSizer->Add(m_InProgressStatuses, 0, wxEXPAND);
+	_resultSizer->Add(m_FinishedStatuses, 0, wxEXPAND);
+	_resultSizer->AddSpacer(5);
+	_resultSizer->Add(m_TotalJobCost, 0, wxEXPAND);
 	_resultSizer->AddSpacer(5);
 	_panelResults->SetSizer(_resultSizer);
 

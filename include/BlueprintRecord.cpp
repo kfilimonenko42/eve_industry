@@ -152,3 +152,13 @@ EVE::Assets::RigME EVE::Industry::BlueprintRecord::rigME() const
 {
 	return this->m_BlueprintSettings.m_RigME;
 }
+
+double EVE::Industry::BlueprintRecord::structureRoleBonus() const
+{
+	return this->m_BlueprintSettings.m_StructureRoleBonus;
+}
+
+double EVE::Industry::BlueprintRecord::facilityTax() const
+{
+	return this->m_BlueprintSettings.m_FacilityTax;
+}

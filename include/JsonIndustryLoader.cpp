@@ -341,9 +341,15 @@ void EVE::Industry::JsonIndustryLoader::readStages(const nlohmann::json& src, Li
 		StageStatus status;
 		enumFromString(arrStageStatus, str_status, status);
 
+		std::uint32_t solSystem_id{};
+		if (elem.contains("solSystem"))
+		{
+			elem.at("solSystem").get_to(solSystem_id);
+		}
+
 		try
 		{
-			tmp.emplace_back(stage, BlueprintRecord{ bp_id }, runs, status);
+			tmp.emplace_back(stage, BlueprintRecord{ bp_id }, SolarSystemRecord{ solSystem_id }, runs, status);
 		}
 		catch (const std::runtime_error& er)
 		{

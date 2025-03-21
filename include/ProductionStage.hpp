@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include "BlueprintRecord.hpp"
+#include "SolarSystemRecord.hpp"
 #include "StageStatus.hpp"
 
 namespace EVE::Industry
@@ -35,11 +36,9 @@ namespace EVE::Industry
 
 	struct ProductionStage
 	{
+		template<typename BpRecord, typename SolRecord>
 		ProductionStage(
-			const std::uint32_t stage, const BlueprintRecord& blueprint,
-			const std::uint64_t runs, const StageStatus status = StageStatus::Outstanding);
-		ProductionStage(
-			const std::uint32_t stage, BlueprintRecord&& blueprint,
+			const std::uint32_t stage, BpRecord&& blueprint, SolRecord&& solSystem,
 			const std::uint64_t runs, const StageStatus status = StageStatus::Outstanding);
 
 		bool operator==(const ProductionStage& rhs) const
@@ -52,15 +51,22 @@ namespace EVE::Industry
 			return this->m_Stage <=> rhs.m_Stage;
 		}
 
-		std::uint32_t id() const;
-		void setStatus(const StageStatus status);
+		std::uint32_t id() const
+		{
+			return m_Blueprint.id();
+		}
+
+		void setStatus(const StageStatus status)
+		{
+			m_Status = status;
+		}
 
 		std::uint32_t m_Stage{};
 		BlueprintRecord m_Blueprint;
+		SolarSystemRecord m_SolarSystem;
 		std::uint64_t m_Runs{};
 		std::uint64_t m_Quantity{};
 		StageStatus m_Status{ StageStatus::Outstanding };
-
 	};
 
 	struct MaterialsBaseSortByStageReversed
@@ -70,6 +76,16 @@ namespace EVE::Industry
 			return !(lhs.m_Stage < rhs.m_Stage);
 		}
 	};
+
+	template<typename BpRecord, typename SolRecord>
+	inline ProductionStage::ProductionStage(
+		const std::uint32_t stage, BpRecord&& blueprint, SolRecord&& solSystem, 
+		const std::uint64_t runs, const StageStatus status)
+		: m_Stage{ stage }, m_Blueprint{ std::forward<BpRecord>(blueprint) }, m_SolarSystem{ std::forward<SolRecord>(solSystem) },
+		m_Runs{ runs }, m_Status{ status }
+	{
+		m_Quantity = m_Runs * m_Blueprint.quantityManufacturedProduct();
+	}
 
 } // EVE::Industry
 

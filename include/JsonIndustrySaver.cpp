@@ -101,6 +101,7 @@ nlohmann::json EVE::Industry::nlohmann_to_json(const ProductionStage& elem)
 	return nlohmann::json{
 		{"stage", elem.m_Stage},
 		{"id", elem.m_Blueprint.id()},
+		{"solSystem", elem.m_SolarSystem.id()},
 		{"runs", elem.m_Runs},
 		{"status", stringFromEnum(arrStageStatus, elem.m_Status)}
 	};

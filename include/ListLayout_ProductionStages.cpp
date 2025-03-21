@@ -19,6 +19,7 @@
 #include "ListLayout_ProductionStages.hpp"
 #include "ProductionStage.hpp"
 #include "EnumTools.hpp"
+#include "TotalValues.hpp"
 
 void EVE::Industry::ListLayoutProductionStages::createColumns(wxListCtrl* list)
 {
@@ -30,6 +31,8 @@ void EVE::Industry::ListLayoutProductionStages::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(2, 100);
 	list->AppendColumn("Status");
 	list->SetColumnWidth(3, 100);
+	list->AppendColumn("Total job cost");
+	list->SetColumnWidth(4, 100);
 }
 
 std::string EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id, void* container, const long index, const long column)
@@ -47,6 +50,8 @@ std::string EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id,
 		return std::format(std::locale(""), "{:L}", item.m_Quantity);
 	case 3:
 		return stringFromEnum(arrStageStatus, item.m_Status);
+	case 4:
+		return std::format(std::locale(""), "{:.2Lf}", jobCost(item.m_Blueprint, item.m_SolarSystem, item.m_Runs));
 	default:
 		return "";
 	}
