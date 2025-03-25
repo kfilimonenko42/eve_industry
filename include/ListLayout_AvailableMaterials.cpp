@@ -30,7 +30,7 @@ void EVE::Industry::ListLayoutAvailableMaterials::createColumns(wxListCtrl* list
 	list->SetColumnWidth(2, 100);
 }
 
-std::string EVE::Industry::ListLayoutAvailableMaterials::getItemText(int owner_id, void* container, const long index, const long column)
+wxString EVE::Industry::ListLayoutAvailableMaterials::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<MaterialProject>*>(container);
 	const auto& item = list[index];
@@ -38,9 +38,9 @@ std::string EVE::Industry::ListLayoutAvailableMaterials::getItemText(int owner_i
 	switch (column)
 	{
 	case 0:
-		return item.m_Type.toString();
+		return item.m_Type.towxString();
 	case 1:
-		return item.m_Type.group().toString();
+		return item.m_Type.group().towxString();
 	case 2:
 		return item.m_Type.quantityToString();
 	default:
@@ -72,7 +72,7 @@ void EVE::Industry::ListLayoutAvailableMaterials::copyToClipboard(void* containe
 
 	const std::size_t colSize = columns.size();
 
-	std::string data;
+	wxString data;
 	for (const long& line : lines)
 	{
 		const auto& item = list[line];
@@ -93,10 +93,10 @@ void EVE::Industry::ListLayoutAvailableMaterials::copyToClipboard(void* containe
 			switch (index)
 			{
 			case 0:
-				data += item.m_Type.name();
+				data += item.m_Type.wxName();
 				break;
 			case 1:
-				data += item.m_Type.group().name();
+				data += item.m_Type.group().wxName();
 				break;
 			case 2:
 				data += std::format("{}", item.m_Type.getQuantity());

@@ -22,6 +22,7 @@
 #include <string>
 #include <format>
 #include <cstdint>
+#include <wx/string.h>
 
 namespace EVE::Industry
 {
@@ -35,8 +36,10 @@ namespace EVE::Industry
 		virtual ~BaseRecord() = default;
 
 		const std::string& name() const;
+		wxString wxName() const;
 		std::uint32_t id() const;
 		virtual std::string toString() const;
+		virtual wxString towxString() const;
 
 	protected:
 		std::string m_Name;

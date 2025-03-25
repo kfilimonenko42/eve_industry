@@ -35,7 +35,7 @@ void EVE::Industry::ListLayoutProductionStages::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(4, 100);
 }
 
-std::string EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id, void* container, const long index, const long column)
+wxString EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<ProductionStage>*>(container);
 	const auto& item = list[index];
@@ -43,7 +43,7 @@ std::string EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id,
 	switch (column)
 	{
 	case 0:
-		return item.m_Blueprint.toString();
+		return item.m_Blueprint.towxString();
 	case 1:
 		return std::format(std::locale(""), "{:L}", item.m_Runs);
 	case 2:
@@ -81,7 +81,7 @@ void EVE::Industry::ListLayoutProductionStages::copyToClipboard(void* container,
 
 	const std::size_t colSize = columns.size();
 
-	std::string data;
+	wxString data;
 	for (const long& line : lines)
 	{
 		const auto& item = list[line];
@@ -102,7 +102,7 @@ void EVE::Industry::ListLayoutProductionStages::copyToClipboard(void* container,
 			switch (index)
 			{
 			case 0:
-				data += item.m_Blueprint.name();
+				data += item.m_Blueprint.wxName();
 				break;
 			case 1:
 				data += std::format("{}", item.m_Runs);;

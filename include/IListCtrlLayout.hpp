@@ -41,7 +41,7 @@ public:
     virtual ~IListCtrlLayout() = default;
 
     virtual void createColumns(wxListCtrl* list) = 0;
-    virtual std::string getItemText(int owner_id, void* container, const long index, const long column) = 0;
+    virtual wxString getItemText(int owner_id, void* container, const long index, const long column) = 0;
     virtual int getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons) = 0;
     virtual void copyToClipboard(void* container, const std::vector<long>& lines, const std::vector<long>& columns) = 0;
     virtual void deleteSelectedListItems(void* container, std::vector<long>& lines) = 0;

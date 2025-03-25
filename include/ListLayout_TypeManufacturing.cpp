@@ -27,7 +27,7 @@ void EVE::Industry::ListLayoutTypeManufacturing::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(1, 100);
 }
 
-std::string EVE::Industry::ListLayoutTypeManufacturing::getItemText(int owner_id, void* container, const long index, const long column)
+wxString EVE::Industry::ListLayoutTypeManufacturing::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<TypeManufacturing>*>(container);
 	const auto& item = list[index];
@@ -35,7 +35,7 @@ std::string EVE::Industry::ListLayoutTypeManufacturing::getItemText(int owner_id
 	switch (column)
 	{
 	case 0:
-		return item.m_Type.name();
+		return item.m_Type.wxName();
 	case 1:
 		return item.m_Type.quantityToString();
 	default:

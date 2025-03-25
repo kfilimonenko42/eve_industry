@@ -23,6 +23,7 @@
 #include <format>
 #include <cstdint>
 #include <stdexcept>
+#include <wx/string.h>
 
 #include "Assets.hpp"
 #include "SolarSystem.hpp"
@@ -42,6 +43,7 @@ namespace EVE::Industry
 		~SolarSystemRecord() override = default;
 
 		std::string toString() const override;
+		wxString towxString() const override;
 		double security() const;
 		double costIndex(const bool isReaction = false) const;
 		std::string costIndexString(const bool isReaction = false) const;

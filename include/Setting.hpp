@@ -16,15 +16,37 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "WxTextToVectorStr.hpp"
+#ifndef _EVEAPPSETTINGS_SETTINGS_HPP_
+#define _EVEAPPSETTINGS_SETTINGS_HPP_
 
-#include "StringTools.hpp"
+#include <cstdint>
+#include <filesystem>
+#include <iostream>
 
-void EVE::Industry::WxTextToVectorStr::operator()(const wxTextCtrl* text, std::vector<std::string>& dst)
+#include "DefaultSettings.hpp"
+#include "JsonHelper.hpp"
+
+namespace EVE::APPSETTINGS
 {
-	int lines = text->GetNumberOfLines();
-	for (int index = 0; index < lines; ++index)
-	{
-		dst.push_back(tolower(text->GetLineText(index).utf8_string()));
-	}
+
+    class Settings
+    {
+    public:
+        Settings();
+
+        static Settings& Instance();
+
+        const std::string& locTag() const;
+        std::uint32_t solarSystem() const;
+
+    private:
+        std::string m_LocTag{ Default::LocTag };
+        std::uint32_t m_SolarSystem{};
+
+    private:
+        void load(const std::string& settings_path);
+    };
+
 }
+
+#endif // _EVEAPPSETTINGS_SETTINGS_HPP_

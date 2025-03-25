@@ -26,9 +26,10 @@
 #include <nlohmann/json.hpp>
 
 #include "IBaseLoaders.hpp"
-#include "Settings.hpp"
 #include "JsonHelper.hpp"
 #include "Logger.hpp"
+#include "DefaultSettings.hpp"
+#include "Setting.hpp"
 
 namespace EVE::Assets
 {

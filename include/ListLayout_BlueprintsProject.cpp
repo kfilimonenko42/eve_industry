@@ -49,7 +49,7 @@ void EVE::Industry::ListLayoutBlueprintsProject::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(9, 150);
 }
 
-std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, void* container, const long index, const long column)
+wxString EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<BlueprintProject>*>(container);
 	const auto& item = list[index];
@@ -57,14 +57,14 @@ std::string EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id
 	switch (column)
 	{
 	case 0:
-		return item.m_Blueprint.toString();
+		return item.m_Blueprint.towxString();
 	case 1:
-		return item.m_Blueprint.group().toString();
+		return item.m_Blueprint.group().towxString();
 	case 2:
 	{
 		if (item.m_SolarSystem.id() != 0)
 		{
-			return item.m_SolarSystem.toString();
+			return item.m_SolarSystem.towxString();
 		}
 
 		return std::string();

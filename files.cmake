@@ -59,7 +59,6 @@ set(ASSETS_src
 	include/Point.cpp
 	include/Point.hpp
 	include/Region.hpp
-	include/Settings.hpp
 	include/SolarSystem.hpp
 	include/Station.hpp
 	include/SystemCostIndices.hpp
@@ -227,6 +226,12 @@ set(ESI_src
 	include/ESI_certificate.hpp
 )
 
+set(APPSETTINGS_src
+	include/DefaultSettings.hpp
+	include/Setting.cpp
+	include/Setting.hpp
+)
+
 source_group("LOGGER" FILES ${LOGGER_src})
 source_group("TOOLS" FILES ${TOOLS_src})
 source_group("RESTAPI" FILES ${RESTAPI_src})
@@ -235,6 +240,7 @@ source_group("GITHUBAPI" FILES ${GITHUBAPI_src})
 source_group("ASSETS" FILES ${ASSETS_src})
 source_group("ESI" FILES ${ESI_src})
 source_group("INDUSTRY" FILES ${INDUSTRY_src})
+source_group("APPSETTINGS" FILES ${ APPSETTINGS_src })
 
 set(SOURCE_FILES
 	${LOGGER_src}
@@ -245,6 +251,7 @@ set(SOURCE_FILES
 	${ASSETS_src}
 	${ESI_src}
 	${INDUSTRY_src}
+	${APPSETTINGS_src}
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

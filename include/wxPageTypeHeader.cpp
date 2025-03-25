@@ -35,7 +35,7 @@ void EVE::Industry::wxPageTypeHeader::createControls()
 	wxStaticBitmap* typeBitmap = new wxStaticBitmap(m_MainPanel, wxID_ANY,
 		_bmp.get32(m_Type.id()),
 		wxDefaultPosition, wxSize(32, 32));
-	wxStaticText* typeNameText = new wxStaticText(m_MainPanel, wxID_ANY, m_Type.name());
+	wxStaticText* typeNameText = new wxStaticText(m_MainPanel, wxID_ANY, wxString::FromUTF8(m_Type.name()));
 
 	wxBoxSizer* typepanel_sizer = new wxBoxSizer(wxHORIZONTAL);
 	typepanel_sizer->Add(typeBitmap, 0, wxALL, 10);

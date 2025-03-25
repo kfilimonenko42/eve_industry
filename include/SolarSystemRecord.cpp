@@ -53,6 +53,18 @@ std::string EVE::Industry::SolarSystemRecord::toString() const
 	}
 }
 
+wxString EVE::Industry::SolarSystemRecord::towxString() const
+{
+	if (this->m_ID == 0)
+	{
+		return wxString();
+	}
+	else
+	{
+		return wxString::FromUTF8(std::format("{} (security: {:.1f}, id: {})", this->m_Name, this->m_Security, this->m_ID));
+	}
+}
+
 double EVE::Industry::SolarSystemRecord::security() const
 {
 	return this->m_Security;

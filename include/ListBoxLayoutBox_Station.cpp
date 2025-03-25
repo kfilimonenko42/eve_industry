@@ -31,7 +31,7 @@ void EVE::Industry::ListLayoutBoxStationRecord::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(0, 350);
 }
 
-std::string EVE::Industry::ListLayoutBoxStationRecord::getItemText(int owner_id, void* container, const long index, const long column)
+wxString EVE::Industry::ListLayoutBoxStationRecord::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<StationRecord>*>(container);
 	const auto& item = list[index];
@@ -39,7 +39,7 @@ std::string EVE::Industry::ListLayoutBoxStationRecord::getItemText(int owner_id,
 	switch (column)
 	{
 	case 0:
-		return item.toString();
+		return item.towxString();
 	default:
 		return "";
 	}

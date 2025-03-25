@@ -35,62 +35,62 @@ EVE::Assets::JsonLoader::JsonLoader(std::string&& source)
 
 void EVE::Assets::JsonLoader::load(std::vector<Agent>& _container)
 {
-	json_load(Setting::Paths::Agents, _container);
+	json_load(EVE::APPSETTINGS::Paths::Agents, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Constellation>& _container)
 {
-	json_load(Setting::Paths::Constellations, _container);
+	json_load(EVE::APPSETTINGS::Paths::Constellations, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Region>& _container)
 {
-	json_load(Setting::Paths::Regions, _container);
+	json_load(EVE::APPSETTINGS::Paths::Regions, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<SolarSystem>& _container)
 {
-	json_load(Setting::Paths::SolarSystems, _container);
+	json_load(EVE::APPSETTINGS::Paths::SolarSystems, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Station>& _container)
 {
-	json_load(Setting::Paths::Stations, _container);
+	json_load(EVE::APPSETTINGS::Paths::Stations, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Blueprint>& _container)
 {
-	json_load(Setting::Paths::Blueprints, _container);
+	json_load(EVE::APPSETTINGS::Paths::Blueprints, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<BlueprintSettings>& _container)
 {
-	json_load(Setting::Paths::BlueprintsSettings, _container);
+	json_load(EVE::APPSETTINGS::Paths::BlueprintsSettings, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Type>& _container)
 {
-	json_load(Setting::Paths::Types, _container);
+	json_load(EVE::APPSETTINGS::Paths::Types, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<MarketGroup>& _container)
 {
-	json_load(Setting::Paths::MarketGroups, _container);
+	json_load(EVE::APPSETTINGS::Paths::MarketGroups, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Group>& _container)
 {
-	json_load(Setting::Paths::Groups, _container);
+	json_load(EVE::APPSETTINGS::Paths::Groups, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Category>& _container)
 {
-	json_load(Setting::Paths::Categories, _container);
+	json_load(EVE::APPSETTINGS::Paths::Categories, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<PI>& _container)
 {
-	json_load(Setting::Paths::PISchemas, _container);
+	json_load(EVE::APPSETTINGS::Paths::PISchemas, _container);
 }
 
 void EVE::Assets::JsonLoader::load(std::vector<Order>& _container)
@@ -105,6 +105,7 @@ void EVE::Assets::JsonLoader::load(std::vector<Order>& _container)
 	catch (const std::runtime_error& er)
 	{
 		Log::LOG_ERROR(er.what());
+		return;
 	}
 	json_load(js, _container);
 }
@@ -121,6 +122,7 @@ void EVE::Assets::JsonLoader::load(std::vector<SystemCostIndices>& _container)
 	catch (const std::runtime_error& er)
 	{
 		Log::LOG_ERROR(er.what());
+		return;
 	}
 	json_load(js, _container);
 }
@@ -137,6 +139,7 @@ void EVE::Assets::JsonLoader::load(std::vector<MarketPrice>& _container)
 	catch (const std::runtime_error& er)
 	{
 		Log::LOG_ERROR(er.what());
+		return;
 	}
 	json_load(js, _container);
 }
@@ -329,17 +332,20 @@ void EVE::Assets::from_json(const nlohmann::json& j, Type& v)
 
 	j.at("id").get_to(v.m_ID);
 
-	if (j.at("name").contains(Setting::LocTag)) 
-		j.at("name").at(Setting::LocTag).get_to(v.m_Name);
-	else 
-		j.at("name").at(Setting::LocTagDefault).get_to(v.m_Name);
+	const auto& settings = EVE::APPSETTINGS::Settings::Instance();
+	const auto& locTag = settings.locTag();
+
+	if (j.at("name").contains(locTag))
+		{ j.at("name").at(locTag).get_to(v.m_Name); }
+	else
+		{ j.at("name").at(EVE::APPSETTINGS::Default::LocTag).get_to(v.m_Name); }
 
 	v.m_NameSearch = tolower(v.m_Name);
 
 	if (j.contains("description")) 
 	{
-		if (j.at("description").contains(Setting::LocTag))
-			j.at("description").at(Setting::LocTag).get_to(v.m_Description); 
+		if (j.at("description").contains(locTag))
+			{ j.at("description").at(locTag).get_to(v.m_Description); }
 	}
 	if (j.contains("blueprint_ID")) { j.at("blueprint_ID").get_to(v.m_BlueprintID); }
 	if (j.contains("icon_ID")) { j.at("icon_ID").get_to(v.m_IconID); }

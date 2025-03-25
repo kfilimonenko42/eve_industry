@@ -34,7 +34,7 @@ void EVE::Industry::ListLayoutMaterialsAppraisal::createColumns(wxListCtrl* list
 	list->SetColumnWidth(4, 100);
 }
 
-std::string EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(int owner_id, void* container, const long index, const long column)
+wxString EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(int owner_id, void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<MaterialAppraisal>*>(container);
 	const auto& item = list[index];
@@ -42,7 +42,7 @@ std::string EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(int owner_i
 	switch (column)
 	{
 	case 0:
-		return item.m_Type.toString();
+		return item.m_Type.towxString();
 	case 1:
 		return priceSellToString(UpdatePriceRecord{ owner_id, item.id(), item.m_EsiSettings });
 	case 2:

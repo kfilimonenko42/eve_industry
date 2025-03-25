@@ -32,7 +32,7 @@ namespace EVE::Industry
 		ListLayoutProductionStages() = default;
 
 		void createColumns(wxListCtrl* list) override;
-		std::string getItemText(int owner_id, void* container, const long index, const long column) override;
+		wxString getItemText(int owner_id, void* container, const long index, const long column) override;
 		int getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons) override;
 		void copyToClipboard(void* container, const std::vector<long>& lines, const std::vector<long>& columns) override;
 		void deleteSelectedListItems(void* container, std::vector<long>& lines) override;

@@ -29,7 +29,7 @@ EVE::Industry::wxPageTypeDescription::wxPageTypeDescription(const TypeRecord& ty
 void EVE::Industry::wxPageTypeDescription::createControls()
 {
 	wxPanel* descriptionPanel = new wxPanel(m_MainPanel, wxID_ANY);
-	wxTextCtrl* m_DescriptionText = new wxTextCtrl(descriptionPanel, wxID_ANY, m_Type.description(),
+	wxTextCtrl* m_DescriptionText = new wxTextCtrl(descriptionPanel, wxID_ANY, wxString::FromUTF8(m_Type.description()),
 		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2 | wxTE_READONLY);
 
 	wxBoxSizer* descriptionPanel_sizer = new wxBoxSizer(wxHORIZONTAL);
