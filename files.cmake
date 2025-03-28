@@ -224,6 +224,8 @@ set(ESI_src
 
 set(APPSETTINGS_src
 	include/DefaultSettings.hpp
+	include/FormSettings.cpp
+	include/FormSettings.hpp
 	include/Setting.cpp
 	include/Setting.hpp
 )

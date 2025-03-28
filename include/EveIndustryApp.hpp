@@ -29,6 +29,7 @@ namespace EVE::Industry
 	{
 	public:
 		EVEIndustryApp() = default;
+        ~EVEIndustryApp() override = default;
 
 		bool OnInit() override;
 		int OnExit() override;

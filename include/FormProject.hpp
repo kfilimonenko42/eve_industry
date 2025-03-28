@@ -42,7 +42,7 @@ namespace EVE::Industry
 	public:
 		explicit FormProject(wxWindow* parent);
 		FormProject(wxWindow* parent, const std::string& projName);
-		virtual ~FormProject() = default;
+		~FormProject() override = default;
 
 		const IndustryProject& project() const;
 		const IndustryProject* projectPtr() const;

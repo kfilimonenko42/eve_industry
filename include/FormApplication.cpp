@@ -23,6 +23,7 @@
 #include "Assets.hpp"
 #include "BitmapContainer.hpp"
 #include "FormAppraisal.hpp"
+#include "FormSettings.hpp"
 #include "Version.hpp"
 #include "GithubAPI.hpp"
 
@@ -101,6 +102,8 @@ void EVE::Industry::FormApplication::createMenuBar()
 	// View
 	wxMenu* viewMenu = new wxMenu();
 	auto appraisalBtn = viewMenu->Append(wxID_ANY, "Appraisal");
+	viewMenu->AppendSeparator();
+	auto settingsBtn = viewMenu->Append(wxID_ANY, "Settings");
 
 	m_MenuBar->Append(viewMenu, "View");
 
@@ -119,6 +122,7 @@ void EVE::Industry::FormApplication::createMenuBar()
 	Bind(wxEVT_MENU, &FormApplication::OnQuit, this, wxID_EXIT);
 	Bind(wxEVT_MENU, &FormApplication::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_MENU, &FormApplication::OnAppraisal, this, appraisalBtn->GetId());
+	Bind(wxEVT_MENU, &FormApplication::OnSettings, this, settingsBtn->GetId());
 }
 
 void EVE::Industry::FormApplication::OnNewProject(wxCommandEvent& e)
@@ -230,4 +234,10 @@ void EVE::Industry::FormApplication::OnAppraisal(wxCommandEvent& e)
 {
 	wxWindow* appraisalForm = new FormAppraisal(this);
 	m_MainBook->AddPage(appraisalForm, "Appraisal", true);
+}
+
+void EVE::Industry::FormApplication::OnSettings(wxCommandEvent& e)
+{
+	std::unique_ptr<EVE::APPSETTINGS::FormSettings> dialog = std::make_unique<EVE::APPSETTINGS::FormSettings>(this);
+	dialog->ShowModal();
 }

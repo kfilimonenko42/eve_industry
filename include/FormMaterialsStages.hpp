@@ -39,6 +39,7 @@ namespace EVE::Industry
 	{
 	public:
 		explicit FormMaterialsStages(std::vector<MaterialProject>&& materials);
+		~FormMaterialsStages() override = default;
 
 		void updateList();
 		void refreshList();

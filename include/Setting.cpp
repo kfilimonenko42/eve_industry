@@ -20,7 +20,7 @@
 
 EVE::APPSETTINGS::Settings::Settings()
 {
-    const std::string settings_path{ std::format("{}/settings.json", std::filesystem::current_path().string()) };
+    const std::string settings_path{ fileName() };
     if (std::filesystem::exists(settings_path))
     {
         load(settings_path);
@@ -31,6 +31,16 @@ EVE::APPSETTINGS::Settings& EVE::APPSETTINGS::Settings::Instance()
 {
     static Settings instance{};
     return instance;
+}
+
+void EVE::APPSETTINGS::Settings::save()
+{
+    do_save();
+}
+
+void EVE::APPSETTINGS::Settings::setLocTag(const std::string& locTag)
+{
+    this->m_LocTag = locTag;
 }
 
 const std::string& EVE::APPSETTINGS::Settings::locTag() const
@@ -52,4 +62,20 @@ void EVE::APPSETTINGS::Settings::load(const std::string& settings_path)
 
     if (js.contains("LocTag")) { js.at("LocTag").get_to(this->m_LocTag); }
     if (js.contains("SolarSystem")) { js.at("SolarSystem").get_to(this->m_SolarSystem); }
+}
+
+void EVE::APPSETTINGS::Settings::do_save()
+{
+    nlohmann::json json{
+        { "LocTag", locTag() },
+        { "SolarSystem", solarSystem() }
+    };
+
+    JsonHelper jhelper(fileName());
+    jhelper.save(json);
+}
+
+std::string EVE::APPSETTINGS::Settings::fileName() const
+{
+    return std::format("{}/user/settings.json", std::filesystem::current_path().string());
 }

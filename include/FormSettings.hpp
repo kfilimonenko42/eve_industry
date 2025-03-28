@@ -16,40 +16,41 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _EVEAPPSETTINGS_SETTINGS_HPP_
-#define _EVEAPPSETTINGS_SETTINGS_HPP_
+#ifndef _EVEAPPSETTINGS_FORMSETTINGS_HPP_
+#define _EVEAPPSETTINGS_FORMSETTINGS_HPP_
 
-#include <cstdint>
-#include <filesystem>
+#include <wx/wx.h>
+#include <wx/listbook.h>
+#include <wx/sizer.h>
 
 #include "DefaultSettings.hpp"
-#include "JsonHelper.hpp"
+#include "Setting.hpp"
+#include "EnumTools.hpp"
 
 namespace EVE::APPSETTINGS
 {
 
-    class Settings
+    class FormSettings : public wxDialog
     {
     public:
-        Settings();
-
-        static Settings& Instance();
-
-        void save();
-        void setLocTag(const std::string& locTag);
-        const std::string& locTag() const;
-        std::uint32_t solarSystem() const;
+        explicit FormSettings(wxWindow* parent);
+        ~FormSettings() override = default;
 
     private:
-        std::string m_LocTag{ Default::LocTag };
-        std::uint32_t m_SolarSystem{};
+        void createControls();
+        void addMainPage();
+
+        void OnOk(wxCommandEvent& event);
+        void OnCancel(wxCommandEvent& event);
+        void formOk();
+        void formCancel();
 
     private:
-        void load(const std::string& settings_path);
-        void do_save();
-        std::string fileName() const;
+        wxListbook* m_ListBook{};
+        wxArrayString m_arrAssetsLocalization;
+        wxChoice* m_cAssetsLocalization{};
     };
 
 } // EVE::APPSETTINGS
 
-#endif // _EVEAPPSETTINGS_SETTINGS_HPP_
+#endif // _EVEAPPSETTINGS_FORMSETTINGS_HPP_

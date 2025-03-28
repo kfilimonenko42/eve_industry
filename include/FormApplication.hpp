@@ -41,6 +41,7 @@ namespace EVE::Industry
 	{
 	public:
 		FormApplication();
+		~FormApplication() override = default;
 
 		void loadAssets();
 		void OnUpdateCurrentPageText();
@@ -56,6 +57,7 @@ namespace EVE::Industry
 		void OnQuit(wxCommandEvent& e);
 		void OnAbout(wxCommandEvent& e);
 		void OnAppraisal(wxCommandEvent& e);
+		void OnSettings(wxCommandEvent& e);
 
 	private:
 		wxMenuBar* m_MenuBar{};

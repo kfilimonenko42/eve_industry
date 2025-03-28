@@ -20,6 +20,8 @@
 #define _EVEAPPSETTINGS_DEFAULTSETTINGS_HPP_
 
 #include <string>
+#include <utility>
+#include <array>
 
 namespace EVE::APPSETTINGS
 {
@@ -40,11 +42,23 @@ namespace EVE::APPSETTINGS
         static const std::string PISchemas{ "/assets/pis.json" };
     }
 
+    static const std::pair<std::string, std::string> LocalizationList[] = {
+        {"de", "German"},
+        {"en", "English"},
+        {"es", "Spanish"},
+        {"fre", "French"},
+        {"it", "Italian"},
+        {"ja", "Japanese"},
+        {"ko", "Korean"},
+        {"ru", "Russian"},
+        {"zh", "Chinese"}
+    };
+
     namespace Default
     {
         static const std::string LocTag{ "en" };
     }
 
-}
+} // EVE::APPSETTINGS
 
 #endif // _EVEAPPSETTINGS_DEFAULTSETTINGS_HPP_

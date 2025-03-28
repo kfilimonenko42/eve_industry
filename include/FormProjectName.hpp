@@ -30,6 +30,7 @@ namespace EVE::Industry
 	{
 	public:
 		explicit FormProjectName(wxWindow* parent);
+		~FormProjectName() override = default;
 
 		std::string get();
 

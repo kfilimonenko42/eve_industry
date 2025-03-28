@@ -35,7 +35,7 @@ namespace EVE::Industry
 	{
 	public:
 		FormType(const TypeRecord& type, wxWindow* parent);
-		virtual ~FormType() = default;
+		~FormType() override = default;
 
 		FormType(const FormType& tmp) = delete;
 		FormType& operator=(const FormType& tmp) = delete;
