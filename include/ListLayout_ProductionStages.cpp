@@ -21,6 +21,11 @@
 #include "EnumTools.hpp"
 #include "TotalValues.hpp"
 
+EVE::Industry::ListLayoutProductionStages::ListLayoutProductionStages(const IndustryProject* project)
+	: IListCtrlLayout(), m_Project{ project }
+{
+}
+
 void EVE::Industry::ListLayoutProductionStages::createColumns(wxListCtrl* list)
 {
 	list->AppendColumn("Blueprint");
@@ -51,7 +56,7 @@ wxString EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id, vo
 	case 3:
 		return stringFromEnum(arrStageStatus, item.m_Status);
 	case 4:
-		return std::format(std::locale(""), "{:.2Lf}", jobCost(item.m_Blueprint, item.m_SolarSystem, item.m_Runs));
+		return std::format(std::locale(""), "{:.2Lf}", jobCost(item, m_Project));
 	default:
 		return "";
 	}

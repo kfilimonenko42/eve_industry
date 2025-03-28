@@ -75,7 +75,9 @@ nlohmann::json EVE::Industry::nlohmann_to_json(const BlueprintProject& elem, con
 		{"maximum_runs", elem.m_MaxRunsPerJob},
 		{"me", stringFromEnum(EVE::Assets::arrBlueprintME, current_bpme.m_BpME)},
 		{"me_struct", stringFromEnum(EVE::Assets::arrStructureME, current_bpme.m_StructME)},
-		{"me_rig", stringFromEnum(EVE::Assets::arrRigME, current_bpme.m_RigME)}
+		{"me_rig", stringFromEnum(EVE::Assets::arrRigME, current_bpme.m_RigME)},
+		{"struct_role_bonus", elem.m_StructRoleBonus},
+		{"facility_tax", elem.m_FacilityTax}
 	};
 }
 

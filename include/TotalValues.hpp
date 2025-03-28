@@ -25,8 +25,9 @@
 
 #include "StageStatus.hpp"
 #include "AppraisalContainer.hpp"
-#include "BlueprintRecord.hpp"
-#include "SolarSystemRecord.hpp"
+#include "ProductionStage.hpp"
+#include "BlueprintProject.hpp"
+#include "IndustryProject.hpp"
 #include "Assets.hpp"
 
 namespace EVE::Industry
@@ -72,33 +73,46 @@ namespace EVE::Industry
 			});
 	}
 
-	inline double jobCost(const BlueprintRecord& bp, const SolarSystemRecord& solSystem, const std::uint64_t runs)
+	inline double jobCost(const ProductionStage& stage, const IndustryProject* project)
 	{
 		const auto& assets = Assets::Instance();
 
+		const auto& bp = stage.m_Blueprint;
 		const auto& list = bp.getManufacturingMaterials();
-		const auto materialsTotalCost = runs * std::accumulate(std::begin(list), std::end(list), 0.0,
+		const auto materialsTotalCost = stage.m_Runs * std::accumulate(std::begin(list), std::end(list), 0.0,
 			[&assets](double summ, const EVE::Assets::Material& element) -> double
 			{
 				auto [mpfound, mp] = assets.m_MarketPricesContainer.element(element.type_id());
 				return ((mpfound ? mp->m_Adjusted : 0) * element.quantity()) + summ;
 			});
 
-		const auto totalJobCost = materialsTotalCost * solSystem.costIndex(bp.isReaction());
-		const auto facilityRoleBonus = totalJobCost * bp.structureRoleBonus();
-		const auto facilityTax = materialsTotalCost * bp.facilityTax();
+		const auto totalJobCost = materialsTotalCost * stage.m_SolarSystem.costIndex(stage.m_Blueprint.isReaction());
+
+		double structRoleBonusIndex = bp.structureRoleBonus();
+		double facilityTaxIndex = bp.facilityTax();
+		if (project)
+		{
+			const auto bpProject = getBlueprintProjectFromBpID(project->m_BlueprintsList.get(), bp.id());
+			if (bpProject)
+			{
+				structRoleBonusIndex = bpProject->m_StructRoleBonus;
+				facilityTaxIndex = bpProject->m_FacilityTax;
+			}
+		}
+		const auto facilityRoleBonus = totalJobCost * structRoleBonusIndex;
+		const auto facilityTax = materialsTotalCost * facilityTaxIndex;
 		const auto scc = materialsTotalCost * 0.04;
 
 		return totalJobCost - facilityRoleBonus + facilityTax + scc;
 	}
 
 	template <typename T>
-	inline double totalJobsCost(const std::vector<T>& source)
+	inline double totalJobsCost(const std::vector<T>& source, const IndustryProject* project)
 	{
 		return std::accumulate(std::begin(source), std::end(source), 0.0,
-			[](double summ, const T& element) -> double
+			[project](double summ, const T& element) -> double
 			{
-				return jobCost(element.m_Blueprint, element.m_SolarSystem, element.m_Runs) + summ;
+				return jobCost(element, project) + summ;
 			});
 	}
 

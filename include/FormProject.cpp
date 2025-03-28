@@ -42,6 +42,11 @@ const EVE::Industry::IndustryProject& EVE::Industry::FormProject::project() cons
 	return m_Project;
 }
 
+const EVE::Industry::IndustryProject* EVE::Industry::FormProject::projectPtr() const
+{
+	return &m_Project;
+}
+
 bool EVE::Industry::FormProject::load()
 {
 	LoadProject loader{ this };
@@ -186,6 +191,24 @@ void EVE::Industry::FormProject::setMaximumRuns(const std::uint64_t runs, const 
 {
 	SetMaximumRuns setMaxRuns{};
 	setMaxRuns(m_Project, runs, selected);
+
+	updateBlueprintsProjectList();
+	updateNamePage();
+}
+
+void EVE::Industry::FormProject::setStructureRoleBonus(const std::uint64_t bonus, const std::vector<long>& selected)
+{
+	SetStructureRoleBonus setStructRoleBonus{};
+	setStructRoleBonus(m_Project, bonus, selected);
+
+	updateBlueprintsProjectList();
+	updateNamePage();
+}
+
+void EVE::Industry::FormProject::setFacilityTax(const double tax, const std::vector<long>& selected)
+{
+	SetFacilityTax setFacilityTax{};
+	setFacilityTax(m_Project, tax, selected);
 
 	updateBlueprintsProjectList();
 	updateNamePage();

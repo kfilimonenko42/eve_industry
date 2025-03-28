@@ -45,20 +45,70 @@ namespace EVE::Industry
 	{
 		using ME = EVE::Assets::BlueprintMaterialEfficiency;
 
-		BlueprintProject(const BlueprintRecord& bp, const SolarSystemRecord& solSystem, ME me, const std::uint64_t maxRunsPerJob = 0);
-		BlueprintProject(BlueprintRecord&& bp, SolarSystemRecord&& solSystem, ME me, const std::uint64_t maxRunsPerJob = 0);
+		template<typename BpRecord, typename SolRecord>
+		BlueprintProject(BpRecord&& bp, SolRecord&& solSystem, ME me, 
+			std::uint64_t maxRunsPerJob = 0, double structRoleBonus = 0.0, double facilityTax = 0.0);
 
-		std::uint32_t id() const;
-		void setSolarSystem(const SolarSystemRecord& solSystem);
+		std::uint32_t id() const
+		{
+			return this->m_Blueprint.id();
+		}
+
+		void setSolarSystem(const SolarSystemRecord& solSystem)
+		{
+			this->m_SolarSystem = solSystem;
+		}
 
 		BlueprintRecord m_Blueprint;
 		SolarSystemRecord m_SolarSystem;
 		ME m_ME{};
 		std::uint64_t m_MaxRunsPerJob{};
+		double m_StructRoleBonus{};
+		double m_FacilityTax{};
 
 	private:
-		void check();
+		void check()
+		{
+			if (this->m_MaxRunsPerJob <= 0)
+			{
+				this->m_MaxRunsPerJob = this->m_Blueprint.maxRunsPerJob();
+			}
+
+			if (this->m_StructRoleBonus <= 0)
+			{
+				this->m_StructRoleBonus = this->m_Blueprint.structureRoleBonus();
+			}
+
+			if (this->m_FacilityTax <= 0)
+			{
+				this->m_FacilityTax = this->m_Blueprint.facilityTax();
+			}
+
+			if (this->m_ME.m_BpME == EVE::Assets::BlueprintME::ME_0)
+			{
+				this->m_ME.m_BpME = this->m_Blueprint.bpME();
+			}
+
+			if (this->m_ME.m_StructME == EVE::Assets::StructureME::ME_0)
+			{
+				this->m_ME.m_StructME = this->m_Blueprint.structME();
+			}
+
+			if (this->m_ME.m_RigME == EVE::Assets::RigME::NO_RIG)
+			{
+				this->m_ME.m_RigME = this->m_Blueprint.rigME();
+			}
+		}
 	};
+
+	template<typename BpRecord, typename SolRecord>
+	inline BlueprintProject::BlueprintProject(BpRecord&& bp, SolRecord&& solSystem, ME me,
+		std::uint64_t maxRunsPerJob, double structRoleBonus, double facilityTax)
+		: m_Blueprint{ std::forward<BpRecord>(bp) }, m_SolarSystem{ std::forward<SolRecord>(solSystem) }, m_ME{ me },
+		m_MaxRunsPerJob{ maxRunsPerJob }, m_StructRoleBonus{ structRoleBonus }, m_FacilityTax{ facilityTax }
+	{
+		check();
+	}
 
 	struct BlueprintProjectSortByWeightName
 	{

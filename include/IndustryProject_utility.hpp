@@ -335,6 +335,53 @@ namespace EVE::Industry
 		}
 	};
 
+
+	struct SetStructureRoleBonus
+	{
+		void operator()(
+			IndustryProject& project,
+			const std::uint64_t bonus,
+			const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			auto& container = project.m_BlueprintsList.get();
+			for (const long& i : selected)
+			{
+				auto& element = container[i];
+				element.m_StructRoleBonus = (double)bonus / 100.0;
+			}
+
+			project.setModified(true);
+		}
+	};
+
+	struct SetFacilityTax
+	{
+		void operator()(
+			IndustryProject& project,
+			const double tax,
+			const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			auto& container = project.m_BlueprintsList.get();
+			for (const long& i : selected)
+			{
+				auto& element = container[i];
+				element.m_FacilityTax = tax / 100.0;
+			}
+
+			project.setModified(true);
+		}
+	};
+
 	struct SetStageStatus
 	{
 		void operator()(

@@ -45,6 +45,7 @@ namespace EVE::Industry
 		virtual ~FormProject() = default;
 
 		const IndustryProject& project() const;
+		const IndustryProject* projectPtr() const;
 		const std::string& name() const;
 		bool load();
 		bool saveAs();
@@ -62,6 +63,8 @@ namespace EVE::Industry
 		void setME(const EVE::Assets::StructureME me, const std::vector<long>& selected);
 		void setME(const EVE::Assets::RigME me, const std::vector<long>& selected);
 		void setMaximumRuns(const std::uint64_t runs, const std::vector<long>& selected);
+		void setStructureRoleBonus(const std::uint64_t bonus, const std::vector<long>& selected);
+		void setFacilityTax(const double tax, const std::vector<long>& selected);
 		void setStageStatus(const StageStatus status, const std::vector<long>& selected);
 		void showMaterialsStages(const std::vector<long>& selected);
 		void addStockFromRawMaterials(const std::vector<long>& selected);

@@ -18,11 +18,13 @@
 
 #include "wxPageBlueprintsProject.hpp"
 
-constexpr int ID_STATUS_SETSOLARSYSTEM = 10001;
-constexpr int ID_STATUS_SETBLUEPRINTME = 10002;
-constexpr int ID_STATUS_SETSTRUCTUREME = 10003;
-constexpr int ID_STATUS_SETRIGME = 10004;
-constexpr int ID_STATUS_SETMAXRUNS = 10005;
+constexpr int ID_BPSETTING_SETSOLARSYSTEM = 10001;
+constexpr int ID_BPSETTING_SETBLUEPRINTME = 10002;
+constexpr int ID_BPSETTING_SETSTRUCTUREME = 10003;
+constexpr int ID_BPSETTING_SETRIGME = 10004;
+constexpr int ID_BPSETTING_SETMAXRUNS = 10005;
+constexpr int ID_BPSETTING_STRUCTUREROLEBONUS = 10006;
+constexpr int ID_BPSETTING_FACILITYTAX = 10007;
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::BlueprintProject>;
 
@@ -89,11 +91,13 @@ void EVE::Industry::wxPageBlueprintsProject::OnCalculateProject(wxCommandEvent& 
 void EVE::Industry::wxPageBlueprintsProject::OnListRightClick(wxListEvent& event)
 {
 	wxMenu menu;
-	menu.Append(ID_STATUS_SETSOLARSYSTEM, "Set 'Solar System'");
-	menu.Append(ID_STATUS_SETBLUEPRINTME, "Set 'Blueprint ME'");
-	menu.Append(ID_STATUS_SETSTRUCTUREME, "Set 'Structure ME'");
-	menu.Append(ID_STATUS_SETRIGME, "Set 'Rig ME'");
-	menu.Append(ID_STATUS_SETMAXRUNS, "Set 'Maximum runs'");
+	menu.Append(ID_BPSETTING_SETSOLARSYSTEM, "Set 'Solar System'");
+	menu.Append(ID_BPSETTING_SETBLUEPRINTME, "Set 'Blueprint ME'");
+	menu.Append(ID_BPSETTING_SETSTRUCTUREME, "Set 'Structure ME'");
+	menu.Append(ID_BPSETTING_SETRIGME, "Set 'Rig ME'");
+	menu.Append(ID_BPSETTING_SETMAXRUNS, "Set 'Maximum runs'");
+	menu.Append(ID_BPSETTING_STRUCTUREROLEBONUS, "Set 'Structure role bonus'");
+	menu.Append(ID_BPSETTING_FACILITYTAX, "Set 'Facility tax'");
 	menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &wxPageBlueprintsProject::OnListPopupClick, this);
 	PopupMenu(&menu);
 
@@ -110,7 +114,7 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 
 	switch (event.GetId())
 	{
-	case ID_STATUS_SETSOLARSYSTEM:
+	case ID_BPSETTING_SETSOLARSYSTEM:
 	{
 		std::unique_ptr<FormSelectSolarSystem> dialog = std::make_unique<FormSelectSolarSystem>(m_FormProject);
 
@@ -120,7 +124,7 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 		}
 		break;
 	}
-	case ID_STATUS_SETBLUEPRINTME:
+	case ID_BPSETTING_SETBLUEPRINTME:
 	{
 		std::unique_ptr<FormSelectBlueprintME> dialog = std::make_unique<FormSelectBlueprintME>(m_FormProject);
 
@@ -131,7 +135,7 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 		}
 		break;
 	}
-	case ID_STATUS_SETSTRUCTUREME:
+	case ID_BPSETTING_SETSTRUCTUREME:
 	{
 		std::unique_ptr<FormSelectStructME> dialog = std::make_unique<FormSelectStructME>(m_FormProject);
 
@@ -142,7 +146,7 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 		}
 		break;
 	}
-	case ID_STATUS_SETRIGME:
+	case ID_BPSETTING_SETRIGME:
 	{
 		std::unique_ptr<FormSelectRigME> dialog = std::make_unique<FormSelectRigME>(m_FormProject);
 
@@ -153,14 +157,36 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 		}
 		break;
 	}
-	case ID_STATUS_SETMAXRUNS:
+	case ID_BPSETTING_SETMAXRUNS:
 	{
-		std::unique_ptr<FormSelectMaxRuns> dialog = std::make_unique<FormSelectMaxRuns>(m_FormProject);
+		std::unique_ptr<FormSelectInt> dialog = std::make_unique<FormSelectInt>(m_FormProject, "Maximum runs", "Maximum runs per one job", 1, INT_MAX);
 
 		if (dialog->ShowModal() == wxID_OK && m_FormProject)
 		{
 			const std::uint64_t result = dialog->get();
 			dynamic_cast<FormProject*>(m_FormProject)->setMaximumRuns(result, sLines);
+		}
+		break;
+	}
+	case ID_BPSETTING_STRUCTUREROLEBONUS:
+	{
+		std::unique_ptr<FormSelectInt> dialog = std::make_unique<FormSelectInt>(m_FormProject, "Structure role bonus", "Structure role bonus");
+
+		if (dialog->ShowModal() == wxID_OK && m_FormProject)
+		{
+			const std::uint64_t result = dialog->get();
+			dynamic_cast<FormProject*>(m_FormProject)->setStructureRoleBonus(result, sLines);
+		}
+		break;
+	}
+	case ID_BPSETTING_FACILITYTAX:
+	{
+		std::unique_ptr<FormSelectDouble> dialog = std::make_unique<FormSelectDouble>(m_FormProject, "Facility tax", "Facility tax");
+
+		if (dialog->ShowModal() == wxID_OK && m_FormProject)
+		{
+			const double result = dialog->get();
+			dynamic_cast<FormProject*>(m_FormProject)->setFacilityTax(result, sLines);
 		}
 		break;
 	}

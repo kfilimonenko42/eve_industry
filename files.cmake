@@ -76,7 +76,6 @@ set(INDUSTRY_src
 	include/BaseRecord.hpp
 	include/BitmapContainer.cpp
 	include/BitmapContainer.hpp
-	include/BlueprintProject.cpp
 	include/BlueprintProject.hpp
 	include/BlueprintRecord.cpp
 	include/BlueprintRecord.hpp
@@ -99,8 +98,10 @@ set(INDUSTRY_src
 	include/FormProjectName.hpp
 	include/FormSelectBlueprintME.cpp
 	include/FormSelectBlueprintME.hpp
-	include/FormSelectMaxRuns.cpp
-	include/FormSelectMaxRuns.hpp
+	include/FormSelectDouble.cpp
+	include/FormSelectDouble.hpp
+	include/FormSelectInt.cpp
+	include/FormSelectInt.hpp
 	include/FormSelectRegion.cpp
 	include/FormSelectRegion.hpp
 	include/FormSelectRigME.cpp

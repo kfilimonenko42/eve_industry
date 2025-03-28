@@ -16,8 +16,8 @@
 	along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _EVEINDUSTRY_FORMSELECTMAXRUNS_HPP_
-#define _EVEINDUSTRY_FORMSELECTMAXRUNS_HPP_
+#ifndef _EVEINDUSTRY_FORMSELECTDOUBLE_HPP_
+#define _EVEINDUSTRY_FORMSELECTDOUBLE_HPP_
 
 #include <string>
 #include <format>
@@ -25,26 +25,24 @@
 #include <wx/dialog.h>
 #include <wx/spinctrl.h>
 
-#include "BlueprintMaterialEfficiency.hpp"
-
 namespace EVE::Industry
 {
 
-	class FormSelectMaxRuns : public wxDialog
+	class FormSelectDouble : public wxDialog
 	{
 	public:
-		explicit FormSelectMaxRuns(wxWindow* parent);
-		~FormSelectMaxRuns() override = default;
+		FormSelectDouble(wxWindow* parent, const std::string& formTitle, const std::string& spinLabel, double min = 0.0, double max = 100.0);
+		~FormSelectDouble() override = default;
 
-		FormSelectMaxRuns(const FormSelectMaxRuns& tmp) = delete;
-		FormSelectMaxRuns& operator=(const FormSelectMaxRuns& tmp) = delete;
-		FormSelectMaxRuns(FormSelectMaxRuns&& tmp) = delete;
-		FormSelectMaxRuns& operator=(FormSelectMaxRuns&& tmp) = delete;
+		FormSelectDouble(const FormSelectDouble& tmp) = delete;
+		FormSelectDouble& operator=(const FormSelectDouble& tmp) = delete;
+		FormSelectDouble(FormSelectDouble&& tmp) = delete;
+		FormSelectDouble& operator=(FormSelectDouble&& tmp) = delete;
 
-		std::uint64_t get() const;
+		double get() const;
 
 	private:
-		void createControls();
+		void createControls(const std::string& spinTitle);
 
 		void OnOk(wxCommandEvent& event);
 		void OnCancel(wxCommandEvent& event);
@@ -53,10 +51,12 @@ namespace EVE::Industry
 		void formCancel();
 
 	private:
-		wxSpinCtrl* m_MaximumRunsPerJob{};
-		std::uint64_t m_Result;
+		wxSpinCtrlDouble* m_SpinCtrlDouble{};
+		double m_Result{};
+		double m_Min{};
+		double m_Max{};
 	};
 
 } // namespace EVE::Industry
 
-#endif // _EVEINDUSTRY_FORMSELECTMAXRUNS_HPP_
+#endif // _EVEINDUSTRY_FORMSELECTDOUBLE_HPP_

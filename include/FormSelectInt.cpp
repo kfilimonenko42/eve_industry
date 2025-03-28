@@ -16,38 +16,38 @@
 	along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "FormSelectMaxRuns.hpp"
+#include "FormSelectInt.hpp"
 
-EVE::Industry::FormSelectMaxRuns::FormSelectMaxRuns(wxWindow* parent)
-	: wxDialog(parent, wxID_ANY, "Maximum runs")
+EVE::Industry::FormSelectInt::FormSelectInt(wxWindow* parent, const std::string& formTitle, const std::string& spinLabel, int min, int max)
+	: wxDialog(parent, wxID_ANY, formTitle), m_Min{ min }, m_Max{ max }
 {
-	createControls();
+	createControls(spinLabel);
 }
 
-std::uint64_t EVE::Industry::FormSelectMaxRuns::get() const
+std::uint64_t EVE::Industry::FormSelectInt::get() const
 {
 	return m_Result;
 }
 
-void EVE::Industry::FormSelectMaxRuns::createControls()
+void EVE::Industry::FormSelectInt::createControls(const std::string& spinLabel)
 {
 	wxPanel* m_controlPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS);
-	m_controlPanel->Bind(wxEVT_CHAR_HOOK, &FormSelectMaxRuns::OnKeyDown, this);
+	m_controlPanel->Bind(wxEVT_CHAR_HOOK, &FormSelectInt::OnKeyDown, this);
 
-	wxStaticText* lblMaximumRunsPerJob = new wxStaticText(m_controlPanel, wxID_ANY, "Maximum runs per one job: ");
-	m_MaximumRunsPerJob = new wxSpinCtrl(m_controlPanel, wxID_ANY, "1", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS | wxSP_WRAP, 1, INT_MAX);
+	wxStaticText* lblSpin = new wxStaticText(m_controlPanel, wxID_ANY, spinLabel);
+	m_SpinCtrlInt = new wxSpinCtrl(m_controlPanel, wxID_ANY, "1", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS | wxSP_WRAP, m_Min, m_Max);
 
 	wxBoxSizer* panel_sizer = new wxBoxSizer(wxHORIZONTAL);
-	panel_sizer->Add(lblMaximumRunsPerJob, 0, wxALL, 5);
+	panel_sizer->Add(lblSpin, 0, wxALL, 5);
 	panel_sizer->AddStretchSpacer();
-	panel_sizer->Add(m_MaximumRunsPerJob, 0, wxEXPAND, 5);
+	panel_sizer->Add(m_SpinCtrlInt, 0, wxEXPAND, 5);
 	m_controlPanel->SetSizer(panel_sizer);
 
 	wxPanel* m_btnPanel = new wxPanel(this, wxID_ANY);
 	wxButton* m_btnOK = new wxButton(m_btnPanel, wxID_ANY, "OK", wxDefaultPosition, wxDefaultSize);
-	m_btnOK->Bind(wxEVT_BUTTON, &FormSelectMaxRuns::OnOk, this);
+	m_btnOK->Bind(wxEVT_BUTTON, &FormSelectInt::OnOk, this);
 	wxButton* m_btnCancel = new wxButton(m_btnPanel, wxID_ANY, "Cancel", wxDefaultPosition, wxDefaultSize);
-	m_btnCancel->Bind(wxEVT_BUTTON, &FormSelectMaxRuns::OnCancel, this);
+	m_btnCancel->Bind(wxEVT_BUTTON, &FormSelectInt::OnCancel, this);
 
 	wxBoxSizer* btn_sizer = new wxBoxSizer(wxHORIZONTAL);
 	btn_sizer->Add(m_btnOK);
@@ -62,17 +62,17 @@ void EVE::Industry::FormSelectMaxRuns::createControls()
 	this->SetSizerAndFit(base_sizer);
 }
 
-void EVE::Industry::FormSelectMaxRuns::OnOk(wxCommandEvent& event)
+void EVE::Industry::FormSelectInt::OnOk(wxCommandEvent& event)
 {
 	formOk();
 }
 
-void EVE::Industry::FormSelectMaxRuns::OnCancel(wxCommandEvent& event)
+void EVE::Industry::FormSelectInt::OnCancel(wxCommandEvent& event)
 {
 	formCancel();
 }
 
-void EVE::Industry::FormSelectMaxRuns::OnKeyDown(wxKeyEvent& event)
+void EVE::Industry::FormSelectInt::OnKeyDown(wxKeyEvent& event)
 {
 	int _key = (int)event.GetKeyCode();
 
@@ -92,14 +92,14 @@ void EVE::Industry::FormSelectMaxRuns::OnKeyDown(wxKeyEvent& event)
 	event.Skip();
 }
 
-void EVE::Industry::FormSelectMaxRuns::formOk()
+void EVE::Industry::FormSelectInt::formOk()
 {
-	m_Result = (std::uint32_t)m_MaximumRunsPerJob->GetValue();
+	m_Result = (std::uint64_t)m_SpinCtrlInt->GetValue();
 
 	EndModal(wxID_OK);
 }
 
-void EVE::Industry::FormSelectMaxRuns::formCancel()
+void EVE::Industry::FormSelectInt::formCancel()
 {
 	EndModal(wxID_CLOSE);
 }

@@ -64,7 +64,8 @@ void EVE::Industry::wxPageProductionStages::updateTotalLabels()
 	const std::size_t countFinished = totalStatuses(m_ProductionStages->get(), StageStatus::Finished);
 	m_FinishedStatuses->SetLabelText(std::format("Finished: {}", countFinished));
 
-	m_TotalJobCost->SetLabelText(std::format(std::locale(""), "Total jobs cost: {:.2Lf}", totalJobsCost(m_ProductionStages->get())));
+	m_TotalJobCost->SetLabelText(std::format(std::locale(""), "Total jobs cost: {:.2Lf}", 
+		totalJobsCost(m_ProductionStages->get(), dynamic_cast<FormProject*>(m_FormProject)->projectPtr())));
 }
 
 void EVE::Industry::wxPageProductionStages::createControls()
@@ -86,7 +87,7 @@ void EVE::Industry::wxPageProductionStages::createControls()
 
 	m_VirtualList = new vListCtrl(
 		mainPanel,
-		std::make_unique<ListLayoutProductionStages>(),
+		std::make_unique<ListLayoutProductionStages>(dynamic_cast<FormProject*>(m_FormProject)->projectPtr()),
 		m_ProductionStages,
 		wxDefaultPosition,
 		wxSize(200, 200));

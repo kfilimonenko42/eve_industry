@@ -41,7 +41,8 @@
 #include "FormSelectBlueprintME.hpp"
 #include "FormSelectStructME.hpp"
 #include "FormSelectRigME.hpp"
-#include "FormSelectMaxRuns.hpp"
+#include "FormSelectInt.hpp"
+#include "FormSelectDouble.hpp"
 
 namespace EVE::Industry
 {

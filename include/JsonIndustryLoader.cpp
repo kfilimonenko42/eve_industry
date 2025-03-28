@@ -195,6 +195,18 @@ void EVE::Industry::JsonIndustryLoader::readBlueprintsProject(const nlohmann::js
 		EVE::Assets::RigME rig_me;
 		enumFromString(EVE::Assets::arrRigME, str_rig_me, rig_me);
 
+		double structRoleBonus{};
+		if (elem.contains("struct_role_bonus"))
+		{
+			elem.at("struct_role_bonus").get_to(structRoleBonus);
+		}
+
+		double facilityTax{};
+		if (elem.contains("facility_tax"))
+		{
+			elem.at("facility_tax").get_to(facilityTax);
+		}
+
 		SolarSystemRecord solSystem;
 		if (solar_system_id > 0)
 		{
@@ -211,9 +223,9 @@ void EVE::Industry::JsonIndustryLoader::readBlueprintsProject(const nlohmann::js
 
 		try
 		{
-			tmp_bp.emplace_back(BlueprintRecord{ bp_id }, std::forward<SolarSystemRecord>(solSystem),
+			tmp_bp.emplace_back(BlueprintRecord{ bp_id }, std::move(solSystem),
 				EVE::Assets::BlueprintMaterialEfficiency{ me, struct_me, rig_me },
-				maximum_runs);
+				maximum_runs, structRoleBonus, facilityTax);
 		}
 		catch (const std::runtime_error& er)
 		{

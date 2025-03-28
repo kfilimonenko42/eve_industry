@@ -22,6 +22,7 @@
 #include <format>
 
 #include "IListCtrlLayout.hpp"
+#include "IndustryProject.hpp"
 
 namespace EVE::Industry
 {
@@ -29,7 +30,7 @@ namespace EVE::Industry
 	class ListLayoutProductionStages : public IListCtrlLayout
 	{
 	public:
-		ListLayoutProductionStages() = default;
+		ListLayoutProductionStages(const IndustryProject* project);
 
 		void createColumns(wxListCtrl* list) override;
 		wxString getItemText(int owner_id, void* container, const long index, const long column) override;
@@ -37,6 +38,9 @@ namespace EVE::Industry
 		void copyToClipboard(void* container, const std::vector<long>& lines, const std::vector<long>& columns) override;
 		void deleteSelectedListItems(void* container, std::vector<long>& lines) override;
 		void activateListItem(void* container, const long index, wxWindow* parent) override;
+
+	private:
+		const IndustryProject* m_Project;
 	};
 
 } // EVE::Industry

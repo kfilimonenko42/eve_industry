@@ -41,12 +41,12 @@ void EVE::Industry::ListLayoutBlueprintsProject::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(5, 80);
 	list->AppendColumn("Rig ME");
 	list->SetColumnWidth(6, 80);
-	list->AppendColumn("Maximum runs (one job)");
-	list->SetColumnWidth(7, 150);
-	list->AppendColumn("Structure role bonus (-isk)");
-	list->SetColumnWidth(8, 150);
+	list->AppendColumn("Max. runs (one job)");
+	list->SetColumnWidth(7, 120);
+	list->AppendColumn("Struct bonus (-isk)");
+	list->SetColumnWidth(8, 120);
 	list->AppendColumn("Facility tax");
-	list->SetColumnWidth(9, 150);
+	list->SetColumnWidth(9, 100);
 }
 
 wxString EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, void* container, const long index, const long column)
@@ -88,7 +88,7 @@ wxString EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, v
 		{
 			const bool isReaction = item.m_Blueprint.isReaction();
 
-			return std::format("{} ({:.4f})", 
+			return std::format("{} ({:.4f})",
 				stringFromEnum(EVE::Assets::arrRigME, item.m_ME.m_RigME),
 				EVE::Assets::me(item.m_SolarSystem.security(), isReaction, item.m_ME.m_RigME));
 		}
@@ -98,9 +98,9 @@ wxString EVE::Industry::ListLayoutBlueprintsProject::getItemText(int owner_id, v
 	case 7:
 		return std::format(std::locale(""), "{:L}", item.m_MaxRunsPerJob);
 	case 8:
-		return std::format(std::locale(""), "{:.2f}%", item.m_Blueprint.structureRoleBonus() * 100);
+		return std::format(std::locale(""), "{:.2f}%", item.m_StructRoleBonus * 100);
 	case 9:
-		return std::format(std::locale(""), "{:.2f}%", item.m_Blueprint.facilityTax() * 100);
+		return std::format(std::locale(""), "{:.2f}%", item.m_FacilityTax * 100);
 	default:
 		return std::string();
 	}
