@@ -22,11 +22,6 @@ set(RESTAPI_src
 	include/Response.hpp
 )
 
-set(ESI_src
-	include/ESI.hpp
-	include/ESI_certificate.hpp
-)
-
 set(GITHUBAPI_src
 	include/GithubAPI.hpp
 	include/GithubAPI_certificate.hpp
@@ -236,7 +231,6 @@ set(APPSETTINGS_src
 source_group("LOGGER" FILES ${LOGGER_src})
 source_group("TOOLS" FILES ${TOOLS_src})
 source_group("RESTAPI" FILES ${RESTAPI_src})
-source_group("ESI" FILES ${ESI_src})
 source_group("GITHUBAPI" FILES ${GITHUBAPI_src})
 source_group("ASSETS" FILES ${ASSETS_src})
 source_group("ESI" FILES ${ESI_src})
@@ -247,7 +241,6 @@ set(SOURCE_FILES
 	${LOGGER_src}
 	${TOOLS_src}
 	${RESTAPI_src}
-	${ESI_src}
 	${GITHUBAPI_src}
 	${ASSETS_src}
 	${ESI_src}
