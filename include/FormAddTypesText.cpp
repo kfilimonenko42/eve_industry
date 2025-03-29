@@ -20,8 +20,11 @@
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::TypeRecord>;
 
-EVE::Industry::FormAddTypesText::FormAddTypesText(wxWindow* parent, const std::string& title)
-	: wxDialog(parent, wxID_ANY, title)
+EVE::Industry::FormAddTypesText::FormAddTypesText(
+	wxWindow* parent,
+	const std::string& title,
+	bool indyTypes)
+	: wxDialog(parent, wxID_ANY, title), m_IndyTypes{ indyTypes }
 {
 	createControls();
 	updateTypesList();
@@ -51,7 +54,8 @@ void EVE::Industry::FormAddTypesText::select()
 		if (dialog->ShowModal() == wxID_OK)
 		{
 			const std::uint64_t result = dialog->get();
-			m_TypesText->AppendText(std::format("{}\t{}", tmpType.name(), result));
+			m_TypesText->AppendText(
+				wxString::FromUTF8(std::format("{}\t{}\n", tmpType.name(), result)));
 		}
 	}
 }
@@ -132,10 +136,10 @@ void EVE::Industry::FormAddTypesText::createControls()
 
 void EVE::Industry::FormAddTypesText::updateTypesList()
 {
-	const std::string txtFilter = tolower(m_txtFilter->GetValue().ToStdString());
+	const std::string txtFilter = tolower(m_txtFilter->GetValue().utf8_string());
 
 	std::vector<TypeRecord> _list = m_TypesList.copy();
-	FilterLeftTypes filter{ true };
+	FilterLeftTypes filter{ m_IndyTypes, true };
 	filter(_list, txtFilter);
 	m_TypesList.update(std::move(_list));
 	updateList();

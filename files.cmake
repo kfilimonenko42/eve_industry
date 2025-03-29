@@ -241,7 +241,7 @@ source_group("GITHUBAPI" FILES ${GITHUBAPI_src})
 source_group("ASSETS" FILES ${ASSETS_src})
 source_group("ESI" FILES ${ESI_src})
 source_group("INDUSTRY" FILES ${INDUSTRY_src})
-source_group("APPSETTINGS" FILES ${ APPSETTINGS_src })
+source_group("APPSETTINGS" FILES ${APPSETTINGS_src})
 
 set(SOURCE_FILES
 	${LOGGER_src}

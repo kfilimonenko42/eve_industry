@@ -118,7 +118,7 @@ void EVE::Industry::FormProject::deleteAllTypes()
 
 void EVE::Industry::FormProject::addAvailableTypes()
 {
-	AddTypesProject adder(this, "stock");
+	AddTypesProject adder(this, "stock", false);
 	adder(m_Project, m_Project.m_Stock);
 
 	updateMaterialsAvailableList();

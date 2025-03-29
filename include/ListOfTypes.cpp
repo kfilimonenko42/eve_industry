@@ -18,8 +18,10 @@
 
 #include "ListOfTypes.hpp"
 
-EVE::Industry::Types::Types(bool sort)
-    : m_Sort{ sort }
+EVE::Industry::Types::Types(
+    bool indyTypes,
+    bool sort)
+    : m_IndyTypes{ indyTypes }, m_Sort{ sort }
 {
 }
 
@@ -29,9 +31,10 @@ void EVE::Industry::Types::operator()(std::vector<TypeRecord>& result)
 
     const Assets& assets = Assets::Instance();
     std::for_each(assets.m_TypesContainer.cbegin(), assets.m_TypesContainer.cend(),
-        [&result](const EVE::Assets::Type& type)
+        [indyTypes = m_IndyTypes, &result](const EVE::Assets::Type& type)
         {
-            if (type.m_BlueprintID > 0)
+            const bool add = indyTypes ? (type.m_BlueprintID > 0) : true;
+            if (add)
             {
                 result.emplace_back(&type);
             }
@@ -43,8 +46,10 @@ void EVE::Industry::Types::operator()(std::vector<TypeRecord>& result)
     }
 }
 
-EVE::Industry::FilterLeftTypes::FilterLeftTypes(bool sort)
-    : m_Sort{ sort }
+EVE::Industry::FilterLeftTypes::FilterLeftTypes(
+    bool indyTypes,
+    bool sort)
+    : m_IndyTypes{ indyTypes }, m_Sort{ sort }
 {
 }
 
@@ -55,15 +60,16 @@ void EVE::Industry::FilterLeftTypes::operator()(std::vector<TypeRecord>& result,
     const Assets& assets = Assets::Instance();
     if (txtFilter.empty())
     {
-        Types loadTypes{ m_Sort };
+        Types loadTypes{ m_IndyTypes, m_Sort };
         loadTypes(result);
         return;
     }
 
     auto filter = std::views::filter(
-        [&txtFilter](const EVE::Assets::Type& type)
+        [indyTypes = m_IndyTypes, &txtFilter](const EVE::Assets::Type& type)
         {
-            return (type.m_BlueprintID > 0 && type.m_NameSearch.rfind(txtFilter, 0) == 0);
+            return ((indyTypes ? (type.m_BlueprintID > 0) : true) 
+                && (type.m_NameSearch.rfind(txtFilter, 0) == 0));
         });
 
     auto filteredList = assets.m_TypesContainer.get_container() | filter;

@@ -141,14 +141,14 @@ namespace EVE::Industry
 
 	struct AddTypesProject
 	{
-		AddTypesProject(wxWindow* parent, const std::string& label)
-			: m_Parent{ parent }, m_Label{ label }
+		AddTypesProject(wxWindow* parent, const std::string& label, bool indyTypes = true)
+			: m_Parent{ parent }, m_Label{ label }, m_IndyTypes{ indyTypes }
 		{
 		}
 
 		void operator()(IndustryProject& project, auto& dst)
 		{
-			std::unique_ptr<FormAddTypesText> dialog = std::make_unique<FormAddTypesText>(m_Parent, m_Label);
+			std::unique_ptr<FormAddTypesText> dialog = std::make_unique<FormAddTypesText>(m_Parent, m_Label, m_IndyTypes);
 
 			if (dialog->ShowModal() == wxID_OK)
 			{
@@ -165,6 +165,7 @@ namespace EVE::Industry
 	private:
 		wxWindow* m_Parent{};
 		std::string m_Label;
+		bool m_IndyTypes{};
 	};
 
 	struct RemoveTypesProject

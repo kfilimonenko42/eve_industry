@@ -40,7 +40,10 @@ namespace EVE::Industry
 	class FormAddTypesText : public wxDialog
 	{
 	public:
-		FormAddTypesText(wxWindow* parent, const std::string& title);
+		FormAddTypesText(
+			wxWindow* parent,
+			const std::string& title,
+			bool indyTypes = true);
 
 		void updateList();
 		void select();
@@ -68,6 +71,7 @@ namespace EVE::Industry
 		wxTextCtrl* m_TypesText{};
 		std::vector<std::string> m_Result;
 		ListDataWrapper<TypeRecord> m_TypesList;
+		bool m_IndyTypes{};
 	};
 
 } // namespace EVE::Industry

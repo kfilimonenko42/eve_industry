@@ -19,7 +19,7 @@
 #include "FormSelectInt.hpp"
 
 EVE::Industry::FormSelectInt::FormSelectInt(wxWindow* parent, const std::string& formTitle, const std::string& spinLabel, int min, int max)
-	: wxDialog(parent, wxID_ANY, formTitle), m_Min{ min }, m_Max{ max }
+	: wxDialog(parent, wxID_ANY, wxString::FromUTF8(formTitle)), m_Min{ min }, m_Max{ max }
 {
 	createControls(spinLabel);
 }

@@ -35,21 +35,27 @@ namespace EVE::Industry
 
     struct Types
     {
-        explicit Types(bool sort = false);
+        explicit Types(
+            bool indyTypes = false,
+            bool sort = false);
 
         void operator()(std::vector<TypeRecord>& result);
 
     private:
+        bool m_IndyTypes{};
         bool m_Sort{};
     };
 
     struct FilterLeftTypes
     {
-        explicit FilterLeftTypes(bool sort = false);
+        explicit FilterLeftTypes(
+            bool indyTypes = false,
+            bool sort = false);
 
         void operator()(std::vector<TypeRecord>& result, const std::string& txtFilter);
 
     private:
+        bool m_IndyTypes{};
         bool m_Sort{};
     };
 

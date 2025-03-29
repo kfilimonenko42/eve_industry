@@ -19,6 +19,7 @@
 #ifndef _EVEINDUSTRY_FORMSELECTINT_HPP_
 #define _EVEINDUSTRY_FORMSELECTINT_HPP_
 
+#include <cstdint>
 #include <string>
 #include <format>
 #include <wx/wx.h>
