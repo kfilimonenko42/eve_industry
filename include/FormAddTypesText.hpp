@@ -24,6 +24,16 @@
 #include <wx/wx.h>
 #include <wx/dialog.h>
 
+#include "WxTextToVectorStr.hpp"
+#include "Assets.hpp"
+#include "ListDataWrapper.hpp"
+#include "ListBoxLayoutBox_Type.hpp"
+#include "wxVirtualListCtrl.hpp"
+#include "TypeRecord.hpp"
+#include "StringTools.hpp"
+#include "ListOfTypes.hpp"
+#include "FormSelectInt.hpp"
+
 namespace EVE::Industry
 {
 
@@ -32,10 +42,13 @@ namespace EVE::Industry
 	public:
 		FormAddTypesText(wxWindow* parent, const std::string& title);
 
+		void updateList();
+		void select();
 		std::vector<std::string> get();
 
 	private:
 		void createControls();
+		void updateTypesList();
 
 		void OnOk(wxCommandEvent& event);
 		void OnCancel(wxCommandEvent& event);
@@ -47,10 +60,14 @@ namespace EVE::Industry
 
 		void formOk();
 		void formCancel();
+		void OnFilterText(wxCommandEvent& event);
 
 	private:
+		wxListCtrl* m_VirtualList{};
+		wxTextCtrl* m_txtFilter{};
 		wxTextCtrl* m_TypesText{};
 		std::vector<std::string> m_Result;
+		ListDataWrapper<TypeRecord> m_TypesList;
 	};
 
 } // namespace EVE::Industry

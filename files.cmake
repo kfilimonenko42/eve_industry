@@ -130,6 +130,8 @@ set(INDUSTRY_src
 	include/ListBoxLayoutBox_SolarSystem.hpp
 	include/ListBoxLayoutBox_Station.cpp
 	include/ListBoxLayoutBox_Station.hpp
+	include/ListBoxLayoutBox_Type.cpp
+	include/ListBoxLayoutBox_Type.hpp
 	include/ListDataWrapper.hpp
 	include/ListLayout_AvailableMaterials.cpp
 	include/ListLayout_AvailableMaterials.hpp
@@ -153,6 +155,8 @@ set(INDUSTRY_src
 	include/ListOfSolarSystems.hpp
 	include/ListOfStations.cpp
 	include/ListOfStations.hpp
+	include/ListOfTypes.cpp
+	include/ListOfTypes.hpp
 	include/MaterialAppraisal.hpp
 	include/MaterialBase.cpp
 	include/MaterialBase.hpp

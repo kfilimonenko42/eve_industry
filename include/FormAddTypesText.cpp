@@ -17,13 +17,43 @@
 */
 
 #include "FormAddTypesText.hpp"
-#include "WxTextToVectorStr.hpp"
-#include "Assets.hpp"
+
+using vListCtrl = wxVirtualListCtrl<EVE::Industry::TypeRecord>;
 
 EVE::Industry::FormAddTypesText::FormAddTypesText(wxWindow* parent, const std::string& title)
 	: wxDialog(parent, wxID_ANY, title)
 {
 	createControls();
+	updateTypesList();
+}
+
+void EVE::Industry::FormAddTypesText::updateList()
+{
+	auto _list = dynamic_cast<vListCtrl*>(m_VirtualList);
+	_list->refreshAfterUpdate();
+}
+
+void EVE::Industry::FormAddTypesText::select()
+{
+	const std::vector<long> selected = dynamic_cast<vListCtrl*>(m_VirtualList)->getSelected();
+	if (selected.empty())
+	{
+		return;
+	}
+
+	const long index = selected[0];
+	if (m_TypesList.size() > index)
+	{
+		const TypeRecord tmpType = m_TypesList[index];
+
+		std::unique_ptr<FormSelectInt> dialog = std::make_unique<FormSelectInt>(this, tmpType.name(), "Quantity", 1, INT_MAX);
+
+		if (dialog->ShowModal() == wxID_OK)
+		{
+			const std::uint64_t result = dialog->get();
+			m_TypesText->AppendText(std::format("{}\t{}", tmpType.name(), result));
+		}
+	}
 }
 
 std::vector<std::string> EVE::Industry::FormAddTypesText::get()
@@ -43,9 +73,40 @@ void EVE::Industry::FormAddTypesText::createControls()
 	m_btnAddAllTypes->Bind(wxEVT_BUTTON, &FormAddTypesText::OnAddAllTypes, this);
 #endif
 
-	m_TypesText = new wxTextCtrl(m_controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(800, 600), wxTE_MULTILINE | wxTE_RICH2 | wxTE_NOHIDESEL | wxTE_PROCESS_TAB);
-	//m_TypesText->SetBackgroundColour(wxLIST_BACK_COLOUR_NIGHT);
-	//m_TypesText->SetForegroundColour(wxLIST_FORE_COLOUR_NIGHT);
+	wxPanel* m_middlePanel = new wxPanel(this, wxID_ANY);
+	wxPanel* m_leftPanel = new wxPanel(m_middlePanel, wxID_ANY);
+	wxPanel* m_rightPanel = new wxPanel(m_middlePanel, wxID_ANY);
+
+	wxStaticText* lblFilter = new wxStaticText(m_leftPanel, wxID_ANY, "Filter: ");
+	m_txtFilter = new wxTextCtrl(m_leftPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(350, 24));
+	m_txtFilter->Bind(wxEVT_TEXT, &FormAddTypesText::OnFilterText, this);
+
+	wxBoxSizer* filterSizer = new wxBoxSizer(wxHORIZONTAL);
+	filterSizer->Add(lblFilter, 0, wxALL, 5);
+	filterSizer->AddStretchSpacer();
+	filterSizer->Add(m_txtFilter, 0, wxEXPAND, 5);
+
+	m_VirtualList = new vListCtrl(
+		m_leftPanel,
+		std::make_unique<ListLayoutBoxTypeRecord>(this),
+		&m_TypesList,
+		wxDefaultPosition,
+		wxSize(400, 570));
+	dynamic_cast<vListCtrl*>(m_VirtualList)->singleSelection(true);
+
+	wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
+	leftSizer->Add(filterSizer, 0, wxALL, 5);
+	leftSizer->AddStretchSpacer();
+	leftSizer->Add(m_VirtualList);
+	m_leftPanel->SetSizer(leftSizer);
+
+	m_TypesText = new wxTextCtrl(m_rightPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(800, 600), wxTE_MULTILINE | wxTE_RICH2 | wxTE_NOHIDESEL | wxTE_PROCESS_TAB);
+
+	wxBoxSizer* middleSizer = new wxBoxSizer(wxHORIZONTAL);
+	middleSizer->Add(m_leftPanel);
+	middleSizer->AddStretchSpacer();
+	middleSizer->Add(m_rightPanel, 0, wxALL, 5);
+	m_middlePanel->SetSizer(middleSizer);
 
 	wxButton* m_btn_Ok = new wxButton(m_btnPanel, wxID_ANY, "OK", wxDefaultPosition, wxDefaultSize);
 	m_btn_Ok->Bind(wxEVT_BUTTON, &FormAddTypesText::OnOk, this);
@@ -63,10 +124,21 @@ void EVE::Industry::FormAddTypesText::createControls()
 #if _DEBUG
 	base_sizer->Add(m_btnAddAllTypes, 0);
 #endif
-	base_sizer->Add(m_controlPanel, 1, wxEXPAND | wxALL, 5);
+	base_sizer->Add(m_middlePanel, 1, wxALL, 5);
 	base_sizer->Add(m_btnPanel, 0, wxALIGN_RIGHT | wxALL, 5);
 
 	this->SetSizerAndFit(base_sizer);
+}
+
+void EVE::Industry::FormAddTypesText::updateTypesList()
+{
+	const std::string txtFilter = tolower(m_txtFilter->GetValue().ToStdString());
+
+	std::vector<TypeRecord> _list = m_TypesList.copy();
+	FilterLeftTypes filter{ true };
+	filter(_list, txtFilter);
+	m_TypesList.update(std::move(_list));
+	updateList();
 }
 
 void EVE::Industry::FormAddTypesText::OnOk(wxCommandEvent& event)
@@ -128,4 +200,9 @@ void EVE::Industry::FormAddTypesText::formOk()
 void EVE::Industry::FormAddTypesText::formCancel()
 {
 	EndModal(wxID_CLOSE);
+}
+
+void EVE::Industry::FormAddTypesText::OnFilterText(wxCommandEvent& event)
+{
+	updateTypesList();
 }
