@@ -52,7 +52,7 @@ namespace EVE::Industry
 		bool operator()(IndustryProject& project)
 		{
 			wxFileDialog opendialog(m_Parent, "open eve indistry project", "", "", "ei files (*.ei)|*.ei", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-			opendialog.SetDirectory(std::format("{}/saves", std::filesystem::current_path().string()));
+			opendialog.SetDirectory(std::format("{}/user/saves", std::filesystem::current_path().string()));
 
 			if (opendialog.ShowModal() != wxID_OK)
 			{
@@ -84,7 +84,7 @@ namespace EVE::Industry
 		bool operator()(IndustryProject& project)
 		{
 			wxFileDialog savedialog(m_Parent, "save eve indistry project", "", "", "ei files (*.ei)|*.ei", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-			savedialog.SetDirectory(std::format("{}/saves", std::filesystem::current_path().string()));
+			savedialog.SetDirectory(std::format("{}/user/saves", std::filesystem::current_path().string()));
 
 			if (savedialog.ShowModal() != wxID_OK)
 			{
