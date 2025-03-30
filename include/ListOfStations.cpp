@@ -48,7 +48,7 @@ void EVE::Industry::Stations::operator()(std::vector<StationRecord>& result)
     }
 }
 
-EVE::Industry::FilterLeftStations::FilterLeftStations(
+EVE::Industry::FilterStations::FilterStations(
     const std::uint32_t regionID,
     const std::uint32_t solSystemID,
     bool sort)
@@ -56,7 +56,7 @@ EVE::Industry::FilterLeftStations::FilterLeftStations(
 {
 }
 
-void EVE::Industry::FilterLeftStations::operator()(std::vector<StationRecord>& result, const std::string& txtFilter)
+void EVE::Industry::FilterStations::operator()(std::vector<StationRecord>& result, const std::string& txtFilter)
 {
     result.clear();
 
@@ -73,7 +73,7 @@ void EVE::Industry::FilterLeftStations::operator()(std::vector<StationRecord>& r
         {
             return ((regionID > 0 ? station.m_RegionID == regionID : true)
                 && (solSystem > 0 ? station.m_SolarSystemID == solSystem : true)
-                && station.m_NameSearch.rfind(txtFilter, 0) == 0);
+                && station.m_NameSearch.find(txtFilter, 0) != std::string::npos);
         });
 
     auto filteredList = assets.m_StationsContainer.get_container() | filter;

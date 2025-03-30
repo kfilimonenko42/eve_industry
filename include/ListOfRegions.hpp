@@ -43,9 +43,9 @@ namespace EVE::Industry
         bool m_Sort{};
     };
 
-    struct FilterLeftRegions
+    struct FilterRegions
     {
-        explicit FilterLeftRegions(bool sort = false);
+        explicit FilterRegions(bool sort = false);
 
         void operator()(std::vector<BaseRecord>& result, const std::string& txtFilter);
 

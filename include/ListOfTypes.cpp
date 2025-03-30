@@ -46,14 +46,14 @@ void EVE::Industry::Types::operator()(std::vector<TypeRecord>& result)
     }
 }
 
-EVE::Industry::FilterLeftTypes::FilterLeftTypes(
+EVE::Industry::FilterTypes::FilterTypes(
     bool indyTypes,
     bool sort)
     : m_IndyTypes{ indyTypes }, m_Sort{ sort }
 {
 }
 
-void EVE::Industry::FilterLeftTypes::operator()(std::vector<TypeRecord>& result, const std::string& txtFilter)
+void EVE::Industry::FilterTypes::operator()(std::vector<TypeRecord>& result, const std::string& txtFilter)
 {
     result.clear();
 
@@ -69,7 +69,7 @@ void EVE::Industry::FilterLeftTypes::operator()(std::vector<TypeRecord>& result,
         [indyTypes = m_IndyTypes, &txtFilter](const EVE::Assets::Type& type)
         {
             return ((indyTypes ? (type.m_BlueprintID > 0) : true) 
-                && (type.m_NameSearch.rfind(txtFilter, 0) == 0));
+                && (type.m_NameSearch.find(txtFilter, 0) != std::string::npos));
         });
 
     auto filteredList = assets.m_TypesContainer.get_container() | filter;

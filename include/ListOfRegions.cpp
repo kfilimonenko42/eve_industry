@@ -40,12 +40,12 @@ void EVE::Industry::Regions::operator()(std::vector<BaseRecord>& result)
     }
 }
 
-EVE::Industry::FilterLeftRegions::FilterLeftRegions(bool sort)
+EVE::Industry::FilterRegions::FilterRegions(bool sort)
     : m_Sort{ sort }
 {
 }
 
-void EVE::Industry::FilterLeftRegions::operator()(std::vector<BaseRecord>& result, const std::string& txtFilter)
+void EVE::Industry::FilterRegions::operator()(std::vector<BaseRecord>& result, const std::string& txtFilter)
 {
     result.clear();
 
@@ -60,7 +60,7 @@ void EVE::Industry::FilterLeftRegions::operator()(std::vector<BaseRecord>& resul
     auto filter = std::views::filter(
         [&txtFilter](const EVE::Assets::Region& region)
         {
-            return region.m_NameSearch.rfind(txtFilter, 0) == 0;
+            return (region.m_NameSearch.find(txtFilter, 0) != std::string::npos);
         });
 
     auto filteredList = assets.m_RegionsContainer.get_container() | filter;

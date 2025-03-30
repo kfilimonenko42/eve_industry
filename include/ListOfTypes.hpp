@@ -46,9 +46,9 @@ namespace EVE::Industry
         bool m_Sort{};
     };
 
-    struct FilterLeftTypes
+    struct FilterTypes
     {
-        explicit FilterLeftTypes(
+        explicit FilterTypes(
             bool indyTypes = false,
             bool sort = false);
 

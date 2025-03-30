@@ -48,9 +48,9 @@ namespace EVE::Industry
         bool m_Sort{};
     };
 
-    struct FilterLeftStations
+    struct FilterStations
     {
-        explicit FilterLeftStations(
+        explicit FilterStations(
             const std::uint32_t regionID = 0,
             const std::uint32_t solSystemID = 0,
             bool sort = false);

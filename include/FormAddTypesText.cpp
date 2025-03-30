@@ -139,7 +139,7 @@ void EVE::Industry::FormAddTypesText::updateTypesList()
 	const std::string txtFilter = tolower(m_txtFilter->GetValue().utf8_string());
 
 	std::vector<TypeRecord> _list = m_TypesList.copy();
-	FilterLeftTypes filter{ m_IndyTypes, true };
+	FilterTypes filter{ m_IndyTypes, true };
 	filter(_list, txtFilter);
 	m_TypesList.update(std::move(_list));
 	updateList();
