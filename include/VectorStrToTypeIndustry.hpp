@@ -34,15 +34,18 @@ namespace EVE::Industry
 	{
 		void operator()(
 			const std::vector<std::string>& source,
-			std::unordered_map<std::uint32_t, std::uint64_t>& _dst);
+			std::unordered_map<std::uint32_t, std::uint64_t>& _dst,
+			const int multiplyBy = 1);
 
 		void operator()(
 			const std::vector<std::string>& source,
-			std::vector<EVE::Assets::Material>& _dst);
+			std::vector<EVE::Assets::Material>& _dst,
+			const int multiplyBy = 1);
 
 		void operator()(
 			const std::vector<std::string>& source,
-			std::vector<MaterialProject>& _dst);
+			std::vector<MaterialProject>& _dst,
+			const int multiplyBy = 1);
 	};
 
 } // EVE::Industry

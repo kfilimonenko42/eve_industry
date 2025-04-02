@@ -23,36 +23,42 @@
 
 void EVE::Industry::VectorStrToTypeIndustry::operator()(
 	const std::vector<std::string>& source,
-	std::unordered_map<std::uint32_t, std::uint64_t>& dst)
+	std::unordered_map<std::uint32_t, std::uint64_t>& dst,
+	const int multiplyBy)
 {
 	ParseIndustryText parser{};
 	parser(
 		std::make_unique<StringParser_v3>(),
 		source,
-		dst
+		dst,
+		multiplyBy
 	);
 }
 
 void EVE::Industry::VectorStrToTypeIndustry::operator()(
 	const std::vector<std::string>& source,
-	std::vector<EVE::Assets::Material>& dst)
+	std::vector<EVE::Assets::Material>& dst,
+	const int multiplyBy)
 {
 	ParseIndustryText parser{};
 	parser(
 		std::make_unique<StringParser_v3>(),
 		source,
-		dst
+		dst,
+		multiplyBy
 	);
 }
 
 void EVE::Industry::VectorStrToTypeIndustry::operator()(
 	const std::vector<std::string>& source,
-	std::vector<MaterialProject>& dst)
+	std::vector<MaterialProject>& dst,
+	const int multiplyBy)
 {
 	ParseIndustryText parser{};
 	parser(
 		std::make_unique<StringParser_v3>(),
 		source,
-		dst
+		dst,
+		multiplyBy
 	);
 }

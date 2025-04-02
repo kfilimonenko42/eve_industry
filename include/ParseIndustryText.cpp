@@ -22,7 +22,8 @@
 void EVE::Industry::ParseIndustryText::operator()(
 	std::unique_ptr<IBaseStringParser> _parser, 
 	const std::vector<std::string>& _str_parse, 
-	std::unordered_map<std::uint32_t, std::uint64_t>& _dst)
+	std::unordered_map<std::uint32_t, std::uint64_t>& _dst,
+	const int multiplyBy)
 {
 
 	const Assets& assets = Assets::Instance();
@@ -42,7 +43,8 @@ void EVE::Industry::ParseIndustryText::operator()(
 			continue;
 		}
 
-		_dst[type->m_ID] += count;
+		const std::uint64_t tmp_count = count * multiplyBy;
+		_dst[type->m_ID] += tmp_count;
 
 	}
 
@@ -51,7 +53,8 @@ void EVE::Industry::ParseIndustryText::operator()(
 void EVE::Industry::ParseIndustryText::operator()(
 	std::unique_ptr<IBaseStringParser> _parser,
 	const std::vector<std::string>& _str_parse,
-	std::vector<EVE::Assets::Material>& _dst)
+	std::vector<EVE::Assets::Material>& _dst,
+	const int multiplyBy)
 {
 
 	const Assets& assets = Assets::Instance();
@@ -66,12 +69,13 @@ void EVE::Industry::ParseIndustryText::operator()(
 		}
 
 		auto [found, type] = assets.m_TypesContainer.element(name);
+		const std::uint64_t tmp_count = count * multiplyBy;
 		if (!found)
 		{
 			continue;
 		}
 
-		_dst.emplace_back(type->m_ID, count);
+		_dst.emplace_back(type->m_ID, tmp_count);
 
 	}
 
@@ -80,7 +84,8 @@ void EVE::Industry::ParseIndustryText::operator()(
 void EVE::Industry::ParseIndustryText::operator()(
 	std::unique_ptr<IBaseStringParser> _parser,
 	const std::vector<std::string>& _str_parse,
-	std::vector<MaterialProject>& _dst)
+	std::vector<MaterialProject>& _dst,
+	const int multiplyBy)
 {
 	const Assets& assets = Assets::Instance();
 
@@ -106,13 +111,14 @@ void EVE::Industry::ParseIndustryText::operator()(
 				return elem.m_Type.id() == type_id;
 			});
 
+		const std::uint64_t tmp_count = count * multiplyBy;
 		if (ittr != std::end(_dst))
 		{
-			ittr->add(count);
+			ittr->add(tmp_count);
 		}
 		else
 		{
-			_dst.emplace_back(TypeRecord{ type }, count);
+			_dst.emplace_back(TypeRecord{ type }, tmp_count);
 		}
 	}
 

@@ -153,9 +153,11 @@ namespace EVE::Industry
 			if (dialog->ShowModal() == wxID_OK)
 			{
 				std::vector<std::string> stringTypes = dialog->get();
+				const int multiplyBy = dialog->getMultiplyBy();
+
 				VectorStrToTypeIndustry strsToTypes{};
 				auto materials = dst.copy();
-				strsToTypes(stringTypes, materials);
+				strsToTypes(stringTypes, materials, multiplyBy);
 				dst.update(std::move(materials));
 
 				project.setModified(true);

@@ -65,6 +65,11 @@ std::vector<std::string> EVE::Industry::FormAddTypesText::get()
 	return std::move(m_Result);
 }
 
+int EVE::Industry::FormAddTypesText::getMultiplyBy() const
+{
+	return m_ResultMultiplyBy;
+}
+
 void EVE::Industry::FormAddTypesText::createControls()
 {
 	wxPanel* m_controlPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS);
@@ -112,13 +117,16 @@ void EVE::Industry::FormAddTypesText::createControls()
 	middleSizer->Add(m_rightPanel, 0, wxALL, 5);
 	m_middlePanel->SetSizer(middleSizer);
 
+	wxStaticText* lblMultiplayBy = new wxStaticText(m_btnPanel, wxID_ANY, "Multiply by: ");
+	m_MultiplyBy = new wxSpinCtrl(m_btnPanel, wxID_ANY, "1", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS | wxSP_WRAP, 1, INT_MAX);
 	wxButton* m_btn_Ok = new wxButton(m_btnPanel, wxID_ANY, "OK", wxDefaultPosition, wxDefaultSize);
 	m_btn_Ok->Bind(wxEVT_BUTTON, &FormAddTypesText::OnOk, this);
-
 	wxButton* m_btn_Cancel = new wxButton(m_btnPanel, wxID_ANY, "Cancel", wxDefaultPosition, wxDefaultSize);
 	m_btn_Cancel->Bind(wxEVT_BUTTON, &FormAddTypesText::OnCancel, this);
 
 	wxBoxSizer* btn_sizer = new wxBoxSizer(wxHORIZONTAL);
+	btn_sizer->Add(lblMultiplayBy, 0, wxTOP, 3);
+	btn_sizer->Add(m_MultiplyBy, 0, wxRIGHT, 10);
 	btn_sizer->Add(m_btn_Ok);
 	btn_sizer->AddStretchSpacer();
 	btn_sizer->Add(m_btn_Cancel);
@@ -197,6 +205,8 @@ void EVE::Industry::FormAddTypesText::formOk()
 
 	EVE::Industry::WxTextToVectorStr textToVector{};
 	textToVector(m_TypesText, m_Result);
+
+	m_ResultMultiplyBy = m_MultiplyBy->GetValue();
 
 	EndModal(wxID_OK);
 }

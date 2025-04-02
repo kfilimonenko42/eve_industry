@@ -38,17 +38,20 @@ namespace EVE::Industry
 		void operator()(
 			std::unique_ptr<IBaseStringParser> _parser,
 			const std::vector<std::string>& _str_parse,
-			std::unordered_map<std::uint32_t, std::uint64_t>& _dst);
+			std::unordered_map<std::uint32_t, std::uint64_t>& _dst,
+			const int multiplyBy = 1);
 
 		void operator()(
 			std::unique_ptr<IBaseStringParser> _parser,
 			const std::vector<std::string>& _str_parse,
-			std::vector<EVE::Assets::Material>& _dst);
+			std::vector<EVE::Assets::Material>& _dst,
+			const int multiplyBy = 1);
 
 		void operator()(
 			std::unique_ptr<IBaseStringParser> _parser,
 			const std::vector<std::string>& _str_parse,
-			std::vector<MaterialProject>& _dst);
+			std::vector<MaterialProject>& _dst,
+			const int multiplyBy = 1);
 	};
 
 }

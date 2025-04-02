@@ -48,6 +48,7 @@ namespace EVE::Industry
 		void updateList();
 		void select();
 		std::vector<std::string> get();
+		int getMultiplyBy() const;
 
 	private:
 		void createControls();
@@ -69,8 +70,10 @@ namespace EVE::Industry
 		wxListCtrl* m_VirtualList{};
 		wxTextCtrl* m_txtFilter{};
 		wxTextCtrl* m_TypesText{};
+		wxSpinCtrl* m_MultiplyBy{};
 		std::vector<std::string> m_Result;
 		ListDataWrapper<TypeRecord> m_TypesList;
+		int m_ResultMultiplyBy{ 1 };
 		bool m_IndyTypes{};
 	};
 
