@@ -134,6 +134,23 @@ namespace EVE::Industry
 
 		return (ittr != std::end(src)) ? ittr->m_MaxRunsPerJob : 1;
 	}
+	
+	inline std::size_t getBlueprintLineIndex(const std::vector<BlueprintProject>& src, const std::uint32_t bpid)
+	{
+		auto ittr = std::find_if(std::begin(src), std::end(src),
+			[&bpid](const BlueprintProject& elem)
+			{
+				return elem.m_Blueprint.id() == bpid;
+			}
+		);
+
+		if (ittr == std::end(src))
+		{
+			return -1;
+		}
+
+		return std::distance(std::begin(src), ittr);
+	}
 
 	inline const BlueprintProject* getBlueprintProjectFromBpID(const std::vector<BlueprintProject>& src, const std::uint32_t bpid)
 	{

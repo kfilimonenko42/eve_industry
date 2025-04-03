@@ -79,14 +79,7 @@ void EVE::Industry::FormSelectDouble::OnKeyDown(wxKeyEvent& event)
 
 	switch (_key)
 	{
-	case WXK_RETURN:
-	{
-		if (wxGetKeyState(WXK_CONTROL))
-		{
-			formOk();
-		}
-		break;
-	}
+	case WXK_RETURN: formOk(); break;
 	case WXK_ESCAPE: formCancel(); break;
 	}
 

@@ -35,6 +35,7 @@
 #include "ListDataWrapper.hpp"
 #include "FormProject.hpp"
 #include "TotalValues.hpp"
+#include "FormSelectInt.hpp"
 
 namespace EVE::Industry
 {

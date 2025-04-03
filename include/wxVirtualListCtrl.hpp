@@ -65,6 +65,7 @@ public:
 		const std::map<std::uint32_t, std::size_t>& vIdsIcons);
 	std::size_t size() const;
 	std::vector<long> getSelected() const;
+	std::size_t countSelected() const;
 	void selectAll();
 	void copyToClipboardSelected(const std::vector<long>& columns) const;
 	void singleSelection(bool enable = true);
@@ -165,6 +166,13 @@ inline std::vector<long> wxVirtualListCtrl<T>::getSelected() const
 	}
 
 	return selected;
+}
+
+template<typename T>
+inline std::size_t wxVirtualListCtrl<T>::countSelected() const
+{
+	const std::vector<long> selected = getSelected();
+	return selected.size();
 }
 
 template<typename T>

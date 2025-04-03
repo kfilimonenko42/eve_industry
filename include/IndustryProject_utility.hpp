@@ -338,6 +338,36 @@ namespace EVE::Industry
 		}
 	};
 
+	struct SetMaximumRunsFromStages
+	{
+		void operator()(
+			IndustryProject& project,
+			const std::uint64_t runs,
+			const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			std::vector<long> bpListSelected;
+
+			auto& stagesContainer = project.m_ProductionStages.get();
+			auto& bpContainer = project.m_BlueprintsList.get();
+			for (const long& i : selected)
+			{
+				auto& element = stagesContainer[i];
+				const auto index = getBlueprintLineIndex(bpContainer, element.m_Blueprint.id());
+				if (index >= 0)
+				{
+					bpListSelected.push_back(index);
+				}
+			}
+
+			SetMaximumRuns setMaxRuns{};
+			setMaxRuns(project, runs, bpListSelected);
+		}
+	};
 
 	struct SetStructureRoleBonus
 	{

@@ -63,6 +63,7 @@ namespace EVE::Industry
 		void setME(const EVE::Assets::StructureME me, const std::vector<long>& selected);
 		void setME(const EVE::Assets::RigME me, const std::vector<long>& selected);
 		void setMaximumRuns(const std::uint64_t runs, const std::vector<long>& selected);
+		void setMaximumRunsFromStages(const std::uint64_t runs, const std::vector<long>& selected);
 		void setStructureRoleBonus(const std::uint64_t bonus, const std::vector<long>& selected);
 		void setFacilityTax(const double tax, const std::vector<long>& selected);
 		void setStageStatus(const StageStatus status, const std::vector<long>& selected);

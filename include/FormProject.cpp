@@ -196,6 +196,15 @@ void EVE::Industry::FormProject::setMaximumRuns(const std::uint64_t runs, const 
 	updateNamePage();
 }
 
+void EVE::Industry::FormProject::setMaximumRunsFromStages(const std::uint64_t runs, const std::vector<long>& selected)
+{
+	SetMaximumRunsFromStages setMaxRunsFromStages{};
+	setMaxRunsFromStages(m_Project, runs, selected);
+
+	updateAllLists();
+	updateNamePage();
+}
+
 void EVE::Industry::FormProject::setStructureRoleBonus(const std::uint64_t bonus, const std::vector<long>& selected)
 {
 	SetStructureRoleBonus setStructRoleBonus{};

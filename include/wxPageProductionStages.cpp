@@ -22,6 +22,7 @@ constexpr int ID_GET_MATERIALS = 10001;
 constexpr int ID_STATUS_OUTSTANDING = 10002;
 constexpr int ID_STATUS_INPROGRESS = 10003;
 constexpr int ID_STATUS_FINISHED = 10004;
+constexpr int ID_BPSETTING_SETMAXRUNS = 10005;
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::ProductionStage>;
 
@@ -151,6 +152,13 @@ void EVE::Industry::wxPageProductionStages::OnListRightClick(wxListEvent& event)
 	menu.Append(ID_STATUS_OUTSTANDING, "Status 'Outstanding'");
 	menu.Append(ID_STATUS_INPROGRESS, "Status 'In Progress'");
 	menu.Append(ID_STATUS_FINISHED, "Status 'Finished'");
+
+	if (dynamic_cast<vListCtrl*>(m_VirtualList)->countSelected() == 1)
+	{
+		menu.AppendSeparator();
+		menu.Append(ID_BPSETTING_SETMAXRUNS, "Set 'Maximum runs'");
+	}
+
 	menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &wxPageProductionStages::OnListPopupClick, this);
 	PopupMenu(&menu);
 
@@ -182,6 +190,19 @@ void EVE::Industry::wxPageProductionStages::OnListPopupClick(wxCommandEvent& eve
 		dynamic_cast<FormProject*>(m_FormProject)->setStageStatus(StageStatus::Finished, sLines);
 		updateTotalLabels();
 		break;
+	case ID_BPSETTING_SETMAXRUNS:
+	{
+		std::unique_ptr<FormSelectInt> dialog = std::make_unique<FormSelectInt>(m_FormProject, "Maximum runs", "Maximum runs per one job", 1, INT_MAX);
+
+		if (dialog->ShowModal() == wxID_OK && m_FormProject)
+		{
+			const std::uint64_t result = dialog->get();
+			auto tmpfp = dynamic_cast<FormProject*>(m_FormProject);
+			tmpfp->setMaximumRunsFromStages(result, sLines);
+			tmpfp->calculateProject();
+		}
+		break;
+	}
 	}
 }
 
