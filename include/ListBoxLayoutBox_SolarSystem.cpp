@@ -45,6 +45,11 @@ wxString EVE::Industry::ListLayoutBoxSolarSystemRecord::getItemText(int owner_id
 	}
 }
 
+wxItemAttr* EVE::Industry::ListLayoutBoxSolarSystemRecord::getGetItemColumnAttr(void* container, const long index, const long column)
+{
+	return nullptr;
+}
+
 int EVE::Industry::ListLayoutBoxSolarSystemRecord::getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons)
 {
 	return -1;

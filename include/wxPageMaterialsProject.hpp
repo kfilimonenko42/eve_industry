@@ -33,6 +33,7 @@
 #include "EsiOrderSettings.hpp"
 #include "FormProject.hpp"
 #include "TotalValues.hpp"
+#include "FormSelectInt.hpp"
 
 namespace EVE::Industry
 {
@@ -58,6 +59,8 @@ namespace EVE::Industry
 		void OnAdd(wxCommandEvent& event);
 		void OnDelete(wxCommandEvent& event);
 		void OnDeleteAll(wxCommandEvent& event);
+		void OnListRightClick(wxListEvent& event);
+		void OnListPopupClick(wxCommandEvent& event);
 		void OnUpdateTimer(wxTimerEvent& event);
 
 	private:

@@ -19,6 +19,7 @@
 #include "wxPageMaterialsBlueprint.hpp"
 
 constexpr int ID_ADD_STOCK = 10001;
+//constexpr int ID_START_NEW_PROJECT = 10002;
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::MaterialBlueprint>;
 
@@ -102,6 +103,8 @@ void EVE::Industry::wxPageMaterialsBlueprint::OnListRightClick(wxListEvent& even
 {
 	wxMenu menu;
 	menu.Append(ID_ADD_STOCK, "Add to stock");
+	//menu.AppendSeparator();
+	//menu.Append(ID_ADD_STOCK, "New project");
 	menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &wxPageMaterialsBlueprint::OnListPopupClick, this);
 	PopupMenu(&menu);
 
@@ -121,6 +124,9 @@ void EVE::Industry::wxPageMaterialsBlueprint::OnListPopupClick(wxCommandEvent& e
 	case ID_ADD_STOCK:
 		dynamic_cast<FormProject*>(m_FormProject)->addStockFromBpMaterials(sLines);
 		break;
+	//case ID_START_NEW_PROJECT:
+	//
+	//	break;
 	}
 }
 

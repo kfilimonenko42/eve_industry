@@ -17,7 +17,6 @@
 */
 
 #include "FormApplication.hpp"
-#include "ProjectNew.hpp"
 #include "IndustryProject_utility.hpp"
 #include "FormProject.hpp"
 #include "Assets.hpp"
@@ -144,12 +143,14 @@ void EVE::Industry::FormApplication::OnOpenProject(wxCommandEvent& e)
 {
 	wxWindow* newIndustryForm = new FormProject(this);
 	FormProject* form = dynamic_cast<FormProject*>(newIndustryForm);
+	form->Show(false);
 	if (form->load())
 	{ 
 		std::function<void()> updFunc = std::bind(&FormApplication::OnUpdateCurrentPageText, this);
 		form->bindFunUpdPage(updFunc);
 		const std::string _name = form->project().name();
 		m_MainBook->AddPage(newIndustryForm, _name, true);
+		form->Show(true);
 	}
 	else
 	{

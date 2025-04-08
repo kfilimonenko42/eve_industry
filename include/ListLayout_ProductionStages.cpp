@@ -34,9 +34,9 @@ void EVE::Industry::ListLayoutProductionStages::createColumns(wxListCtrl* list)
 	list->SetColumnWidth(1, 100);
 	list->AppendColumn("Quantity");
 	list->SetColumnWidth(2, 100);
-	list->AppendColumn("Status");
-	list->SetColumnWidth(3, 100);
 	list->AppendColumn("Total job cost");
+	list->SetColumnWidth(3, 100);
+	list->AppendColumn("Status");
 	list->SetColumnWidth(4, 100);
 }
 
@@ -54,11 +54,25 @@ wxString EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id, vo
 	case 2:
 		return std::format(std::locale(""), "{:L}", item.m_Quantity);
 	case 3:
-		return stringFromEnum(arrStageStatus, item.m_Status);
-	case 4:
 		return std::format(std::locale(""), "{:.2Lf}", jobCost(item, m_Project));
+	case 4:
+		return stringFromEnum(arrStageStatus, item.m_Status);
 	default:
 		return "";
+	}
+}
+
+wxItemAttr* EVE::Industry::ListLayoutProductionStages::getGetItemColumnAttr(void* container, const long index, const long column)
+{
+	const auto& list = *reinterpret_cast<std::vector<ProductionStage>*>(container);
+	const auto& item = list[index];
+
+	switch (column)
+	{
+	case 4:
+		return getStageStatusAttribute(item.m_Status);
+	default:
+		return nullptr;
 	}
 }
 

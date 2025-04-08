@@ -24,6 +24,8 @@
 #include <utility>
 #include <numeric>
 #include <algorithm>
+#include <wx/wx.h>
+#include <wx/itemattr.h>
 
 namespace EVE::Industry
 {
@@ -38,8 +40,28 @@ namespace EVE::Industry
 	static const std::pair<StageStatus, std::string> arrStageStatus[] = {
 		{ StageStatus::Outstanding, "Outstanding" },
 		{ StageStatus::InProgress, "In Progress" },
-		{ StageStatus::Finished, "Finished" },
+		{ StageStatus::Finished, "Finished" }
 	};
+
+	[[nodiscard]] inline wxColour getStageStatusColour(const StageStatus status)
+	{
+		switch (status)
+		{
+		case StageStatus::Outstanding:
+			return wxColour(133, 32, 12);
+		case StageStatus::InProgress:
+			return wxColour(11, 83, 148);
+		case StageStatus::Finished:
+			return wxColour(56, 118, 29);
+		default:
+			return wxColour();
+		}
+	}
+
+	[[nodiscard]] inline wxItemAttr* getStageStatusAttribute(const StageStatus status)
+	{
+		return new wxItemAttr(getStageStatusColour(status), wxColour(), wxFont());
+	}
 
 } // EVE::Industry
 

@@ -72,17 +72,13 @@ int EVE::Industry::FormAddTypesText::getMultiplyBy() const
 
 void EVE::Industry::FormAddTypesText::createControls()
 {
-	wxPanel* m_controlPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS);
-	m_controlPanel->Bind(wxEVT_CHAR_HOOK, &FormAddTypesText::OnKeyDown, this);
-
-	wxPanel* m_btnPanel = new wxPanel(this, wxID_ANY);
-
 #if _DEBUG
 	wxButton* m_btnAddAllTypes = new wxButton(this, wxID_ANY, "add all types", wxDefaultPosition, wxDefaultSize);
 	m_btnAddAllTypes->Bind(wxEVT_BUTTON, &FormAddTypesText::OnAddAllTypes, this);
 #endif
 
-	wxPanel* m_middlePanel = new wxPanel(this, wxID_ANY);
+	wxPanel* m_middlePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS);
+	m_middlePanel->Bind(wxEVT_CHAR_HOOK, &FormAddTypesText::OnKeyDown, this);
 	wxPanel* m_leftPanel = new wxPanel(m_middlePanel, wxID_ANY);
 	wxPanel* m_rightPanel = new wxPanel(m_middlePanel, wxID_ANY);
 
@@ -117,6 +113,7 @@ void EVE::Industry::FormAddTypesText::createControls()
 	middleSizer->Add(m_rightPanel, 0, wxALL, 5);
 	m_middlePanel->SetSizer(middleSizer);
 
+	wxPanel* m_btnPanel = new wxPanel(this, wxID_ANY);
 	wxStaticText* lblMultiplayBy = new wxStaticText(m_btnPanel, wxID_ANY, "Multiply by: ");
 	m_MultiplyBy = new wxSpinCtrl(m_btnPanel, wxID_ANY, "1", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS | wxSP_WRAP, 1, INT_MAX);
 	wxButton* m_btn_Ok = new wxButton(m_btnPanel, wxID_ANY, "OK", wxDefaultPosition, wxDefaultSize);

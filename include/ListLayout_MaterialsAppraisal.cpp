@@ -56,6 +56,11 @@ wxString EVE::Industry::ListLayoutMaterialsAppraisal::getItemText(int owner_id, 
 	}
 }
 
+wxItemAttr* EVE::Industry::ListLayoutMaterialsAppraisal::getGetItemColumnAttr(void* container, const long index, const long column)
+{
+	return nullptr;
+}
+
 int EVE::Industry::ListLayoutMaterialsAppraisal::getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons)
 {
 	const auto& list = *reinterpret_cast<std::vector<MaterialAppraisal>*>(container);

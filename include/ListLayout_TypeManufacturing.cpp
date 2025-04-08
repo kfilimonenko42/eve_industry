@@ -43,6 +43,11 @@ wxString EVE::Industry::ListLayoutTypeManufacturing::getItemText(int owner_id, v
 	}
 }
 
+wxItemAttr* EVE::Industry::ListLayoutTypeManufacturing::getGetItemColumnAttr(void* container, const long index, const long column)
+{
+	return nullptr;
+}
+
 int EVE::Industry::ListLayoutTypeManufacturing::getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons)
 {
 	const auto& list = *reinterpret_cast<std::vector<TypeManufacturing>*>(container);

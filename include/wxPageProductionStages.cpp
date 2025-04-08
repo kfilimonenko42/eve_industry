@@ -102,13 +102,13 @@ void EVE::Industry::wxPageProductionStages::createControls()
 	m_TotalStatuses->SetFont(font);
 	m_OutstandingStatuses = new wxStaticText(_panelResults, wxID_ANY, "Outstanding: -");
 	m_OutstandingStatuses->SetFont(font);
-	m_OutstandingStatuses->SetForegroundColour(wxColour(214, 147, 101));
+	m_OutstandingStatuses->SetForegroundColour(getStageStatusColour(StageStatus::Outstanding));
 	m_InProgressStatuses = new wxStaticText(_panelResults, wxID_ANY, "In Progress: -");
 	m_InProgressStatuses->SetFont(font);
-	m_InProgressStatuses->SetForegroundColour(wxColour(98, 192, 249));
+	m_InProgressStatuses->SetForegroundColour(getStageStatusColour(StageStatus::InProgress));
 	m_FinishedStatuses = new wxStaticText(_panelResults, wxID_ANY, "Finished: -");
 	m_FinishedStatuses->SetFont(font);
-	m_FinishedStatuses->SetForegroundColour(wxColour(70, 150, 81));
+	m_FinishedStatuses->SetForegroundColour(getStageStatusColour(StageStatus::Finished));
 	m_TotalJobCost = new wxStaticText(_panelResults, wxID_ANY, "Total jobs cost: -");
 	m_TotalJobCost->SetFont(font);
 

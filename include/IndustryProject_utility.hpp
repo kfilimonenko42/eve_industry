@@ -38,9 +38,22 @@
 #include "FormAddTypesText.hpp"
 #include "BlueprintMaterialEfficiency.hpp"
 #include "FormMaterialsStages.hpp"
+#include "FormProjectName.hpp"
 
 namespace EVE::Industry
 {
+
+	[[nodiscard]] inline std::string getNewProjectName()
+	{
+		std::unique_ptr<FormProjectName> dialog = std::make_unique<FormProjectName>(nullptr);
+
+		if (dialog->ShowModal() == wxID_OK)
+		{
+			return dialog->get();
+		}
+
+		return {};
+	}
 
 	struct LoadProject
 	{
@@ -183,6 +196,29 @@ namespace EVE::Industry
 			for (const long& i : selected)
 			{
 				dst.erase(i);
+			}
+
+			project.setModified(true);
+		}
+	};
+
+	struct SetQuantityProjectMaterials
+	{
+		void operator()(
+			IndustryProject& project,
+			const std::uint64_t quantity,
+			const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			auto& container = project.m_TypesProject.get();
+			for (const long& i : selected)
+			{
+				auto& element = container[i];
+				element.m_Type.setQuantity(quantity);
 			}
 
 			project.setModified(true);

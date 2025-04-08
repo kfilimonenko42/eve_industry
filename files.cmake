@@ -168,7 +168,6 @@ set(INDUSTRY_src
 	include/ParseIndustryText.cpp
 	include/ParseIndustryText.hpp
 	include/ProductionStage.hpp
-	include/ProjectNew.hpp
 	include/RegionPanel.cpp
 	include/RegionPanel.hpp
 	include/SolarSystemPanel.cpp

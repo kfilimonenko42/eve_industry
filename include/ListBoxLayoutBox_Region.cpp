@@ -45,6 +45,11 @@ wxString EVE::Industry::ListLayoutBoxRegionRecord::getItemText(int owner_id, voi
 	}
 }
 
+wxItemAttr* EVE::Industry::ListLayoutBoxRegionRecord::getGetItemColumnAttr(void* container, const long index, const long column)
+{
+	return nullptr;
+}
+
 int EVE::Industry::ListLayoutBoxRegionRecord::getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons)
 {
 	return -1;

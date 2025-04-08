@@ -16,8 +16,8 @@
 	along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _EVEINDUSTRY_WX_ILISTCTRLLAYOUTMATERIALSPROJECT_HPP_
-#define _EVEINDUSTRY_WX_ILISTCTRLLAYOUTMATERIALSPROJECT_HPP_
+#ifndef _EVEINDUSTRY_WX_ILISTCTRLLAYOUTAVAILABLEMATERIALSPROJECT_HPP_
+#define _EVEINDUSTRY_WX_ILISTCTRLLAYOUTAVAILABLEMATERIALSPROJECT_HPP_
 
 #include <format>
 
@@ -33,6 +33,7 @@ namespace EVE::Industry
 
 		void createColumns(wxListCtrl* list) override;
 		wxString getItemText(int owner_id, void* container, const long index, const long column) override;
+		wxItemAttr* getGetItemColumnAttr(void* container, const long index, const long column) override;
 		int getItemImage(void* container, const long index, const std::map<std::uint32_t, std::size_t>& vIdsIcons) override;
 		void copyToClipboard(void* container, const std::vector<long>& lines, const std::vector<long>& columns) override;
 		void deleteSelectedListItems(void* container, std::vector<long>& lines) override;
@@ -41,4 +42,4 @@ namespace EVE::Industry
 
 } // EVE::Industry
 
-#endif // _EVEINDUSTRY_WX_ILISTCTRLLAYOUTMATERIALSPROJECT_HPP_
+#endif // _EVEINDUSTRY_WX_ILISTCTRLLAYOUTAVAILABLEMATERIALSPROJECT_HPP_

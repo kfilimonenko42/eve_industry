@@ -18,6 +18,8 @@
 
 #include "wxPageMaterialsProject.hpp"
 
+constexpr int ID_SET_QUANTITY = 10001;
+
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::MaterialProject>;
 
 EVE::Industry::wxPageMaterialsProject::wxPageMaterialsProject(
@@ -75,6 +77,7 @@ void EVE::Industry::wxPageMaterialsProject::createControls()
 		m_Materials,
 		wxDefaultPosition,
 		wxSize(200, 200));
+	m_VirtualList->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, &wxPageMaterialsProject::OnListRightClick, this);
 	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsPrices(true);
 	dynamic_cast<vListCtrl*>(m_VirtualList)->setIsImages(true);
 
@@ -122,6 +125,42 @@ void EVE::Industry::wxPageMaterialsProject::OnDeleteAll(wxCommandEvent& event)
 {
 	dynamic_cast<FormProject*>(m_FormProject)->deleteAllTypes();
 	dynamic_cast<FormProject*>(m_FormProject)->getBlueprints();
+}
+
+void EVE::Industry::wxPageMaterialsProject::OnListRightClick(wxListEvent& event)
+{
+	wxMenu menu;
+	menu.Append(ID_SET_QUANTITY, "Set 'Quantity'");
+	menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &wxPageMaterialsProject::OnListPopupClick, this);
+	PopupMenu(&menu);
+
+	event.Skip();
+}
+
+void EVE::Industry::wxPageMaterialsProject::OnListPopupClick(wxCommandEvent& event)
+{
+	const std::vector<long> sLines = dynamic_cast<vListCtrl*>(m_VirtualList)->getSelected();
+	if (sLines.empty())
+	{
+		return;
+	}
+
+	switch (event.GetId())
+	{
+	case ID_SET_QUANTITY:
+	{
+		std::unique_ptr<FormSelectInt> dialog = std::make_unique<FormSelectInt>(m_FormProject, "Set 'Quantity'", "Quantity", 1, INT_MAX);
+
+		if (dialog->ShowModal() == wxID_OK && m_FormProject)
+		{
+			const std::uint64_t result = dialog->get();
+			auto tmpfp = dynamic_cast<FormProject*>(m_FormProject);
+			tmpfp->setQuantityProjectMaterials(result, sLines);
+			tmpfp->calculateProject();
+		}
+		break;
+	}
+	}
 }
 
 void EVE::Industry::wxPageMaterialsProject::OnUpdateTimer(wxTimerEvent& event)

@@ -58,6 +58,7 @@ namespace EVE::Industry
 		void deleteAvailableTypes(std::vector<long>& selected);
 		void deleteAllAvailableTypes();
 		void getBlueprints();
+		void setQuantityProjectMaterials(const std::uint64_t quantity, const std::vector<long>& selected);
 		void setSolarSystem(const SolarSystemRecord& solSystem, const std::vector<long>& selected);
 		void setME(const EVE::Assets::BlueprintME me, const std::vector<long>& selected);
 		void setME(const EVE::Assets::StructureME me, const std::vector<long>& selected);

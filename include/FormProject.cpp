@@ -151,6 +151,15 @@ void EVE::Industry::FormProject::getBlueprints()
 	updateBlueprintsProjectList();
 }
 
+void EVE::Industry::FormProject::setQuantityProjectMaterials(const std::uint64_t quantity, const std::vector<long>& selected)
+{
+	SetQuantityProjectMaterials setQPM{};
+	setQPM(m_Project, quantity, selected);
+
+	updateMaterialsProjectList();
+	updateNamePage();
+}
+
 void EVE::Industry::FormProject::setSolarSystem(const SolarSystemRecord& solSystem, const std::vector<long>& selected)
 {
 	SetSolarSystem setSS{};

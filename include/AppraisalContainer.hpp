@@ -90,20 +90,6 @@ namespace EVE::Industry
 		updThread m_UpdThread{ checkPriceFunc };
 	};
 
-	inline std::string priceSellToString(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
-	{
-		auto& container = AppraisalContainer::Instance();
-		const auto& price = container.getPriceNoUpdate(updRecord);
-		return std::format(std::locale(""), "{:.2Lf}", price.m_PriceSell * count);
-	}
-
-	inline std::string priceBuyToString(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
-	{
-		auto& container = AppraisalContainer::Instance();
-		const auto& price = container.getPriceNoUpdate(updRecord);
-		return std::format(std::locale(""), "{:.2Lf}", price.m_PriceBuy * count);
-	}
-
 	inline double priceSell(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
 	{
 		auto& container = AppraisalContainer::Instance();
@@ -116,6 +102,16 @@ namespace EVE::Industry
 		auto& container = AppraisalContainer::Instance();
 		const auto& price = container.getPriceNoUpdate(updRecord);
 		return price.m_PriceBuy * count;
+	}
+
+	inline std::string priceSellToString(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
+	{
+		return std::format(std::locale(""), "{:.2Lf}", priceSell(updRecord, count));
+	}
+
+	inline std::string priceBuyToString(const UpdatePriceRecord& updRecord, std::uint32_t count = 1)
+	{
+		return std::format(std::locale(""), "{:.2Lf}", priceBuy(updRecord, count));
 	}
 
 	inline bool priceUpdOwner(int owner_id, time_point last)

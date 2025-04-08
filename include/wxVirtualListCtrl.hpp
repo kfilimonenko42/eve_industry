@@ -31,6 +31,7 @@
 #include <chrono>
 #include <wx/wx.h>
 #include <wx/listctrl.h>
+#include <wx/itemattr.h>
 #include <concepts>
 
 #include "ListDataWrapper.hpp"
@@ -83,6 +84,7 @@ private:
 
 	wxString OnGetItemText(long index, long column) const wxOVERRIDE;
 	int OnGetItemImage(long index) const wxOVERRIDE;
+	wxItemAttr* OnGetItemColumnAttr(long index, long column) const wxOVERRIDE;
 	void OnActivateListItem(wxListEvent& event);
 	void OnKeyDown(wxListEvent& event);
 
@@ -294,6 +296,13 @@ inline int wxVirtualListCtrl<T>::OnGetItemImage(long index) const
 {
 	void* tmp = reinterpret_cast<void*>(&(m_List->get()));
 	return m_Layout->getItemImage(tmp, index, m_IdsIcons);
+}
+
+template<typename T>
+inline wxItemAttr* wxVirtualListCtrl<T>::OnGetItemColumnAttr(long index, long column) const
+{
+	void* tmp = reinterpret_cast<void*>(&(m_List->get()));
+	return m_Layout->getGetItemColumnAttr(tmp, index, column);
 }
 
 template<typename T>

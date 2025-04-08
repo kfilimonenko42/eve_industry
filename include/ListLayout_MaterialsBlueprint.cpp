@@ -68,6 +68,11 @@ wxString EVE::Industry::ListLayoutMaterialsBlueprint::getItemText(int owner_id, 
 	}
 }
 
+wxItemAttr* EVE::Industry::ListLayoutMaterialsBlueprint::getGetItemColumnAttr(void* container, const long index, const long column)
+{
+	return nullptr;
+}
+
 int EVE::Industry::ListLayoutMaterialsBlueprint::getItemImage(void* container, const long index, const std::map<std::uint32_t, size_t>& vIdsIcons)
 {
 	const auto& list = *reinterpret_cast<std::vector<MaterialBlueprint>*>(container);
