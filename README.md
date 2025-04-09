@@ -31,8 +31,8 @@ cmake --build .
 
 ## How to use
 
-- [**ru**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/ru)
-- [**en**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/en)
+- [**ru**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/ru/ru.md)
+- [**en**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/en/en.md)
 
 ## License
 
