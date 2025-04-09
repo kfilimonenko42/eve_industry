@@ -24,7 +24,7 @@ You can change name or leave default.
 
 To add our two fits for production on 'Project' page need to press 'Add' button.\
 For example, we want to create some stock of these ships with fits, so will produce them 50 pieces each.\
-Copied fits from pyfa we paste ((<kbd>CTRL</kbd> + <kbd>V</kbd>)) in text field for adding production types and increase 'Multiply by' field to 50.\
+Copied fits from pyfa we paste (<kbd>CTRL</kbd> + <kbd>V</kbd>) in text field for adding production types and increase 'Multiply by' field to 50.\
 One line - one production type. You can use list in left part for adding production types, copy from game client or simply write them in text field.\
 To finish press 'OК' and all list of types that can be produced will be added to 'project' list.\
 Application will gradually load cost information (Currently data loads by Jita 4-4).
@@ -41,9 +41,9 @@ After adding production types will update blueprints list. These are all bp that
 
 This list needs to be configured for getting correct list of base materials and production stages.\
 By right-clicking on list will appear list of what can be configured.\
-Whole list can be selected using <kbd>CTRL</kbd> + <kbd>A</kbd> combination and change settings in group.\
+Whole list can be selected using <kbd>CTRL</kbd> + <kbd>A</kbd> combination and change settings in group.
 
-![6](../examples/example_06.png)\
+![6](../examples/example_06.png)
 
 Settings:
 - Set 'Solar system': system will change resource consumption percentage (structure rigs) and system index. System index will be used for calculating job costs;
@@ -56,7 +56,7 @@ Settings:
 
 All bps have default settings.\
 By default, for all bps (originals) ME is set to 10%, T2 rig and 1% structure bonus.\
-For bpc (like navy, issue, implants and similar) ME is set to 0%, T2 rig and 1% structure bonus with one run.\
+For bpc (like navy, issue, implants and similar) ME is set to 0%, T2 rig and 1% structure bonus and one run.\
 For T2 bpc special settings are set depending on group (ships, modules, charges etc.).\
 BP ME, structure bonus, rig bonus, number of runs - these are important configuration elements that affect final result, what quantity of base materials will be needed for production and number of stages.\
 After configuration need to press 'calculate' button:
@@ -95,10 +95,16 @@ And for other options.\
 I use this project because I like to use ships (modules) that were produced by me, without need to use excel, appraisal and other projects.
 
 
-Warning!\
+1. Warning!\
 Use real numbers for production, what you will actually produce.\
 Application doesn't limit you in quantity you want to produce (only limitation is self build-in types c++).\
 Maximum quantity for production: 18446744073709500000.\
 As example, you might want to produce such quantity of Sabre and will start jobs by 10 runs.\
 Thus you will get such number of stages: 1844674407370950000 and these are only stages for Sabre production, need to add more stages for all reactions and others.\
 Not sure that anyone's PC could 'handle' such numbers.
+
+2. Warning!\
+System indexes load once when application starts.\
+System indexes are cached on ESI side (1 hour), so you may see small difference between game values and values loaded from ESI.\
+Adjusted prices for calculating job costs also load once when application starts.\
+Prices (buy/sell current jita 4-4) displayed in lists load once during first request.
