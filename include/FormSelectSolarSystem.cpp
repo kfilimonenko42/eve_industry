@@ -53,13 +53,18 @@ void EVE::Industry::FormSelectSolarSystem::createControls()
 	m_controlPanel->Bind(wxEVT_CHAR_HOOK, &FormSelectSolarSystem::OnKeyDown, this);
 
 	wxStaticText* lblFilter = new wxStaticText(m_controlPanel, wxID_ANY, "Filter: ");
-	m_txtFilter = new wxTextCtrl(m_controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(350, 24));
+	m_txtFilter = new wxTextCtrl(m_controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(320, 24));
 	m_txtFilter->Bind(wxEVT_TEXT, &FormSelectSolarSystem::OnFilterText, this);
+
+	wxButton* m_btnClear = new wxButton(m_controlPanel, wxID_ANY, "x", wxDefaultPosition, wxSize(30, 24));
+	m_btnClear->Bind(wxEVT_BUTTON, &FormSelectSolarSystem::OnClear, this);
 
 	wxBoxSizer* panel_sizer = new wxBoxSizer(wxHORIZONTAL);
 	panel_sizer->Add(lblFilter, 0, wxALL, 5);
 	panel_sizer->AddStretchSpacer();
 	panel_sizer->Add(m_txtFilter, 0, wxEXPAND, 5);
+	panel_sizer->AddStretchSpacer();
+	panel_sizer->Add(m_btnClear, 0, wxEXPAND);
 	m_controlPanel->SetSizer(panel_sizer);
 
 	const Assets& assets = Assets::Instance();
@@ -157,4 +162,10 @@ void EVE::Industry::FormSelectSolarSystem::formOk()
 void EVE::Industry::FormSelectSolarSystem::formCancel()
 {
 	EndModal(wxID_CLOSE);
+}
+
+void EVE::Industry::FormSelectSolarSystem::OnClear(wxCommandEvent& event)
+{
+	m_txtFilter->Clear();
+	updateSolarSystemList();
 }

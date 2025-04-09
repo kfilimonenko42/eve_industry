@@ -65,6 +65,7 @@ namespace EVE::Industry
 		void formOk();
 		void formCancel();
 		void OnFilterText(wxCommandEvent& event);
+		void OnClear(wxCommandEvent& event);
 
 	private:
 		wxListCtrl* m_VirtualList{};

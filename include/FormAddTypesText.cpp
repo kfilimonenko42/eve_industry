@@ -83,13 +83,18 @@ void EVE::Industry::FormAddTypesText::createControls()
 	wxPanel* m_rightPanel = new wxPanel(m_middlePanel, wxID_ANY);
 
 	wxStaticText* lblFilter = new wxStaticText(m_leftPanel, wxID_ANY, "Filter: ");
-	m_txtFilter = new wxTextCtrl(m_leftPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(350, 24));
+	m_txtFilter = new wxTextCtrl(m_leftPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(320, 24));
 	m_txtFilter->Bind(wxEVT_TEXT, &FormAddTypesText::OnFilterText, this);
+
+	wxButton* m_btnClear = new wxButton(m_leftPanel, wxID_ANY, "x", wxDefaultPosition, wxSize(30, 24));
+	m_btnClear->Bind(wxEVT_BUTTON, &FormAddTypesText::OnClear, this);
 
 	wxBoxSizer* filterSizer = new wxBoxSizer(wxHORIZONTAL);
 	filterSizer->Add(lblFilter, 0, wxALL, 5);
 	filterSizer->AddStretchSpacer();
 	filterSizer->Add(m_txtFilter, 0, wxEXPAND, 5);
+	filterSizer->AddStretchSpacer();
+	filterSizer->Add(m_btnClear, 0, wxEXPAND);
 
 	m_VirtualList = new vListCtrl(
 		m_leftPanel,
@@ -215,5 +220,11 @@ void EVE::Industry::FormAddTypesText::formCancel()
 
 void EVE::Industry::FormAddTypesText::OnFilterText(wxCommandEvent& event)
 {
+	updateTypesList();
+}
+
+void EVE::Industry::FormAddTypesText::OnClear(wxCommandEvent& event)
+{
+	m_txtFilter->Clear();
 	updateTypesList();
 }

@@ -59,6 +59,7 @@ namespace EVE::Industry
 		void OnKeyDown(wxKeyEvent& event);
 		void formOk();
 		void formCancel();
+		void OnClear(wxCommandEvent& event);
 
 	private:
 		wxTextCtrl* m_txtFilter{};
