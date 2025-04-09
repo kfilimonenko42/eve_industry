@@ -2,6 +2,11 @@
 
 This project can help you get information about materials, prices, and production stages (eve online)
 
+## How to use
+
+- [**ru**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/ru/ru.md)
+- [**en**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/en/en.md)
+
 ## Building
 
 ### Windows
@@ -27,12 +32,6 @@ cmake --build .
 - [**boost beast**](https://github.com/boostorg/boost)
 - [**openssl**](https://github.com/openssl/openssl)
 - [**nlohmann/json**](https://github.com/nlohmann/json)
-
-
-## How to use
-
-- [**ru**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/ru/ru.md)
-- [**en**](https://github.com/kfilimonenko42/eve_industry/tree/main/docs/en/en.md)
 
 ## License
 
