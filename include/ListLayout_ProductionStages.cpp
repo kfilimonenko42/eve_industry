@@ -62,7 +62,7 @@ wxString EVE::Industry::ListLayoutProductionStages::getItemText(int owner_id, vo
 	}
 }
 
-wxItemAttr* EVE::Industry::ListLayoutProductionStages::getGetItemColumnAttr(void* container, const long index, const long column)
+wxItemAttr* EVE::Industry::ListLayoutProductionStages::getItemColumnAttr(void* container, const long index, const long column)
 {
 	const auto& list = *reinterpret_cast<std::vector<ProductionStage>*>(container);
 	const auto& item = list[index];

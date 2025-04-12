@@ -22,6 +22,7 @@
 #include <string>
 #include <utility>
 #include <array>
+#include <filesystem>
 
 namespace EVE::APPSETTINGS
 {
@@ -35,6 +36,7 @@ namespace EVE::APPSETTINGS
         static const std::string Stations{ "/assets/stations.json" };
         static const std::string Blueprints{ "/assets/bps.json" };
         static const std::string BlueprintsSettings{ "/assets/bps_settings.json" };
+        static const std::string BlueprintsSettings_Users{ "/user/bps_settings.json" };
         static const std::string Types{ "/assets/types.json" };
         static const std::string MarketGroups{ "/assets/market_groups.json" };
         static const std::string Groups{ "/assets/groups.json" };
@@ -57,6 +59,11 @@ namespace EVE::APPSETTINGS
     namespace Default
     {
         static const std::string LocTag{ "en" };
+    }
+
+    [[nodiscard]] inline bool userBpSettingsExists()
+    {
+        return std::filesystem::exists(std::filesystem::current_path().string() + Paths::BlueprintsSettings_Users);
     }
 
 } // EVE::APPSETTINGS

@@ -113,7 +113,6 @@ set(INDUSTRY_src
 	include/IIndustryLoader.hpp
 	include/IIndustrySaver.hpp
 	include/IListCtrlLayout.hpp
-	include/IListInfoUpdater.hpp
 	include/IndustryCalculation.cpp
 	include/IndustryCalculation.hpp
 	include/IndustryCalculation_Tools.hpp

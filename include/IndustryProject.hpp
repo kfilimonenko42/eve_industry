@@ -56,10 +56,6 @@ namespace EVE::Industry
 		const std::string& fileName() const;
 
 		std::vector<std::uint32_t> getTypeProjectIDs() const;
-		void restoreME();
-		void restoreSystems();
-		void restoreMaxRunsPerJob();
-
 		std::uint64_t getStock(const std::uint32_t type_id) const;
 
 	public:
@@ -68,9 +64,6 @@ namespace EVE::Industry
 		ListDataWrapper<MaterialProject> m_Stock;
 		//
 		ListDataWrapper<BlueprintProject> m_BlueprintsList;
-		std::unordered_map<std::uint32_t, BpME> m_BPME;
-		std::unordered_map<std::uint32_t, SolarSystemRecord> m_BPSystem;
-		std::unordered_map<std::uint32_t, std::uint64_t> m_BPMaxRunsPreJob;
 		//
 		ListDataWrapper<MaterialBase> m_TypesBase;
 		ListDataWrapper<MaterialBlueprint> m_TypesBlueprint;

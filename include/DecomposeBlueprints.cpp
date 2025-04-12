@@ -33,8 +33,8 @@ void EVE::Industry::MaterialsToBlueprints::operator()(
 	const std::vector<std::uint32_t>& _source,
 	std::vector<BlueprintProject>& _dst)
 {;
-	using bpME = EVE::Assets::BlueprintMaterialEfficiency;
 	DecomposeBlueprint decbps{};
+	const auto& assets = Assets::Instance();
 
 	for (const std::uint32_t type_id : _source)
 	{
@@ -76,7 +76,33 @@ void EVE::Industry::MaterialsToBlueprints::operator()(
 			continue;
 		}
 
-		_dst.emplace_back(bp, SolarSystemRecord{}, bpME{});
+		auto [bpsfound, settings] = assets.m_BlueprintsSettingsContainer.element(bp.id());
+
+		if (bpsfound)
+		{
+			SolarSystemRecord solSystem;
+
+			if (settings->m_SolarSystemID > 0)
+			{
+				try
+				{
+					solSystem = SolarSystemRecord{ settings->m_SolarSystemID };
+				}
+				catch (const std::runtime_error& er)
+				{
+					Log::LOG_ERROR(er.what());
+				}
+			}
+
+			_dst.emplace_back(std::move(bp), std::move(solSystem),
+				EVE::Assets::BlueprintMaterialEfficiency{ settings->m_BpME, settings->m_StructME, settings->m_RigME },
+				settings->m_MaxRuns, settings->m_StructureRoleBonus, settings->m_FacilityTax);
+		}
+		else
+		{
+			_dst.emplace_back(std::move(bp), SolarSystemRecord{}, EVE::Assets::BlueprintMaterialEfficiency{});
+		}
+
 		decbps(bp, _dst);
 	}
 }

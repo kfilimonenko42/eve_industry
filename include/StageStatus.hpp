@@ -58,9 +58,23 @@ namespace EVE::Industry
 		}
 	}
 
+	static wxItemAttr ia_StatusOutstanding(getStageStatusColour(StageStatus::Outstanding), wxColour(), wxFont());
+	static wxItemAttr ia_StatusInProgress(getStageStatusColour(StageStatus::InProgress), wxColour(), wxFont());
+	static wxItemAttr ia_StatusFinished(getStageStatusColour(StageStatus::Finished), wxColour(), wxFont());
+
 	[[nodiscard]] inline wxItemAttr* getStageStatusAttribute(const StageStatus status)
 	{
-		return new wxItemAttr(getStageStatusColour(status), wxColour(), wxFont());
+		switch (status)
+		{
+		case StageStatus::Outstanding:
+			return &ia_StatusOutstanding;
+		case StageStatus::InProgress:
+			return &ia_StatusInProgress;
+		case StageStatus::Finished:
+			return &ia_StatusFinished;
+		default:
+			return nullptr;
+		}
 	}
 
 } // EVE::Industry

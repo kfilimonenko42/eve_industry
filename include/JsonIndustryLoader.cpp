@@ -213,7 +213,6 @@ void EVE::Industry::JsonIndustryLoader::readBlueprintsProject(const nlohmann::js
 			try
 			{
 				solSystem = SolarSystemRecord{ solar_system_id };
-				dst.m_BPSystem[bp_id] = solSystem;
 			}
 			catch (const std::runtime_error& er)
 			{
@@ -230,12 +229,6 @@ void EVE::Industry::JsonIndustryLoader::readBlueprintsProject(const nlohmann::js
 		catch (const std::runtime_error& er)
 		{
 			Log::LOG_ERROR(er.what());
-		}
-		
-		dst.m_BPME[bp_id] = EVE::Assets::BlueprintMaterialEfficiency{ me, struct_me, rig_me };
-		if (maximum_runs > 0)
-		{
-			dst.m_BPMaxRunsPreJob[bp_id] = maximum_runs;
 		}
 	}
 

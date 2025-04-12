@@ -32,7 +32,7 @@ void EVE::Industry::JsonIndustrySaver::save(const std::string& fileName, const I
 	prepareDataJson(source.m_Stock, stock);
 
 	nlohmann::json blueprintsProject = nlohmann::json::array();
-	prepareDataJson(source.m_BlueprintsList, blueprintsProject, source.m_BPME);
+	prepareDataJson(source.m_BlueprintsList, blueprintsProject);
 	
 	nlohmann::json typesRaw = nlohmann::json::array();
 	prepareDataJson(source.m_TypesBase, typesRaw);
@@ -65,17 +65,15 @@ nlohmann::json EVE::Industry::nlohmann_to_json(const MaterialProject& elem)
 	};
 }
 
-nlohmann::json EVE::Industry::nlohmann_to_json(const BlueprintProject& elem, const std::unordered_map<std::uint32_t, EVE::Assets::BlueprintMaterialEfficiency>& bpme)
+nlohmann::json EVE::Industry::nlohmann_to_json(const BlueprintProject& elem)
 {
-	auto current_bpme = getBlueprintMaterialEfficiency(elem.m_Blueprint.id(), bpme);
-
 	return nlohmann::json{
 		{"id", elem.m_Blueprint.id()},
 		{"solar_system", elem.m_SolarSystem.id()},
 		{"maximum_runs", elem.m_MaxRunsPerJob},
-		{"me", stringFromEnum(EVE::Assets::arrBlueprintME, current_bpme.m_BpME)},
-		{"me_struct", stringFromEnum(EVE::Assets::arrStructureME, current_bpme.m_StructME)},
-		{"me_rig", stringFromEnum(EVE::Assets::arrRigME, current_bpme.m_RigME)},
+		{"me", stringFromEnum(EVE::Assets::arrBlueprintME, elem.m_ME.m_BpME)},
+		{"me_struct", stringFromEnum(EVE::Assets::arrStructureME, elem.m_ME.m_StructME)},
+		{"me_rig", stringFromEnum(EVE::Assets::arrRigME, elem.m_ME.m_RigME)},
 		{"struct_role_bonus", elem.m_StructRoleBonus},
 		{"facility_tax", elem.m_FacilityTax}
 	};

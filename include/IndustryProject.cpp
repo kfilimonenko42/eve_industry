@@ -31,9 +31,6 @@ void EVE::Industry::IndustryProject::clear()
 	m_TypesProject.clear();
 	m_Stock.clear();
 	m_BlueprintsList.clear();
-	m_BPME.clear();
-	m_BPSystem.clear();
-	m_BPMaxRunsPreJob.clear();
 	m_TypesBase.clear();
 	m_TypesBlueprint.clear();
 	m_ProductionStages.clear();
@@ -91,59 +88,6 @@ std::vector<std::uint32_t> EVE::Industry::IndustryProject::getTypeProjectIDs() c
 	_result.erase(std::unique(std::begin(_result), std::end(_result)), std::end(_result));
 
 	return _result;
-}
-
-void EVE::Industry::IndustryProject::restoreME()
-{
-	if (m_BlueprintsList.empty())
-	{
-		return;
-	}
-
-	for (auto& element : m_BlueprintsList.get())
-	{
-		const uint32_t bp_id = element.m_Blueprint.id();
-		if (m_BPME.contains(bp_id))
-		{
-			element.m_ME = m_BPME.at(bp_id);
-		}
-	}
-}
-
-void EVE::Industry::IndustryProject::restoreSystems()
-{
-	if (m_BlueprintsList.empty())
-	{
-		return;
-	}
-
-	const Assets& assets = Assets::Instance();
-
-	for (auto& element : m_BlueprintsList.get())
-	{
-		const uint32_t bp_id = element.m_Blueprint.id();
-		if (m_BPSystem.contains(bp_id))
-		{
-			element.setSolarSystem(m_BPSystem.at(bp_id));
-		}
-	}
-}
-
-void EVE::Industry::IndustryProject::restoreMaxRunsPerJob()
-{
-	if (m_BlueprintsList.empty())
-	{
-		return;
-	}
-
-	for (auto& element : m_BlueprintsList.get())
-	{
-		const uint32_t bp_id = element.m_Blueprint.id();
-		if (m_BPMaxRunsPreJob.contains(bp_id))
-		{
-			element.m_MaxRunsPerJob = m_BPMaxRunsPreJob.at(bp_id);
-		}
-	}
 }
 
 std::uint64_t EVE::Industry::IndustryProject::getStock(const std::uint32_t type_id) const

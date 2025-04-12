@@ -56,7 +56,7 @@ namespace EVE::Industry
     }
 
 	nlohmann::json nlohmann_to_json(const MaterialProject& elem);
-	nlohmann::json nlohmann_to_json(const BlueprintProject& elem, const std::unordered_map<std::uint32_t, EVE::Assets::BlueprintMaterialEfficiency>& bpme);
+	nlohmann::json nlohmann_to_json(const BlueprintProject& elem);
     nlohmann::json nlohmann_to_json(const MaterialBase& elem);
     nlohmann::json nlohmann_to_json(const MaterialBlueprint& elem);
     nlohmann::json nlohmann_to_json(const ProductionStage& elem);

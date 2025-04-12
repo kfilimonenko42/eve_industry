@@ -65,6 +65,12 @@ void EVE::Assets::JsonLoader::load(std::vector<Blueprint>& _container)
 
 void EVE::Assets::JsonLoader::load(std::vector<BlueprintSettings>& _container)
 {
+	if (EVE::APPSETTINGS::userBpSettingsExists())
+	{
+		json_load(EVE::APPSETTINGS::Paths::BlueprintsSettings_Users, _container);
+		return;
+	}
+
 	json_load(EVE::APPSETTINGS::Paths::BlueprintsSettings, _container);
 }
 
@@ -279,6 +285,8 @@ void EVE::Assets::from_json(const nlohmann::json& j, BlueprintSettings& v)
 
 	j.at("id").get_to(v.m_ID);
 
+	if (j.contains("solar_system")) { j.at("solar_system").get_to(v.m_SolarSystemID); };
+
 	std::string me;
 	if (j.contains("me")) { j.at("me").get_to(me); };
 	enumFromString(arrBlueprintME, me, v.m_BpME);
@@ -293,6 +301,8 @@ void EVE::Assets::from_json(const nlohmann::json& j, BlueprintSettings& v)
 
 	if (j.contains("weight")) { j.at("weight").get_to(v.m_Weight); };
 	if (j.contains("maximum_runs")) { j.at("maximum_runs").get_to(v.m_MaxRuns); };
+	if (j.contains("structure_role_bonus")) { j.at("structure_role_bonus").get_to(v.m_StructureRoleBonus); };
+	if (j.contains("facility_tax")) { j.at("facility_tax").get_to(v.m_FacilityTax); };
 }
 
 void EVE::Assets::from_json(const nlohmann::json& j, std::vector<Material>& v)

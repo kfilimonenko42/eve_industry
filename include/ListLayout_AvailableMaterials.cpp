@@ -48,7 +48,7 @@ wxString EVE::Industry::ListLayoutAvailableMaterials::getItemText(int owner_id, 
 	}
 }
 
-wxItemAttr* EVE::Industry::ListLayoutAvailableMaterials::getGetItemColumnAttr(void* container, const long index, const long column)
+wxItemAttr* EVE::Industry::ListLayoutAvailableMaterials::getItemColumnAttr(void* container, const long index, const long column)
 {
 	return nullptr;
 }

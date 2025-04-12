@@ -166,18 +166,6 @@ namespace EVE::Assets
 		}
 	};
 
-	[[nodiscard]] inline const BlueprintMaterialEfficiency getBlueprintMaterialEfficiency(
-		const std::uint32_t id,
-		const auto& container)
-	{
-		if (container.contains(id))
-		{
-			return container.at(id);
-		}
-
-		return {};
-	}
-
 } // namespace EVE::Assets
 
 #endif // _EVEASSETS_BLUEPRINTMATERIALEFFICIENCY_HPP_

@@ -232,6 +232,12 @@ void EVE::Industry::FormProject::setFacilityTax(const double tax, const std::vec
 	updateNamePage();
 }
 
+void EVE::Industry::FormProject::saveUserBlueprintsSettins(const std::vector<long>& selected)
+{
+	SaveUserBlueprintsSettins subs{};
+	subs(m_Project, selected);
+}
+
 void EVE::Industry::FormProject::setStageStatus(const StageStatus status, const std::vector<long>& selected)
 {
 	SetStageStatus setStageStatus{};

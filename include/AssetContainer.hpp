@@ -103,6 +103,23 @@ namespace EVE::Assets
 			}
 		}
 
+		void load(std::vector<T>&& src)
+		{
+			std::scoped_lock lg(m_Mutex);
+
+			if (!m_Container.empty())
+			{
+				m_Container.clear();
+			}
+
+			m_Container = std::move(src);
+
+			if constexpr (TSupportsLessThan<T>)
+			{
+				std::sort(std::begin(m_Container), std::end(m_Container));
+			}
+		}
+
 		std::size_t size() const
 		{
 			return m_Container.size();
@@ -134,6 +151,11 @@ namespace EVE::Assets
 		}
 
 		[[nodiscard]] const std::vector<T>& get_container() const
+		{
+			return m_Container;
+		}
+
+		[[nodiscard]] std::vector<T> copy() const
 		{
 			return m_Container;
 		}

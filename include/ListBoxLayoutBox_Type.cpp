@@ -45,7 +45,7 @@ wxString EVE::Industry::ListLayoutBoxTypeRecord::getItemText(int owner_id, void*
 	}
 }
 
-wxItemAttr* EVE::Industry::ListLayoutBoxTypeRecord::getGetItemColumnAttr(void* container, const long index, const long column)
+wxItemAttr* EVE::Industry::ListLayoutBoxTypeRecord::getItemColumnAttr(void* container, const long index, const long column)
 {
 	return nullptr;
 }

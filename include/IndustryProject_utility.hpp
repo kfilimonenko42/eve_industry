@@ -236,10 +236,6 @@ namespace EVE::Industry
 			mattobps(project.getTypeProjectIDs(), blueprints);
 			std::sort(std::begin(blueprints), std::end(blueprints), BlueprintProjectSortByWeightName());
 			project.m_BlueprintsList.update(std::move(blueprints));
-
-			project.restoreSystems();
-			project.restoreME();
-			project.restoreMaxRunsPerJob();
 		}
 	};
 
@@ -261,7 +257,6 @@ namespace EVE::Industry
 				auto& element = container[i];
 
 				element.setSolarSystem(solSystem);
-				project.m_BPSystem[element.m_Blueprint.id()] = solSystem;
 			}
 
 			project.setModified(true);
@@ -290,7 +285,6 @@ namespace EVE::Industry
 				}
 
 				element.m_ME.m_BpME = me;
-				project.m_BPME[element.m_Blueprint.id()].m_BpME = me;
 			}
 
 			project.setModified(true);
@@ -319,7 +313,6 @@ namespace EVE::Industry
 				}
 
 				element.m_ME.m_StructME = me;
-				project.m_BPME[element.m_Blueprint.id()].m_StructME = me;
 			}
 
 			project.setModified(true);
@@ -343,7 +336,6 @@ namespace EVE::Industry
 			{
 				auto& element = container[i];
 				element.m_ME.m_RigME = me;
-				project.m_BPME[element.m_Blueprint.id()].m_RigME = me;
 			}
 
 			project.setModified(true);
@@ -367,7 +359,6 @@ namespace EVE::Industry
 			{
 				auto& element = container[i];
 				element.m_MaxRunsPerJob = runs;
-				project.m_BPMaxRunsPreJob[element.m_Blueprint.id()] = runs;
 			}
 
 			project.setModified(true);
@@ -448,6 +439,35 @@ namespace EVE::Industry
 			}
 
 			project.setModified(true);
+		}
+	};
+
+	struct SaveUserBlueprintsSettins
+	{
+		void operator()(
+			const IndustryProject& project,
+			const std::vector<long>& selected)
+		{
+			if (selected.empty())
+			{
+				return;
+			}
+
+			auto& assets = Assets::Instance();
+			std::vector<EVE::Assets::BlueprintSettings> bpSettingsCopy = assets.m_BlueprintsSettingsContainer.copy();
+
+			auto& container = project.m_BlueprintsList.get();
+			for (const long& i : selected)
+			{
+				auto& element = container[i];
+				updateUserBlueprintSettings(bpSettingsCopy,
+					element.m_Blueprint.id(), element.m_SolarSystem.id(),
+					element.m_ME.m_BpME, element.m_ME.m_StructME, element.m_ME.m_RigME,
+					element.m_MaxRunsPerJob, element.m_StructRoleBonus, element.m_FacilityTax);
+			}
+
+			saveUserBlueprintSettings(bpSettingsCopy);
+			assets.m_BlueprintsSettingsContainer.load(std::move(bpSettingsCopy));
 		}
 	};
 

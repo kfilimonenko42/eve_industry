@@ -67,6 +67,7 @@ namespace EVE::Industry
 		void setMaximumRunsFromStages(const std::uint64_t runs, const std::vector<long>& selected);
 		void setStructureRoleBonus(const std::uint64_t bonus, const std::vector<long>& selected);
 		void setFacilityTax(const double tax, const std::vector<long>& selected);
+		void saveUserBlueprintsSettins(const std::vector<long>& selected);
 		void setStageStatus(const StageStatus status, const std::vector<long>& selected);
 		void showMaterialsStages(const std::vector<long>& selected);
 		void addStockFromRawMaterials(const std::vector<long>& selected);

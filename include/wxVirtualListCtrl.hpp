@@ -226,14 +226,17 @@ inline void wxVirtualListCtrl<T>::OnUpdateTimer(wxTimerEvent& event)
 
 	auto& bitmapContainer = EVE::Industry::BitmapContainer::Instance();
 	const auto lastUpdImages = bitmapContainer.lastUpdate(list_id);
-	if (this->m_IsImages && EVE::Industry::bitmapUpdOwner(list_id, this->m_LastUpdImages))
+	if (this->m_IsImages)
 	{
-		wxVector<wxBitmapBundle> vIcons;
-		std::map<std::uint32_t, std::size_t> vIdsIcons;
-		bitmapContainer.get16(m_List->ids(), vIcons, vIdsIcons);
-		this->updateImages(vIcons, vIdsIcons);
-		this->updateLastUpdImages(lastUpdImages);
-		needRefresh = true;
+		if (EVE::Industry::bitmapUpdOwner(list_id, this->m_LastUpdImages))
+		{
+			wxVector<wxBitmapBundle> vIcons;
+			std::map<std::uint32_t, std::size_t> vIdsIcons;
+			bitmapContainer.get16(m_List->ids(), vIcons, vIdsIcons);
+			this->updateImages(vIcons, vIdsIcons);
+			this->updateLastUpdImages(lastUpdImages);
+			needRefresh = true;
+		}
 	}
 
 	if (needRefresh)
@@ -302,7 +305,7 @@ template<typename T>
 inline wxItemAttr* wxVirtualListCtrl<T>::OnGetItemColumnAttr(long index, long column) const
 {
 	void* tmp = reinterpret_cast<void*>(&(m_List->get()));
-	return m_Layout->getGetItemColumnAttr(tmp, index, column);
+	return m_Layout->getItemColumnAttr(tmp, index, column);
 }
 
 template<typename T>

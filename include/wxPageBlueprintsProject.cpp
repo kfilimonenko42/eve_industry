@@ -25,6 +25,7 @@ constexpr int ID_BPSETTING_SETRIGME = 10004;
 constexpr int ID_BPSETTING_SETMAXRUNS = 10005;
 constexpr int ID_BPSETTING_STRUCTUREROLEBONUS = 10006;
 constexpr int ID_BPSETTING_FACILITYTAX = 10007;
+constexpr int ID_BPSETTING_SAVE = 10008;
 
 using vListCtrl = wxVirtualListCtrl<EVE::Industry::BlueprintProject>;
 
@@ -92,12 +93,17 @@ void EVE::Industry::wxPageBlueprintsProject::OnListRightClick(wxListEvent& event
 {
 	wxMenu menu;
 	menu.Append(ID_BPSETTING_SETSOLARSYSTEM, "Set 'Solar System'");
+	menu.AppendSeparator();
 	menu.Append(ID_BPSETTING_SETBLUEPRINTME, "Set 'Blueprint ME'");
 	menu.Append(ID_BPSETTING_SETSTRUCTUREME, "Set 'Structure ME'");
 	menu.Append(ID_BPSETTING_SETRIGME, "Set 'Rig ME'");
+	menu.AppendSeparator();
 	menu.Append(ID_BPSETTING_SETMAXRUNS, "Set 'Maximum runs'");
+	menu.AppendSeparator();
 	menu.Append(ID_BPSETTING_STRUCTUREROLEBONUS, "Set 'Structure role bonus'");
 	menu.Append(ID_BPSETTING_FACILITYTAX, "Set 'Facility tax'");
+	menu.AppendSeparator();
+	menu.Append(ID_BPSETTING_SAVE, "Save settings");
 	menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &wxPageBlueprintsProject::OnListPopupClick, this);
 	PopupMenu(&menu);
 
@@ -188,6 +194,11 @@ void EVE::Industry::wxPageBlueprintsProject::OnListPopupClick(wxCommandEvent& ev
 			const double result = dialog->get();
 			dynamic_cast<FormProject*>(m_FormProject)->setFacilityTax(result, sLines);
 		}
+		break;
+	}
+	case ID_BPSETTING_SAVE:
+	{
+		dynamic_cast<FormProject*>(m_FormProject)->saveUserBlueprintsSettins(sLines);
 		break;
 	}
 	}
