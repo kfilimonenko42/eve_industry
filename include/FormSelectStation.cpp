@@ -56,10 +56,10 @@ void EVE::Industry::FormSelectStation::createControls()
 	m_controlPanel->Bind(wxEVT_CHAR_HOOK, &FormSelectStation::OnKeyDown, this);
 
 	wxStaticText* lblFilter = new wxStaticText(m_controlPanel, wxID_ANY, "Filter: ");
-	m_txtFilter = new wxTextCtrl(m_controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(320, 24));
+	m_txtFilter = new wxTextCtrl(m_controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(300, 24));
 	m_txtFilter->Bind(wxEVT_TEXT, &FormSelectStation::OnFilterText, this);
 
-	wxButton* m_btnClear = new wxButton(m_controlPanel, wxID_ANY, "x", wxDefaultPosition, wxSize(30, 24));
+	wxButton* m_btnClear = new wxButton(m_controlPanel, wxID_ANY, "x", wxDefaultPosition, wxSize(35, 24));
 	m_btnClear->Bind(wxEVT_BUTTON, &FormSelectStation::OnClear, this);
 
 	wxBoxSizer* panel_sizer = new wxBoxSizer(wxHORIZONTAL);

@@ -50,13 +50,13 @@ const EVE::Industry::StationRecord& EVE::Industry::StationPanel::get() const
 
 void EVE::Industry::StationPanel::createControls()
 {
-	wxStaticText* lblStationName = new wxStaticText(this, wxID_ANY, "Station: ", wxDefaultPosition, wxSize(40, 19));
-	m_StationName = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(250, 24), wxTE_READONLY);
+	wxStaticText* lblStationName = new wxStaticText(this, wxID_ANY, "Station: ", wxDefaultPosition, wxSize(50, 19));
+	m_StationName = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(220, 24), wxTE_READONLY);
 
-	wxButton* m_btnClear = new wxButton(this, wxID_ANY, "x", wxDefaultPosition, wxSize(30, 24));
+	wxButton* m_btnClear = new wxButton(this, wxID_ANY, "x", wxDefaultPosition, wxSize(35, 24));
 	m_btnClear->Bind(wxEVT_BUTTON, &StationPanel::OnClear, this);
 
-	wxButton* m_btnSelect = new wxButton(this, wxID_ANY, "...", wxDefaultPosition, wxSize(30, 24));
+	wxButton* m_btnSelect = new wxButton(this, wxID_ANY, "...", wxDefaultPosition, wxSize(35, 24));
 	m_btnSelect->Bind(wxEVT_BUTTON, &StationPanel::OnSelect, this);
 
 	wxBoxSizer* base_sizer = new wxBoxSizer(wxHORIZONTAL);

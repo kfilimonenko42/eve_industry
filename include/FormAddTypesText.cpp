@@ -83,10 +83,10 @@ void EVE::Industry::FormAddTypesText::createControls()
 	wxPanel* m_rightPanel = new wxPanel(m_middlePanel, wxID_ANY);
 
 	wxStaticText* lblFilter = new wxStaticText(m_leftPanel, wxID_ANY, "Filter: ");
-	m_txtFilter = new wxTextCtrl(m_leftPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(320, 24));
+	m_txtFilter = new wxTextCtrl(m_leftPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(300, 24));
 	m_txtFilter->Bind(wxEVT_TEXT, &FormAddTypesText::OnFilterText, this);
 
-	wxButton* m_btnClear = new wxButton(m_leftPanel, wxID_ANY, "x", wxDefaultPosition, wxSize(30, 24));
+	wxButton* m_btnClear = new wxButton(m_leftPanel, wxID_ANY, "x", wxDefaultPosition, wxSize(35, 24));
 	m_btnClear->Bind(wxEVT_BUTTON, &FormAddTypesText::OnClear, this);
 
 	wxBoxSizer* filterSizer = new wxBoxSizer(wxHORIZONTAL);
