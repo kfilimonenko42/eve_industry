@@ -20,6 +20,7 @@
 #define _EVEINDUSTRY_LISTDATAWRAPPER_HPP_
 
 #include <vector>
+#include <set>
 #include <cassert>
 #include <string>
 #include <cstdint>
@@ -88,13 +89,18 @@ namespace EVE::Industry
 	template<typename T>
 	inline std::vector<std::uint32_t> ListDataWrapper<T>::ids() const
 	{
-		std::vector<std::uint32_t> result;
+		std::set<std::uint32_t> ids;
 
 		for (const auto& elem : m_Data)
 		{
-			result.push_back(elem.id());
+			const std::uint32_t _id = elem.id();
+			if (!ids.contains(_id))
+			{
+				ids.insert(_id);
+			}
 		}
 
+		std::vector<std::uint32_t> result(std::begin(ids), std::end(ids));
 		return result;
 	}
 

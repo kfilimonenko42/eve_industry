@@ -23,4 +23,16 @@
 
 using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
+[[nodiscard]] inline decltype(auto) difference_seconds(const time_point start, const time_point end)
+{
+	const auto diff = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+	return diff.count();
+}
+
+[[nodiscard]] inline decltype(auto) difference_seconds_now(const time_point start)
+{
+	const auto now = std::chrono::high_resolution_clock::now();
+	return difference_seconds(start, now);
+}
+
 #endif // _CHRONOTOOLS_HPP_

@@ -228,7 +228,8 @@ inline void wxVirtualListCtrl<T>::OnUpdateTimer(wxTimerEvent& event)
 	const auto lastUpdImages = bitmapContainer.lastUpdate(list_id);
 	if (this->m_IsImages)
 	{
-		if (EVE::Industry::bitmapUpdOwner(list_id, this->m_LastUpdImages))
+		if (EVE::Industry::bitmapUpdOwner(list_id, this->m_LastUpdImages)
+			|| (difference_seconds_now(this->m_LastUpdImages) >= 5 && m_IdsIcons.empty()))
 		{
 			wxVector<wxBitmapBundle> vIcons;
 			std::map<std::uint32_t, std::size_t> vIdsIcons;
