@@ -59,6 +59,8 @@ By default, for all bps (originals) ME is set to 10%, T2 rig and 1% structure bo
 For bpc (like navy, issue, implants and similar) ME is set to 0%, T2 rig and 1% structure bonus and one run.\
 For T2 bpc special settings are set depending on group (ships, modules, charges etc.).\
 BP ME, structure bonus, rig bonus, number of runs - these are important configuration elements that affect final result, what quantity of base materials will be needed for production and number of stages.\
+Maximum runs - pre-calculated for null sec (wh) with maximum skills and T2 rigs for speed. You also can change this parameter on page 'stages'.\
+If you changed values and want to save them, you need to select rows with changed settings and choose item 'Save settings'.\
 After configuration need to press 'calculate' button:
 
 ![7](../examples/example_07.png)
