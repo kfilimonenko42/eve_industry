@@ -1,4 +1,4 @@
-# eve industry
+# EVE Industry (bulk)
 
 This project can help you get information about materials, prices, and production stages (eve online)
 
@@ -37,7 +37,7 @@ cmake --build .
 
 EVE industry is licensed under the GNU GPL v3.0, see LICENSE
 
-## Contacts:
+## Contacts
 
 * EVE: Kirill Dif
 
