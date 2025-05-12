@@ -94,8 +94,12 @@ void EVE::Industry::FormProject::addTypes()
 	AddTypesProject adder(this, "add types for industry");
 	adder(m_Project, m_Project.m_TypesProject);
 
-	updateMaterialsProjectList();
-	updateNamePage();
+	if (adder.isUpdated())
+	{
+		updateMaterialsProjectList();
+		updateNamePage();
+		getBlueprints();
+	}
 }
 
 void EVE::Industry::FormProject::deleteTypes(std::vector<long>& selected)
@@ -105,6 +109,7 @@ void EVE::Industry::FormProject::deleteTypes(std::vector<long>& selected)
 
 	updateMaterialsProjectList();
 	updateNamePage();
+	getBlueprints();
 }
 
 void EVE::Industry::FormProject::deleteAllTypes()
@@ -114,6 +119,7 @@ void EVE::Industry::FormProject::deleteAllTypes()
 
 	updateMaterialsProjectList();
 	updateNamePage();
+	getBlueprints();
 }
 
 void EVE::Industry::FormProject::addAvailableTypes()
@@ -121,8 +127,11 @@ void EVE::Industry::FormProject::addAvailableTypes()
 	AddTypesProject adder(this, "stock", false);
 	adder(m_Project, m_Project.m_Stock);
 
-	updateMaterialsAvailableList();
-	updateNamePage();
+	if (adder.isUpdated())
+	{
+		updateMaterialsAvailableList();
+		updateNamePage();
+	}
 }
 
 void EVE::Industry::FormProject::deleteAvailableTypes(std::vector<long>& selected)

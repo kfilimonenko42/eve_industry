@@ -168,19 +168,29 @@ namespace EVE::Industry
 				std::vector<std::string> stringTypes = dialog->get();
 				const int multiplyBy = dialog->getMultiplyBy();
 
-				VectorStrToTypeIndustry strsToTypes{};
-				auto materials = dst.copy();
-				strsToTypes(stringTypes, materials, multiplyBy);
-				dst.update(std::move(materials));
+				if (!stringTypes.empty())
+				{
+					VectorStrToTypeIndustry strsToTypes{};
+					auto materials = dst.copy();
+					strsToTypes(stringTypes, materials, multiplyBy);
+					dst.update(std::move(materials));
 
-				project.setModified(true);
+					project.setModified(true);
+					m_ListUpdated = true;
+				}
 			}
+		}
+
+		bool isUpdated()
+		{
+			return m_ListUpdated;
 		}
 
 	private:
 		wxWindow* m_Parent{};
 		std::string m_Label;
 		bool m_IndyTypes{};
+		bool m_ListUpdated{};
 	};
 
 	struct RemoveTypesProject

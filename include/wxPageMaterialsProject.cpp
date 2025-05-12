@@ -111,20 +111,17 @@ void EVE::Industry::wxPageMaterialsProject::createControls()
 void EVE::Industry::wxPageMaterialsProject::OnAdd(wxCommandEvent& event)
 {
 	dynamic_cast<FormProject*>(m_FormProject)->addTypes();
-	dynamic_cast<FormProject*>(m_FormProject)->getBlueprints();
 }
 
 void EVE::Industry::wxPageMaterialsProject::OnDelete(wxCommandEvent& event)
 {
 	std::vector<long> selected = dynamic_cast<vListCtrl*>(m_VirtualList)->getSelected();
 	dynamic_cast<FormProject*>(m_FormProject)->deleteTypes(selected);
-	dynamic_cast<FormProject*>(m_FormProject)->getBlueprints();
 }
 
 void EVE::Industry::wxPageMaterialsProject::OnDeleteAll(wxCommandEvent& event)
 {
 	dynamic_cast<FormProject*>(m_FormProject)->deleteAllTypes();
-	dynamic_cast<FormProject*>(m_FormProject)->getBlueprints();
 }
 
 void EVE::Industry::wxPageMaterialsProject::OnListRightClick(wxListEvent& event)

@@ -25,6 +25,10 @@ void EVE::Industry::WxTextToVectorStr::operator()(const wxTextCtrl* text, std::v
 	int lines = text->GetNumberOfLines();
 	for (int index = 0; index < lines; ++index)
 	{
-		dst.push_back(tolower(text->GetLineText(index).utf8_string()));
+        std::string tmp = tolower(text->GetLineText(index).utf8_string());
+        if (!tmp.empty())
+        {
+            dst.push_back(std::move(tmp));
+        }
 	}
 }

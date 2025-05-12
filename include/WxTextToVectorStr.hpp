@@ -19,6 +19,7 @@
 #ifndef _EVEINDUSTRY_WXTEXTTPVECTPRSTR_HPP_
 #define _EVEINDUSTRY_WXTEXTTPVECTPRSTR_HPP_
 
+#include <utility>
 #include <vector>
 #include <string>
 #include <wx/wx.h>
